@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">LEGO Shop - Catálogo</title>
+  <style>
+    /* ===== VARIABLES Y TEMAS ===== */
+    :root {
+      --bg-body: #f0f0f0;
+      --bg-card: #ffffff;
+      --bg-header: #ffcc00;
+      --bg-footer: #0055a4;
+      --text-primary: #1a1a1a;
+      --text-secondary: #333;
+      --text-light: #fff;
+      --border-color: #d0d0d0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.15);
+      --radius: 8px;
+      --accent: #e63946;
+      --accent-hover: #c62828;
+      --success: #2e7d32;
+      --warning: #f57c00;
+      --lego-red: #e63946;
+      --lego-yellow: #ffcc00;
+      --lego-blue: #0055a4;
+      --lego-white: #ffffff;
+      --lego-border-radius: 12px;
+      --font: 'Segoe UI', Roboto, system-ui, sans-serif;
+      --transition: 0.3s ease;
+      --offer-bg: #ffebee;
+      --offer-color: #c62828;
+      --admin-badge: #4caf50;
+    }
+
+    [data-theme="dark"] {
+      --bg-body: #1a1a2e;
+      --bg-card: #16213e;
+      --bg-header: #0f3460;
+      --bg-footer: #0a0a1a;
+      --text-primary: #e0e0e0;
+      --text-secondary: #aaa;
+      --text-light: #fff;
+      --border-color: #2a2a4a;
+      --shadow: 0 4px 12px rgba(0,0,0,0.5);
+      --lego-yellow: #fdd835;
+      --lego-red: #ef5350;
+      --lego-blue: #42a5f5;
+      --offer-bg: #2a1a1a;
+      --offer-color: #ef9a9a;
+      --admin-badge: #66bb6a;
+    }
+
+    [data-theme="lego"] {
+      --bg-body: #f5e6d3;
+      --bg-card: #ffffff;
+      --bg-header: #ffcc00;
+      --bg-footer: #c62828;
+      --text-primary: #1a1a1a;
+      --text-secondary: #333;
+      --text-light: #fff;
+      --border-color: #b71c1c;
+      --shadow: 0 6px 0 #b71c1c, 0 10px 20px rgba(0,0,0,0.2);
+      --accent: #c62828;
+      --accent-hover: #b71c1c;
+      --lego-red: #c62828;
+      --lego-yellow: #ffcc00;
+      --lego-blue: #1565c0;
+      --lego-white: #fff8e1;
+      --offer-bg: #ffccbc;
+      --offer-color: #bf360c;
+      --admin-badge: #2e7d32;
+    }
+
+    /* ===== RESET Y BASE ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      transition: background var(--transition), color var(--transition);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .lego-button {
+      background: var(--lego-red);
+      border: none;
+      border-radius: var(--lego-border-radius);
+      border-bottom: 6px solid #8e0000;
+      padding: 12px 24px;
+      color: #fff;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 0 #8e0000;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lego-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #8e0000;
+    }
+    .lego-button:active {
+      transform: translateY(4px);
+      box-shadow: 0 0px 0 #8e0000;
+    }
+    .lego-button.secondary {
+      background: var(--lego-blue);
+      border-bottom-color: #0a3a6a;
+      box-shadow: 0 4px 0 #0a3a6a;
+    }
+    .lego-button.secondary:hover {
+      box-shadow: 0 6px 0 #0a3a6a;
+    }
+    .lego-button.success {
+      background: var(--success);
+      border-bottom-color: #1b5e20;
+      box-shadow: 0 4px 0 #1b5e20;
+    }
+    .lego-button.small {
+      padding: 6px 12px;
+      font-size: 0.7rem;
+      border-bottom-width: 4px;
+    }
+    .lego-button.whatsapp {
+      background: #25d366;
+      border-bottom-color: #128c7e;
+      box-shadow: 0 4px 0 #128c7e;
+    }
+    .lego-button.whatsapp:hover {
+      box-shadow: 0 6px 0 #128c7e;
+    }
+    .lego-button.admin-toggle {
+      background: var(--admin-badge);
+      border-bottom-color: #1b5e20;
+      box-shadow: 0 4px 0 #1b5e20;
+      font-size: 0.75rem;
+      padding: 6px 14px;
+    }
+    .lego-button.admin-toggle:hover {
+      box-shadow: 0 6px 0 #1b5e20;
+    }
+
+    .lego-input {
+      padding: 12px 16px;
+      border: 3px solid var(--border-color);
+      border-radius: var(--lego-border-radius);
+      font-size: 1rem;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      width: 100%;
+      transition: border 0.3s;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .lego-input:focus {
+      border-color: var(--lego-red);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.2);
+    }
+    .lego-textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .lego-checkbox {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--lego-red);
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: var(--bg-header);
+      padding: 16px 24px;
+      border-radius: var(--lego-border-radius);
+      border-bottom: 6px solid #b71c1c;
+      box-shadow: 0 6px 0 #b71c1c, 0 8px 20px rgba(0,0,0,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+      color: var(--text-light);
+      transition: background var(--transition);
+      position: relative;
+    }
+    .header .brand h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+      letter-spacing: 2px;
+      transition: color 0.3s;
+    }
+    .header .brand small {
+      display: block;
+      font-size: 0.8rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    .header .contact-info {
+      text-align: right;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .header .admin-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header .admin-area .admin-status {
+      font-size: 0.75rem;
+      background: var(--admin-badge);
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+
+    /* ===== BUSCADOR (cliente y admin) ===== */
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 24px;
+    }
+    .search-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: var(--bg-card);
+      padding: 16px 20px;
+      border-radius: var(--lego-border-radius);
+      border: 3px solid var(--border-color);
+      box-shadow: var(--shadow);
+      transition: background var(--transition);
+    }
+    .search-bar input {
+      flex: 1 1 200px;
+      min-width: 120px;
+    }
+    .search-bar .lego-button {
+      flex-shrink: 0;
+    }
+    .search-bar .filter-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .suggestions-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: var(--bg-card);
+      border: 3px solid var(--border-color);
+      border-top: none;
+      border-radius: 0 0 var(--lego-border-radius) var(--lego-border-radius);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      max-height: 320px;
+      overflow-y: auto;
+      display: none;
+      margin-top: 2px;
+    }
+    .suggestions-list.active {
+      display: block;
+    }
+    .suggestions-list .suggestion-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .suggestions-list .suggestion-item:hover {
+      background: var(--bg-header);
+      color: #1a1a1a;
+    }
+    .suggestions-list .suggestion-item .sug-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #e0e0e0;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--border-color);
+    }
+    .suggestions-list .suggestion-item .sug-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .suggestions-list .suggestion-item .sug-img .no-img {
+      font-size: 0.6rem;
+      color: #999;
+    }
+    .suggestions-list .suggestion-item .sug-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .suggestions-list .suggestion-item .sug-info .sug-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .suggestions-list .suggestion-item .sug-info .sug-detail {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .suggestions-list .suggestion-item .sug-price {
+      font-weight: 700;
+      color: var(--lego-red);
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+    .suggestions-list .no-results {
+      padding: 16px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    /* ===== PRODUCTOS ===== */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border-radius: var(--lego-border-radius);
+      border: 3px solid var(--border-color);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      cursor: default;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .product-card .image {
+      height: 180px;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom: 3px solid var(--border-color);
+      position: relative;
+    }
+    .product-card .image .offer-flag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--lego-red);
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      border: 2px solid #fff;
+      z-index: 2;
+    }
+    .product-card .image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .product-card .image .no-img {
+      color: #999;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 10px;
+    }
+    .product-card .info {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .product-card .info .name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .product-card .info .code {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .product-card .info .price {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--lego-red);
+      margin: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .product-card .info .price .original {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      text-decoration: line-through;
+      font-weight: 400;
+    }
+    .product-card .info .price .offer-badge {
+      font-size: 0.7rem;
+      background: var(--offer-bg);
+      color: var(--offer-color);
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      border: 2px solid var(--offer-color);
+    }
+    .product-card .info .stock {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .product-card .info .stock .badge {
+      background: var(--success);
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .product-card .info .stock .badge.low {
+      background: var(--warning);
+    }
+    .product-card .info .stock .badge.out {
+      background: var(--accent);
+    }
+    .product-card .actions {
+      padding: 12px 16px;
+      border-top: 2px solid var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+    .product-card .actions .lego-button {
+      font-size: 0.7rem;
+      padding: 6px 12px;
+      border-bottom-width: 4px;
+      flex: 1 1 auto;
+      min-width: 60px;
+      justify-content: center;
+    }
+
+    /* ===== MODALES ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-box {
+      background: var(--bg-card);
+      border-radius: var(--lego-border-radius);
+      border: 4px solid var(--border-color);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+      max-width: 800px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px 32px;
+      position: relative;
+      animation: modalIn 0.3s ease;
+    }
+    @keyframes modalIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .modal-box .close {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      background: none;
+      border: none;
+      line-height: 1;
+    }
+    .modal-box h2 {
+      margin-bottom: 20px;
+      color: var(--text-primary);
+      border-bottom: 3px solid var(--lego-yellow);
+      padding-bottom: 10px;
+    }
+    .modal-box .form-group {
+      margin-bottom: 16px;
+    }
+    .modal-box .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .modal-box .form-group .row {
+      display: flex;
+      gap: 12px;
+    }
+    .modal-box .form-group .row > * {
+      flex: 1;
+    }
+    .modal-box .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      justify-content: flex-end;
+    }
+    .modal-box .form-actions .lego-button {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .offer-toggle {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+    }
+    .offer-toggle label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* ===== MODAL DETALLE ===== */
+    .detail-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+    .detail-image {
+      flex: 1 1 280px;
+      max-height: 400px;
+      overflow: hidden;
+      border-radius: var(--lego-border-radius);
+      border: 3px solid var(--border-color);
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .detail-image .offer-flag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--lego-red);
+      color: #fff;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      border: 2px solid #fff;
+      z-index: 2;
+    }
+    .detail-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      max-height: 400px;
+    }
+    .detail-image .no-img {
+      padding: 40px;
+      color: #999;
+      font-size: 1rem;
+    }
+    .detail-info {
+      flex: 2 1 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .detail-info .field {
+      display: flex;
+      border-bottom: 1px solid var(--border-color);
+      padding: 4px 0;
+    }
+    .detail-info .field .label {
+      font-weight: 600;
+      min-width: 100px;
+      color: var(--text-secondary);
+    }
+    .detail-info .field .value {
+      flex: 1;
+      color: var(--text-primary);
+    }
+    .detail-info .field .value .original {
+      text-decoration: line-through;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-right: 8px;
+    }
+    .detail-info .field .value .offer-badge {
+      background: var(--offer-bg);
+      color: var(--offer-color);
+      padding: 2px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: 2px solid var(--offer-color);
+      margin-left: 8px;
+    }
+    .detail-info .field .value.desc {
+      white-space: pre-wrap;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+    .detail-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 2px solid var(--border-color);
+    }
+
+    /* Tabs historial (solo admin) */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 3px solid var(--border-color);
+    }
+    .tabs button {
+      background: none;
+      border: none;
+      padding: 10px 20px;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+      text-transform: uppercase;
+    }
+    .tabs button.active {
+      color: var(--lego-red);
+      border-bottom-color: var(--lego-red);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    .sales-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    .sales-table th, .sales-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-color);
+      text-align: left;
+    }
+    .sales-table th {
+      background: var(--bg-header);
+      color: var(--text-light);
+    }
+    .sales-table .total-row {
+      font-weight: 700;
+      background: var(--lego-yellow);
+      color: #1a1a1a;
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    .filter-bar .lego-input {
+      width: auto;
+      flex: 1 1 150px;
+    }
+    .filter-bar .lego-button {
+      flex-shrink: 0;
+    }
+
+    .footer {
+      margin-top: 30px;
+      background: var(--bg-footer);
+      color: var(--text-light);
+      padding: 16px 24px;
+      border-radius: var(--lego-border-radius);
+      border-bottom: 6px solid #1a1a2e;
+      box-shadow: 0 6px 0 #1a1a2e;
+      text-align: center;
+      font-size: 0.85rem;
+      transition: background var(--transition);
+    }
+
+    .stock-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .stock-badge.ok { background: var(--success); }
+    .stock-badge.low { background: var(--warning); }
+    .stock-badge.out { background: var(--accent); }
+
+    .btn-void {
+      background: #d32f2f;
+      border-bottom-color: #8e0000;
+    }
+    .btn-void:hover {
+      background: #b71c1c;
+    }
+
+    .db-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .db-buttons .lego-button {
+      flex: 1;
+      justify-content: center;
+    }
+
+    /* Ocultar elementos de admin en modo cliente */
+    .admin-only {
+      display: none;
+    }
+    body.admin-mode .admin-only {
+      display: flex !important;
+    }
+    body.admin-mode .client-only {
+      display: none !important;
+    }
+    body:not(.admin-mode) .admin-only {
+      display: none !important;
+    }
+    body:not(.admin-mode) .client-only {
+      display: flex !important;
+    }
+
+    /* Ajustes para vista cliente */
+    .client-only .product-card .actions .lego-button {
+      flex: 1 1 100%;
+    }
+
+    @media (max-width: 700px) {
+      .header { flex-direction: column; text-align: center; }
+      .header .contact-info { text-align: center; }
+      .header .admin-area { justify-content: center; }
+      .search-bar { flex-direction: column; }
+      .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+      .modal-box { padding: 20px; }
+      .modal-box .form-group .row { flex-direction: column; }
+      .filter-bar { flex-direction: column; align-items: stretch; }
+      .sales-table { font-size: 0.75rem; }
+      .sales-table th, .sales-table td { padding: 4px 6px; }
+      .detail-container { flex-direction: column; }
+      .detail-image { max-height: 250px; }
+      .suggestions-list .suggestion-item { padding: 6px 12px; }
+      .suggestions-list .suggestion-item .sug-img { width: 30px; height: 30px; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-body); }
+    ::-webkit-scrollbar-thumb { background: var(--lego-red); border-radius: 10px; }
+
+    .text-center { text-align: center; }
+    .mt-8 { margin-top: 8px; }
+    .mb-8 { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- HEADER -->
+  <header class="header" id="mainHeader">
+    <div class="brand">
+      <h1 id="shopTitle">LEGO Shop</h1>
+      <small id="businessName">Autos de Colección &amp; Juguetes LEGO</small>
+    </div>
+    <div class="contact-info" id="businessContact">
+      <div>📞 <span id="businessPhone">+54 9 11 1234-5678</span></div>
+      <div>📍 <span id="businessAddress">Av. Brick 123, Ciudad LEGO</span></div>
+    </div>
+    <div class="admin-area">
+      <span class="admin-status admin-only" id="adminStatusBadge">👑 Admin</span>
+      <button class="lego-button admin-toggle" id="adminToggleBtn">🔐 Admin</button>
+    </div>
+  </header>
+
+  <!-- BUSCADOR (visible para todos) -->
+  <div class="search-wrapper">
+    <div class="search-bar">
+      <input type="text" id="searchInput" class="lego-input" placeholder="🔍 Buscar por nombre, código o código de barras..." autocomplete="off">
+      <div class="filter-group">
+        <button class="lego-button small" id="searchBtn">Buscar</button>
+        <button class="lego-button small secondary" id="clearSearch">Limpiar</button>
+      </div>
+    </div>
+    <div id="suggestionsList" class="suggestions-list"></div>
+  </div>
+
+  <!-- TOOLBAR (solo admin) -->
+  <div class="admin-only" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+    <button class="lego-button secondary" id="openControlPanel">⚙️ Panel de Control</button>
+    <button class="lego-button" id="openAddProduct">➕ Agregar Producto</button>
+    <button class="lego-button secondary" id="openHistoryBtn">📜 Historial</button>
+    <button class="lego-button secondary" id="themeToggle">🎨 Cambiar Tema</button>
+  </div>
+
+  <!-- GRID DE PRODUCTOS -->
+  <div id="productGrid" class="product-grid"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <p>🧱 LEGO Shop Manager — Todos los derechos reservados © 2026</p>
+  </footer>
+</div>
+
+<!-- ============ MODAL LOGIN ADMIN ============ -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-box" style="max-width: 420px;">
+    <button class="close" id="closeLogin">&times;</button>
+    <h2>🔐 Acceso Administrador</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label>Usuario</label>
+        <input type="text" id="loginUser" class="lego-input" placeholder="admin" value="admin">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="loginPass" class="lego-input" placeholder="****" value="admin123">
+      </div>
+      <div class="form-actions">
+        <button type="button" class="lego-button secondary" id="cancelLogin">Cancelar</button>
+        <button type="submit" class="lego-button">Ingresar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL PRODUCTO (Admin) ============ -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <button class="close" id="closeModal">&times;</button>
+    <h2 id="modalTitle">Agregar Producto</h2>
+    <form id="productForm">
+      <input type="hidden" id="editId" value="">
+      <div class="form-group">
+        <label>Nombre del producto *</label>
+        <input type="text" id="prodName" class="lego-input" required>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div>
+            <label>Código interno</label>
+            <input type="text" id="prodCode" class="lego-input" placeholder="Ej: LEGO-001">
+          </div>
+          <div>
+            <label>Código de barras</label>
+            <input type="text" id="prodBarcode" class="lego-input" placeholder="1234567890">
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div>
+            <label>Costo (ARS)</label>
+            <input type="number" id="prodCost" class="lego-input" step="0.01" min="0">
+          </div>
+          <div>
+            <label>Precio (ARS) *</label>
+            <input type="number" id="prodPrice" class="lego-input" step="0.01" min="0" required>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div>
+            <label>Stock inicial *</label>
+            <input type="number" id="prodStock" class="lego-input" min="0" value="1" required>
+          </div>
+          <div>
+            <label>Stock mínimo (alerta)</label>
+            <input type="number" id="prodMinStock" class="lego-input" min="0" value="5">
+            <small style="color:var(--text-secondary);">Cuando el stock baje de este número, se mostrará "Pocas unidades".</small>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div>
+            <label>Descripción</label>
+            <textarea id="prodDescription" class="lego-input lego-textarea" rows="2" placeholder="Descripción del producto..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="offer-toggle">
+          <label>
+            <input type="checkbox" id="prodOnOffer" class="lego-checkbox">
+            En oferta
+          </label>
+          <div style="flex:1; display:flex; gap:8px; align-items:center;">
+            <label style="margin:0;">% Descuento:</label>
+            <input type="number" id="prodOfferPercent" class="lego-input" min="0" max="100" value="10" style="width:80px; flex:0 0 auto;">
+            <span>%</span>
+          </div>
+        </div>
+        <small style="color:var(--text-secondary);">Activa la oferta y define el porcentaje de descuento que se aplicará al precio.</small>
+      </div>
+      <div class="form-group">
+        <label>Imagen</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="file" id="prodImageFile" class="lego-input" accept="image/*" style="flex:1;">
+          <input type="text" id="prodImageUrl" class="lego-input" placeholder="O URL de la imagen" style="flex:2;">
+        </div>
+        <div id="imagePreview" style="margin-top:8px; max-width:150px; border-radius:8px; overflow:hidden; border:2px solid var(--border-color); display:none;">
+          <img id="previewImg" src="" alt="preview" style="width:100%; height:auto; display:block;">
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="lego-button secondary" id="cancelModal">Cancelar</button>
+        <button type="submit" class="lego-button" id="saveProductBtn">💾 Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL DETALLE (Cliente y Admin) ============ -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box" style="max-width: 900px;">
+    <button class="close" id="closeDetail">&times;</button>
+    <h2 id="detailTitle">Detalle del Producto</h2>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<!-- ============ MODAL PANEL DE CONTROL (Admin) ============ -->
+<div class="modal-overlay" id="controlModal">
+  <div class="modal-box">
+    <button class="close" id="closeControl">&times;</button>
+    <h2>⚙️ Panel de Control</h2>
+    <form id="controlForm">
+      <div class="form-group">
+        <label>Título de la página</label>
+        <input type="text" id="shopTitleInput" class="lego-input" placeholder="LEGO Shop">
+      </div>
+      <div class="form-group">
+        <label>Nombre del negocio</label>
+        <input type="text" id="bizName" class="lego-input" placeholder="Mi tienda LEGO">
+      </div>
+      <div class="form-group">
+        <label>Teléfono de contacto</label>
+        <input type="text" id="bizPhone" class="lego-input" placeholder="+54 9 11 1234-5678">
+      </div>
+      <div class="form-group">
+        <label>Dirección</label>
+        <input type="text" id="bizAddress" class="lego-input" placeholder="Av. Brick 123, Ciudad LEGO">
+      </div>
+      <div class="form-group">
+        <label>Número de WhatsApp para clientes</label>
+        <input type="text" id="whatsappNumber" class="lego-input" placeholder="5491112345678">
+        <small style="color:var(--text-secondary);">Número al que los clientes enviarán mensajes desde el catálogo.</small>
+      </div>
+      <hr style="border-color:var(--border-color); margin: 16px 0;">
+      <h3 style="margin-bottom:12px;">🔐 Acceso Administrador</h3>
+      <div class="form-group">
+        <label>Usuario</label>
+        <input type="text" id="adminUserInput" class="lego-input" placeholder="admin">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="text" id="adminPassInput" class="lego-input" placeholder="••••••">
+        <small style="color:var(--text-secondary);">Cambia la contraseña de acceso al panel de administración.</small>
+      </div>
+      <div class="form-group">
+        <label>Base de datos</label>
+        <div class="db-buttons">
+          <button type="button" class="lego-button secondary" id="exportDbBtn">💾 Guardar backup</button>
+          <button type="button" class="lego-button warning" id="importDbBtn">📂 Cargar backup</button>
+        </div>
+        <small style="color:var(--text-secondary);">Exporta o importa toda la base de datos (productos, ventas y configuración).</small>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="lego-button secondary" id="closeControlBtn">Cerrar</button>
+        <button type="submit" class="lego-button">💾 Guardar Configuración</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ MODAL HISTORIAL (Admin) ============ -->
+<div class="modal-overlay" id="historyModal">
+  <div class="modal-box" style="max-width: 1000px;">
+    <button class="close" id="closeHistory">&times;</button>
+    <h2>📜 Historial</h2>
+    <div class="tabs">
+      <button class="active" data-tab="inventario">📦 Inventario</button>
+      <button data-tab="ventas">💰 Ventas</button>
+    </div>
+    <div id="tabInventario" class="tab-content active">
+      <div style="margin-bottom:12px;">
+        <input type="text" id="invSearch" class="lego-input" placeholder="🔍 Buscar en inventario...">
+      </div>
+      <div id="inventoryList" style="max-height:400px; overflow-y:auto;"></div>
+    </div>
+    <div id="tabVentas" class="tab-content">
+      <div class="filter-bar">
+        <input type="date" id="salesDateFilter" class="lego-input" style="flex:0 0 auto;">
+        <button class="lego-button small" id="filterToday">Hoy</button>
+        <button class="lego-button small" id="filterMonth">Este Mes</button>
+        <button class="lego-button small" id="filterYear">Este Año</button>
+        <button class="lego-button small secondary" id="clearSalesFilter">Limpiar</button>
+      </div>
+      <div id="salesSummary" style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:16px; background:var(--bg-card); padding:12px; border-radius:8px; border:2px solid var(--border-color);">
+        <span><strong>Hoy:</strong> $<span id="totalToday">0.00</span></span>
+        <span><strong>Este mes:</strong> $<span id="totalMonth">0.00</span></span>
+        <span><strong>Este año:</strong> $<span id="totalYear">0.00</span></span>
+      </div>
+      <div id="salesList" style="max-height:350px; overflow-y:auto;"></div>
+    </div>
+    <div class="form-actions" style="margin-top:16px;">
+      <button class="lego-button secondary" id="closeHistoryBtn">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // =====================================================
+  // 1. BASE DE DATOS
+  // =====================================================
+  const DB_KEY = 'lego_products';
+  const BIZ_KEY = 'lego_business';
+  const SALES_KEY = 'lego_sales';
+  const ADMIN_KEY = 'lego_admin';
+
+  function getProducts() {
+    try { return JSON.parse(localStorage.getItem(DB_KEY)) || []; } catch { return []; }
+  }
+  function saveProducts(products) {
+    localStorage.setItem(DB_KEY, JSON.stringify(products));
+  }
+  function getBusiness() {
+    try { return JSON.parse(localStorage.getItem(BIZ_KEY)) || { shopTitle: 'LEGO Shop', name: 'Autos de Colección & Juguetes LEGO', phone: '+54 9 11 1234-5678', address: 'Av. Brick 123, Ciudad LEGO', whatsapp: '5491112345678' }; } catch { return { shopTitle: 'LEGO Shop', name: 'LEGO Shop', phone: '', address: '', whatsapp: '' }; }
+  }
+  function saveBusiness(biz) {
+    localStorage.setItem(BIZ_KEY, JSON.stringify(biz));
+  }
+  function getSales() {
+    try { return JSON.parse(localStorage.getItem(SALES_KEY)) || []; } catch { return []; }
+  }
+  function saveSales(sales) {
+    localStorage.setItem(SALES_KEY, JSON.stringify(sales));
+  }
+  function getAdmin() {
+    try { return JSON.parse(localStorage.getItem(ADMIN_KEY)) || { user: 'admin', pass: 'admin123' }; } catch { return { user: 'admin', pass: 'admin123' }; }
+  }
+  function saveAdmin(admin) {
+    localStorage.setItem(ADMIN_KEY, JSON.stringify(admin));
+  }
+
+  // =====================================================
+  // 2. ESTADO
+  // =====================================================
+  let products = getProducts();
+  let business = getBusiness();
+  let sales = getSales();
+  let admin = getAdmin();
+  let editingId = null;
+  let currentTheme = localStorage.getItem('legoTheme') || 'default';
+  let salesFilter = 'all';
+  let searchTimeout = null;
+  let isAdmin = false;
+
+  // =====================================================
+  // 3. REFERENCIAS DOM
+  // =====================================================
+  const grid = document.getElementById('productGrid');
+  const searchInput = document.getElementById('searchInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const clearSearch = document.getElementById('clearSearch');
+  const suggestionsList = document.getElementById('suggestionsList');
+
+  // Login
+  const loginModal = document.getElementById('loginModal');
+  const closeLogin = document.getElementById('closeLogin');
+  const cancelLogin = document.getElementById('cancelLogin');
+  const loginForm = document.getElementById('loginForm');
+  const loginUser = document.getElementById('loginUser');
+  const loginPass = document.getElementById('loginPass');
+  const adminToggleBtn = document.getElementById('adminToggleBtn');
+  const adminStatusBadge = document.getElementById('adminStatusBadge');
+
+  // Modal producto
+  const modal = document.getElementById('productModal');
+  const closeModal = document.getElementById('closeModal');
+  const cancelModal = document.getElementById('cancelModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const productForm = document.getElementById('productForm');
+  const editId = document.getElementById('editId');
+  const prodName = document.getElementById('prodName');
+  const prodCode = document.getElementById('prodCode');
+  const prodBarcode = document.getElementById('prodBarcode');
+  const prodCost = document.getElementById('prodCost');
+  const prodPrice = document.getElementById('prodPrice');
+  const prodStock = document.getElementById('prodStock');
+  const prodMinStock = document.getElementById('prodMinStock');
+  const prodDescription = document.getElementById('prodDescription');
+  const prodOnOffer = document.getElementById('prodOnOffer');
+  const prodOfferPercent = document.getElementById('prodOfferPercent');
+  const prodImageFile = document.getElementById('prodImageFile');
+  const prodImageUrl = document.getElementById('prodImageUrl');
+  const imagePreview = document.getElementById('imagePreview');
+  const previewImg = document.getElementById('previewImg');
+
+  // Modal detalle
+  const detailModal = document.getElementById('detailModal');
+  const closeDetail = document.getElementById('closeDetail');
+  const detailTitle = document.getElementById('detailTitle');
+  const detailContent = document.getElementById('detailContent');
+
+  const openAddBtn = document.getElementById('openAddProduct');
+  const openHistoryBtn = document.getElementById('openHistoryBtn');
+
+  // Control
+  const controlModal = document.getElementById('controlModal');
+  const openControlBtn = document.getElementById('openControlPanel');
+  const closeControl = document.getElementById('closeControl');
+  const closeControlBtn = document.getElementById('closeControlBtn');
+  const controlForm = document.getElementById('controlForm');
+  const shopTitleInput = document.getElementById('shopTitleInput');
+  const bizName = document.getElementById('bizName');
+  const bizPhone = document.getElementById('bizPhone');
+  const bizAddress = document.getElementById('bizAddress');
+  const whatsappNumber = document.getElementById('whatsappNumber');
+  const adminUserInput = document.getElementById('adminUserInput');
+  const adminPassInput = document.getElementById('adminPassInput');
+
+  const themeToggle = document.getElementById('themeToggle');
+
+  // Historial
+  const historyModal = document.getElementById('historyModal');
+  const closeHistory = document.getElementById('closeHistory');
+  const closeHistoryBtn = document.getElementById('closeHistoryBtn');
+  const tabs = document.querySelectorAll('.tabs button');
+  const tabInventario = document.getElementById('tabInventario');
+  const tabVentas = document.getElementById('tabVentas');
+  const invSearch = document.getElementById('invSearch');
+  const inventoryList = document.getElementById('inventoryList');
+  const salesDateFilter = document.getElementById('salesDateFilter');
+  const filterToday = document.getElementById('filterToday');
+  const filterMonth = document.getElementById('filterMonth');
+  const filterYear = document.getElementById('filterYear');
+  const clearSalesFilter = document.getElementById('clearSalesFilter');
+  const salesList = document.getElementById('salesList');
+  const totalToday = document.getElementById('totalToday');
+  const totalMonth = document.getElementById('totalMonth');
+  const totalYear = document.getElementById('totalYear');
+
+  // =====================================================
+  // 4. FUNCIONES DE AYUDA
+  // =====================================================
+  function escHtml(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function getOfferPrice(product) {
+    if (product.onOffer && product.offerPercent && product.offerPercent > 0) {
+      const discount = product.price * (product.offerPercent / 100);
+      return product.price - discount;
+    }
+    return product.price;
+  }
+
+  function formatPrice(price) {
+    return price.toFixed(2);
+  }
+
+  function getOfferDisplay(product) {
+    if (product.onOffer && product.offerPercent && product.offerPercent > 0) {
+      const offerPrice = getOfferPrice(product);
+      return {
+        original: product.price,
+        offer: offerPrice,
+        percent: product.offerPercent,
+        display: `$${formatPrice(offerPrice)}`
+      };
+    }
+    return null;
+  }
+
+  // =====================================================
+  // 5. RENDERIZADO PRINCIPAL
+  // =====================================================
+  function renderProducts(filter = '') {
+    let list = products.filter(p => p.stock > 0);
+    if (filter.trim()) {
+      const f = filter.trim().toLowerCase();
+      list = list.filter(p =>
+        p.name.toLowerCase().includes(f) ||
+        (p.code && p.code.toLowerCase().includes(f)) ||
+        (p.barcode && p.barcode.toLowerCase().includes(f))
+      );
+    }
+    if (list.length === 0) {
+      grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; background:var(--bg-card); border-radius:var(--lego-border-radius); border:3px dashed var(--border-color);">
+        <p style="font-size:1.2rem; color:var(--text-secondary);">🧱 No hay productos disponibles en el catálogo.</p>
+      </div>`;
+      return;
+    }
+    grid.innerHTML = list.map(p => {
+      const minStock = p.minStock !== undefined ? p.minStock : 5;
+      let stockClass = 'ok';
+      let stockLabel = 'En stock';
+      if (p.stock === 0) { stockClass = 'out'; stockLabel = 'Agotado'; }
+      else if (p.stock <= minStock) { stockClass = 'low'; stockLabel = 'Pocas unidades'; }
+      const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` :
+        `<div class="no-img">🧱<br>Sin imagen</div>`;
+      const offer = getOfferDisplay(p);
+      let priceHtml = `<span>$${formatPrice(p.price)}</span>`;
+      let offerFlag = '';
+      if (offer) {
+        priceHtml = `
+          <span class="original">$${formatPrice(offer.original)}</span>
+          <span>$${formatPrice(offer.offer)}</span>
+          <span class="offer-badge">-${offer.percent}%</span>
+        `;
+        offerFlag = `<div class="offer-flag">🔥 Oferta ${offer.percent}%</div>`;
+      }
+
+      // Acciones según rol
+      let actionsHtml = '';
+      if (isAdmin) {
+        actionsHtml = `
+          <div class="actions">
+            <button class="lego-button small secondary" onclick="editProduct('${p.id}')">✏️ Editar</button>
+            <button class="lego-button small warning" onclick="sellProduct('${p.id}')">💰 Vender</button>
+            <button class="lego-button small success" onclick="returnProduct('${p.id}')">↩️ Devolver</button>
+            <button class="lego-button small" onclick="deleteProduct('${p.id}')">🗑️ Eliminar</button>
+            <button class="lego-button small" onclick="openDetail('${p.id}')">🔍 Ver</button>
+          </div>
+        `;
+      } else {
+        actionsHtml = `
+          <div class="actions">
+            <button class="lego-button whatsapp small" onclick="clientWhatsApp('${p.id}')">📱 Consultar</button>
+            <button class="lego-button small secondary" onclick="openDetail('${p.id}')">🔍 Ver</button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="product-card" data-id="${p.id}">
+          <div class="image">
+            ${imgHtml}
+            ${offerFlag}
+          </div>
+          <div class="info">
+            <div class="name">${escHtml(p.name)}</div>
+            <div class="code">${isAdmin ? 'Código: '+escHtml(p.code || '—')+' | Barras: '+escHtml(p.barcode || '—') : ''}</div>
+            <div class="price">${priceHtml}</div>
+            <div class="stock">
+              <span class="stock-badge ${stockClass}">${stockLabel}</span>
+              <span>${p.stock} unidades</span>
+              ${isAdmin && p.minStock !== undefined ? `<span style="font-size:0.65rem; color:var(--text-secondary);">(mín: ${p.minStock})</span>` : ''}
+            </div>
+          </div>
+          ${actionsHtml}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // =====================================================
+  // 6. BUSCADOR DINÁMICO (funciona en ambos modos)
+  // =====================================================
+  function updateSuggestions(query) {
+    const trimmed = query.trim().toLowerCase();
+    if (!trimmed) {
+      suggestionsList.classList.remove('active');
+      return;
+    }
+    // En modo cliente solo buscar productos con stock, en admin todos
+    let matches = products;
+    if (!isAdmin) {
+      matches = products.filter(p => p.stock > 0);
+    }
+    matches = matches.filter(p =>
+      p.name.toLowerCase().includes(trimmed) ||
+      (p.code && p.code.toLowerCase().includes(trimmed)) ||
+      (p.barcode && p.barcode.toLowerCase().includes(trimmed))
+    );
+    if (matches.length === 0) {
+      suggestionsList.innerHTML = `<div class="no-results">🧱 No se encontraron productos</div>`;
+      suggestionsList.classList.add('active');
+      return;
+    }
+    const top = matches.slice(0, 10);
+    let html = '';
+    top.forEach(p => {
+      const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` :
+        `<span class="no-img">🧱</span>`;
+      const stockStatus = p.stock > 0 ? `Stock: ${p.stock}` : 'Agotado';
+      const offer = getOfferDisplay(p);
+      const priceDisplay = offer ? `$${formatPrice(offer.offer)}` : `$${formatPrice(p.price)}`;
+      // En modo cliente no mostramos código interno ni stock para simplificar
+      const detail = isAdmin ? `${escHtml(p.code || '—')} · ${stockStatus}` : `Stock: ${p.stock}`;
+      html += `
+        <div class="suggestion-item" onclick="selectSuggestion('${p.id}')">
+          <div class="sug-img">${imgHtml}</div>
+          <div class="sug-info">
+            <span class="sug-name">${escHtml(p.name)}</span>
+            <span class="sug-detail">${detail}</span>
+          </div>
+          <span class="sug-price">${priceDisplay}</span>
+        </div>
+      `;
+    });
+    suggestionsList.innerHTML = html;
+    suggestionsList.classList.add('active');
+  }
+
+  window.selectSuggestion = function(id) {
+    const p = products.find(pr => pr.id === id);
+    if (p) {
+      searchInput.value = p.name;
+      suggestionsList.classList.remove('active');
+      renderProducts(p.name);
+    }
+  };
+
+  // Eventos del buscador (siempre activos)
+  searchInput.addEventListener('input', function() {
+    const val = this.value;
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      updateSuggestions(val);
+      renderProducts(val);
+    }, 200);
+  });
+
+  document.addEventListener('click', function(e) {
+    const wrapper = document.querySelector('.search-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+      suggestionsList.classList.remove('active');
+    }
+  });
+
+  searchBtn.addEventListener('click', function() {
+    const val = searchInput.value;
+    suggestionsList.classList.remove('active');
+    renderProducts(val);
+  });
+
+  clearSearch.addEventListener('click', function() {
+    searchInput.value = '';
+    suggestionsList.classList.remove('active');
+    renderProducts('');
+  });
+
+  searchInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      suggestionsList.classList.remove('active');
+      renderProducts(this.value);
+    }
+  });
+
+  // =====================================================
+  // 7. CRUD DE PRODUCTOS (Admin)
+  // =====================================================
+  function addProduct(product) {
+    product.id = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
+    products.push(product);
+    saveProducts(products);
+    renderProducts(searchInput.value);
+  }
+
+  function updateProduct(id, newData) {
+    const idx = products.findIndex(p => p.id === id);
+    if (idx === -1) return;
+    products[idx] = { ...products[idx], ...newData };
+    saveProducts(products);
+    renderProducts(searchInput.value);
+  }
+
+  window.deleteProduct = function(id) {
+    if (!isAdmin) return;
+    if (!confirm('¿Estás seguro de eliminar este producto?')) return;
+    products = products.filter(p => p.id !== id);
+    saveProducts(products);
+    renderProducts(searchInput.value);
+    if (historyModal.classList.contains('active')) renderInventory();
+    closeDetailModal();
+  };
+
+  window.sellProduct = function(id) {
+    if (!isAdmin) return;
+    const p = products.find(pr => pr.id === id);
+    if (!p) return;
+    if (p.stock <= 0) {
+      alert('❌ No hay stock disponible para vender.');
+      return;
+    }
+    const qty = prompt(`¿Cuántas unidades vender de "${p.name}"? (Stock actual: ${p.stock})`, '1');
+    if (qty === null) return;
+    const num = parseInt(qty);
+    if (isNaN(num) || num <= 0) { alert('Cantidad inválida.'); return; }
+    if (num > p.stock) { alert(`❌ No hay suficiente stock. Disponible: ${p.stock}`); return; }
+
+    const priceToUse = getOfferPrice(p);
+    const sale = {
+      id: Date.now().toString(36) + Math.random().toString(36).substr(2, 4),
+      productId: p.id,
+      productName: p.name,
+      quantity: num,
+      price: priceToUse,
+      total: num * priceToUse,
+      date: new Date().toISOString()
+    };
+    sales.push(sale);
+    saveSales(sales);
+
+    p.stock -= num;
+    saveProducts(products);
+    renderProducts(searchInput.value);
+    alert(`✅ Venta realizada: ${num} unidad(es) de "${p.name}" por $${sale.total.toFixed(2)}`);
+
+    if (historyModal.classList.contains('active')) {
+      renderInventory();
+      renderSales();
+    }
+    closeDetailModal();
+  };
+
+  window.returnProduct = function(id) {
+    if (!isAdmin) return;
+    const p = products.find(pr => pr.id === id);
+    if (!p) return;
+    const qty = prompt(`¿Cuántas unidades devolver de "${p.name}"?`, '1');
+    if (qty === null) return;
+    const num = parseInt(qty);
+    if (isNaN(num) || num <= 0) { alert('Cantidad inválida.'); return; }
+    p.stock += num;
+    saveProducts(products);
+    renderProducts(searchInput.value);
+    alert(`✅ Devolución registrada: ${num} unidad(es) devueltas de "${p.name}"`);
+    if (historyModal.classList.contains('active')) renderInventory();
+    closeDetailModal();
+  };
+
+  window.voidSale = function(saleId) {
+    if (!isAdmin) return;
+    if (!confirm('⚠️ ¿Estás seguro de anular esta venta? Se devolverá el stock al producto.')) return;
+    const saleIndex = sales.findIndex(s => s.id === saleId);
+    if (saleIndex === -1) { alert('Venta no encontrada.'); return; }
+    const sale = sales[saleIndex];
+    const product = products.find(p => p.id === sale.productId);
+    if (product) {
+      product.stock += sale.quantity;
+      saveProducts(products);
+    } else {
+      alert('⚠️ El producto asociado a esta venta ya no existe. Solo se eliminará la venta.');
+    }
+    sales.splice(saleIndex, 1);
+    saveSales(sales);
+    renderProducts(searchInput.value);
+    if (historyModal.classList.contains('active')) {
+      renderInventory();
+      renderSales();
+    }
+    alert(`✅ Venta anulada. Stock de "${sale.productName}" restaurado.`);
+  };
+
+  window.editProduct = function(id) {
+    if (!isAdmin) return;
+    const p = products.find(pr => pr.id === id);
+    if (!p) return;
+    editingId = id;
+    modalTitle.textContent = '✏️ Editar Producto';
+    editId.value = id;
+    prodName.value = p.name || '';
+    prodCode.value = p.code || '';
+    prodBarcode.value = p.barcode || '';
+    prodCost.value = p.cost || '';
+    prodPrice.value = p.price || '';
+    prodStock.value = p.stock || 0;
+    prodMinStock.value = p.minStock !== undefined ? p.minStock : 5;
+    prodDescription.value = p.description || '';
+    prodOnOffer.checked = p.onOffer || false;
+    prodOfferPercent.value = p.offerPercent || 10;
+    prodImageFile.value = '';
+    prodImageUrl.value = p.image || '';
+    if (p.image) {
+      previewImg.src = p.image;
+      imagePreview.style.display = 'block';
+    } else {
+      imagePreview.style.display = 'none';
+    }
+    modal.classList.add('active');
+    closeDetailModal();
+  };
+
+  // =====================================================
+  // 8. MANEJO DE IMÁGENES
+  // =====================================================
+  prodImageFile.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const dataUrl = ev.target.result;
+      previewImg.src = dataUrl;
+      imagePreview.style.display = 'block';
+      prodImageUrl.value = dataUrl;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  prodImageUrl.addEventListener('input', function() {
+    const url = this.value.trim();
+    if (url) {
+      previewImg.src = url;
+      imagePreview.style.display = 'block';
+    } else {
+      imagePreview.style.display = 'none';
+    }
+  });
+
+  // =====================================================
+  // 9. FORMULARIO PRODUCTO
+  // =====================================================
+  function openProductForm(productData = null) {
+    if (!isAdmin) return;
+    if (productData) {
+      editingId = productData.id;
+      modalTitle.textContent = '✏️ Editar Producto';
+      editId.value = productData.id;
+      prodName.value = productData.name || '';
+      prodCode.value = productData.code || '';
+      prodBarcode.value = productData.barcode || '';
+      prodCost.value = productData.cost || '';
+      prodPrice.value = productData.price || '';
+      prodStock.value = productData.stock || 0;
+      prodMinStock.value = productData.minStock !== undefined ? productData.minStock : 5;
+      prodDescription.value = productData.description || '';
+      prodOnOffer.checked = productData.onOffer || false;
+      prodOfferPercent.value = productData.offerPercent || 10;
+      prodImageFile.value = '';
+      prodImageUrl.value = productData.image || '';
+      if (productData.image) {
+        previewImg.src = productData.image;
+        imagePreview.style.display = 'block';
+      } else {
+        imagePreview.style.display = 'none';
+      }
+    } else {
+      editingId = null;
+      modalTitle.textContent = '➕ Agregar Producto';
+      editId.value = '';
+      productForm.reset();
+      prodStock.value = 1;
+      prodMinStock.value = 5;
+      prodDescription.value = '';
+      prodOnOffer.checked = false;
+      prodOfferPercent.value = 10;
+      prodImageFile.value = '';
+      prodImageUrl.value = '';
+      imagePreview.style.display = 'none';
+    }
+    modal.classList.add('active');
+  }
+
+  openAddBtn.addEventListener('click', () => openProductForm(null));
+
+  productForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!isAdmin) return;
+    const name = prodName.value.trim();
+    if (!name) { alert('El nombre es obligatorio.'); return; }
+    const price = parseFloat(prodPrice.value);
+    if (isNaN(price) || price < 0) { alert('Precio inválido.'); return; }
+    const stock = parseInt(prodStock.value) || 0;
+    const cost = parseFloat(prodCost.value) || 0;
+    const image = prodImageUrl.value.trim() || '';
+    const minStock = parseInt(prodMinStock.value) || 5;
+    const description = prodDescription.value.trim();
+    const onOffer = prodOnOffer.checked;
+    const offerPercent = parseInt(prodOfferPercent.value) || 0;
+
+    const data = {
+      name,
+      code: prodCode.value.trim(),
+      barcode: prodBarcode.value.trim(),
+      cost,
+      price,
+      stock,
+      minStock,
+      description,
+      onOffer,
+      offerPercent: onOffer ? Math.min(100, Math.max(0, offerPercent)) : 0,
+      image
+    };
+
+    if (editingId) {
+      updateProduct(editingId, data);
+    } else {
+      addProduct(data);
+    }
+    modal.classList.remove('active');
+    renderProducts(searchInput.value);
+  });
+
+  function closeModalFn() {
+    modal.classList.remove('active');
+  }
+  closeModal.addEventListener('click', closeModalFn);
+  cancelModal.addEventListener('click', closeModalFn);
+  modal.addEventListener('click', function(e) {
+    if (e.target === this) closeModalFn();
+  });
+
+  // =====================================================
+  // 10. DETALLE DEL PRODUCTO (cliente y admin)
+  // =====================================================
+  window.openDetail = function(id) {
+    const p = products.find(pr => pr.id === id);
+    if (!p) return;
+    detailTitle.textContent = `🔍 ${p.name}`;
+    const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` :
+      `<div class="no-img">🧱 Sin imagen</div>`;
+    const minStock = p.minStock !== undefined ? p.minStock : 5;
+    let stockClass = 'ok';
+    let stockLabel = 'En stock';
+    if (p.stock === 0) { stockClass = 'out'; stockLabel = 'Agotado'; }
+    else if (p.stock <= minStock) { stockClass = 'low'; stockLabel = 'Pocas unidades'; }
+
+    const offer = getOfferDisplay(p);
+    let priceHtml = `<span>$${formatPrice(p.price)}</span>`;
+    let offerFlag = '';
+    if (offer) {
+      priceHtml = `
+        <span class="original">$${formatPrice(offer.original)}</span>
+        <span>$${formatPrice(offer.offer)}</span>
+        <span class="offer-badge">-${offer.percent}%</span>
+      `;
+      offerFlag = `<div class="offer-flag">🔥 Oferta ${offer.percent}%</div>`;
+    }
+
+    let actionsHtml = '';
+    if (isAdmin) {
+      actionsHtml = `
+        <div class="detail-actions">
+          <button class="lego-button small secondary" onclick="editProduct('${p.id}'); closeDetailModal();">✏️ Editar</button>
+          <button class="lego-button small warning" onclick="sellProduct('${p.id}');">💰 Vender</button>
+          <button class="lego-button small success" onclick="returnProduct('${p.id}');">↩️ Devolver</button>
+          <button class="lego-button small" onclick="deleteProduct('${p.id}');">🗑️ Eliminar</button>
+          <button class="lego-button small whatsapp" onclick="clientWhatsApp('${p.id}');">📱 WhatsApp</button>
+          <button class="lego-button small secondary" onclick="closeDetailModal();">Cerrar</button>
+        </div>
+      `;
+    } else {
+      actionsHtml = `
+        <div class="detail-actions">
+          <button class="lego-button whatsapp small" onclick="clientWhatsApp('${p.id}');">📱 Consultar por WhatsApp</button>
+          <button class="lego-button small secondary" onclick="closeDetailModal();">Cerrar</button>
+        </div>
+      `;
+    }
+
+    detailContent.innerHTML = `
+      <div class="detail-container">
+        <div class="detail-image">
+          ${imgHtml}
+          ${offerFlag}
+        </div>
+        <div class="detail-info">
+          <div class="field"><span class="label">Nombre</span><span class="value">${escHtml(p.name)}</span></div>
+          ${isAdmin ? `<div class="field"><span class="label">Código</span><span class="value">${escHtml(p.code || '—')}</span></div>` : ''}
+          ${isAdmin ? `<div class="field"><span class="label">Código de barras</span><span class="value">${escHtml(p.barcode || '—')}</span></div>` : ''}
+          ${isAdmin ? `<div class="field"><span class="label">Costo</span><span class="value">$${p.cost ? p.cost.toFixed(2) : '0.00'}</span></div>` : ''}
+          <div class="field"><span class="label">Precio</span><span class="value">${priceHtml}</span></div>
+          <div class="field"><span class="label">Stock</span><span class="value">${p.stock} unidades <span class="stock-badge ${stockClass}">${stockLabel}</span>${isAdmin ? ` (mín: ${minStock})` : ''}</span></div>
+          <div class="field"><span class="label">Descripción</span><span class="value desc">${escHtml(p.description || 'Sin descripción')}</span></div>
+          ${actionsHtml}
+        </div>
+      </div>
+    `;
+    detailModal.classList.add('active');
+  };
+
+  function closeDetailModal() {
+    detailModal.classList.remove('active');
+  }
+  closeDetail.addEventListener('click', closeDetailModal);
+  detailModal.addEventListener('click', function(e) {
+    if (e.target === this) closeDetailModal();
+  });
+
+  // =====================================================
+  // 11. WHATSAPP PARA CLIENTES
+  // =====================================================
+  window.clientWhatsApp = function(productId) {
+    const p = products.find(pr => pr.id === productId);
+    if (!p) return;
+    const phone = business.whatsapp || '';
+    if (!phone) {
+      alert('⚠️ El administrador no ha configurado un número de WhatsApp para contactos.');
+      return;
+    }
+    const offer = getOfferDisplay(p);
+    const priceDisplay = offer ? `$${formatPrice(offer.offer)} (antes $${formatPrice(offer.original)}, -${offer.percent}%)` : `$${formatPrice(p.price)}`;
+    const msg = `🧱 *LEGO Shop* - Consulta sobre producto\n\n` +
+                `📦 *Producto:* ${p.name}\n` +
+                `💰 *Precio:* ${priceDisplay}\n` +
+                `📊 *Stock disponible:* ${p.stock} unidades\n\n` +
+                `👋 ¡Hola! Me interesa este producto. ¿Podrías darme más información?`;
+    const url = `https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  };
+
+  // =====================================================
+  // 12. ADMIN LOGIN / LOGOUT
+  // =====================================================
+  function checkAdminSession() {
+    const session = sessionStorage.getItem('lego_admin_session');
+    if (session === 'true') {
+      isAdmin = true;
+      document.body.classList.add('admin-mode');
+      adminStatusBadge.style.display = 'inline-block';
+      adminToggleBtn.textContent = '🚪 Salir';
+      document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'flex');
+      document.querySelectorAll('.client-only').forEach(el => el.style.display = 'none');
+      renderProducts(searchInput.value);
+    } else {
+      isAdmin = false;
+      document.body.classList.remove('admin-mode');
+      adminStatusBadge.style.display = 'none';
+      adminToggleBtn.textContent = '🔐 Admin';
+      document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.client-only').forEach(el => el.style.display = 'flex');
+      renderProducts(searchInput.value);
+    }
+  }
+
+  adminToggleBtn.addEventListener('click', function() {
+    if (isAdmin) {
+      if (confirm('¿Cerrar sesión de administrador?')) {
+        sessionStorage.removeItem('lego_admin_session');
+        isAdmin = false;
+        checkAdminSession();
+      }
+    } else {
+      loginUser.value = admin.user;
+      loginPass.value = '';
+      loginModal.classList.add('active');
+    }
+  });
+
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const user = loginUser.value.trim();
+    const pass = loginPass.value.trim();
+    if (user === admin.user && pass === admin.pass) {
+      sessionStorage.setItem('lego_admin_session', 'true');
+      loginModal.classList.remove('active');
+      isAdmin = true;
+      checkAdminSession();
+    } else {
+      alert('❌ Usuario o contraseña incorrectos.');
+    }
+  });
+
+  function closeLoginFn() {
+    loginModal.classList.remove('active');
+  }
+  closeLogin.addEventListener('click', closeLoginFn);
+  cancelLogin.addEventListener('click', closeLoginFn);
+  loginModal.addEventListener('click', function(e) {
+    if (e.target === this) closeLoginFn();
+  });
+
+  // =====================================================
+  // 13. PANEL DE CONTROL
+  // =====================================================
+  function loadBusinessToUI() {
+    const b = getBusiness();
+    shopTitleInput.value = b.shopTitle || 'LEGO Shop';
+    bizName.value = b.name || '';
+    bizPhone.value = b.phone || '';
+    bizAddress.value = b.address || '';
+    whatsappNumber.value = b.whatsapp || '';
+    adminUserInput.value = admin.user;
+    adminPassInput.value = admin.pass;
+    document.getElementById('shopTitle').textContent = b.shopTitle || 'LEGO Shop';
+    document.getElementById('businessName').textContent = b.name || 'Autos de Colección & Juguetes LEGO';
+    document.getElementById('businessPhone').textContent = b.phone || '+54 9 11 1234-5678';
+    document.getElementById('businessAddress').textContent = b.address || 'Av. Brick 123, Ciudad LEGO';
+    document.title = (b.shopTitle || 'LEGO Shop') + ' Manager';
+  }
+
+  openControlBtn.addEventListener('click', function() {
+    if (!isAdmin) return;
+    loadBusinessToUI();
+    controlModal.classList.add('active');
+  });
+
+  function closeControlFn() {
+    controlModal.classList.remove('active');
+  }
+  closeControl.addEventListener('click', closeControlFn);
+  closeControlBtn.addEventListener('click', closeControlFn);
+  controlModal.addEventListener('click', function(e) {
+    if (e.target === this) closeControlFn();
+  });
+
+  controlForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (!isAdmin) return;
+    const data = {
+      shopTitle: shopTitleInput.value.trim() || 'LEGO Shop',
+      name: bizName.value.trim(),
+      phone: bizPhone.value.trim(),
+      address: bizAddress.value.trim(),
+      whatsapp: whatsappNumber.value.trim()
+    };
+    saveBusiness(data);
+    business = data;
+
+    const newUser = adminUserInput.value.trim();
+    const newPass = adminPassInput.value.trim();
+    if (newUser && newPass) {
+      admin.user = newUser;
+      admin.pass = newPass;
+      saveAdmin(admin);
+    }
+
+    loadBusinessToUI();
+    closeControlFn();
+    alert('✅ Configuración guardada correctamente.');
+  });
+
+  // ===== BACKUP =====
+  document.getElementById('exportDbBtn').addEventListener('click', function() {
+    if (!isAdmin) return;
+    const data = {
+      products: products,
+      sales: sales,
+      business: business,
+      admin: admin
+    };
+    const json = JSON.stringify(data, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const now = new Date();
+    const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+    a.download = `lego_backup_${dateStr}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    alert('✅ Backup guardado correctamente.');
+  });
+
+  document.getElementById('importDbBtn').addEventListener('click', function() {
+    if (!isAdmin) return;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        try {
+          const data = JSON.parse(ev.target.result);
+          if (!data.products || !data.sales || !data.business || !data.admin) {
+            alert('❌ Archivo inválido: debe contener products, sales, business y admin.');
+            return;
+          }
+          if (!confirm('⚠️ Esto reemplazará TODOS los datos actuales. ¿Continuar?')) return;
+          products = data.products;
+          sales = data.sales;
+          business = data.business;
+          admin = data.admin;
+          saveProducts(products);
+          saveSales(sales);
+          saveBusiness(business);
+          saveAdmin(admin);
+          loadBusinessToUI();
+          renderProducts(searchInput.value);
+          if (historyModal.classList.contains('active')) {
+            renderInventory();
+            renderSales();
+          }
+          alert('✅ Base de datos restaurada correctamente.');
+        } catch (err) {
+          alert('❌ Error al leer el archivo: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  });
+
+  // =====================================================
+  // 14. HISTORIAL (Admin)
+  // =====================================================
+  function renderInventory() {
+    if (!isAdmin) return;
+    const filter = invSearch.value.trim().toLowerCase();
+    let list = products.slice();
+    if (filter) {
+      list = list.filter(p =>
+        p.name.toLowerCase().includes(filter) ||
+        (p.code && p.code.toLowerCase().includes(filter)) ||
+        (p.barcode && p.barcode.toLowerCase().includes(filter))
+      );
+    }
+    if (list.length === 0) {
+      inventoryList.innerHTML = `<p style="color:var(--text-secondary);">No hay productos.</p>`;
+      return;
+    }
+    inventoryList.innerHTML = list.map(p => {
+      const offer = getOfferDisplay(p);
+      const priceDisplay = offer ? `$${formatPrice(offer.offer)} (${offer.percent}% dto)` : `$${formatPrice(p.price)}`;
+      return `
+      <div style="display:flex; align-items:center; gap:12px; padding:8px 12px; border-bottom:1px solid var(--border-color); flex-wrap:wrap;">
+        <span style="flex:1; font-weight:600;">${escHtml(p.name)}</span>
+        <span style="font-size:0.85rem; color:var(--text-secondary);">Cód: ${escHtml(p.code || '—')}</span>
+        <span style="font-size:0.85rem; color:var(--text-secondary);">Stock: ${p.stock}</span>
+        <span style="font-weight:700; color:var(--lego-red);">${priceDisplay}</span>
+        <div style="display:flex; gap:4px;">
+          <button class="lego-button small secondary" onclick="editProduct('${p.id}'); historyModal.classList.remove('active');">✏️</button>
+          <button class="lego-button small" onclick="deleteProduct('${p.id}'); renderInventory();">🗑️</button>
+        </div>
+      </div>
+    `}).join('');
+  }
+
+  function renderSales() {
+    if (!isAdmin) return;
+    let filtered = sales.slice();
+    const filterType = salesFilter;
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const yearStart = new Date(now.getFullYear(), 0, 1);
+
+    if (filterType === 'today') {
+      filtered = filtered.filter(s => new Date(s.date) >= today);
+    } else if (filterType === 'month') {
+      filtered = filtered.filter(s => new Date(s.date) >= monthStart);
+    } else if (filterType === 'year') {
+      filtered = filtered.filter(s => new Date(s.date) >= yearStart);
+    } else if (filterType === 'date' && salesDateFilter.value) {
+      const d = new Date(salesDateFilter.value);
+      const dStart = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      const dEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
+      filtered = filtered.filter(s => {
+        const sd = new Date(s.date);
+        return sd >= dStart && sd < dEnd;
+      });
+    }
+
+    const totalHoy = sales.filter(s => new Date(s.date) >= today).reduce((sum, s) => sum + s.total, 0);
+    const totalMes = sales.filter(s => new Date(s.date) >= monthStart).reduce((sum, s) => sum + s.total, 0);
+    const totalAnio = sales.filter(s => new Date(s.date) >= yearStart).reduce((sum, s) => sum + s.total, 0);
+    totalToday.textContent = totalHoy.toFixed(2);
+    totalMonth.textContent = totalMes.toFixed(2);
+    totalYear.textContent = totalAnio.toFixed(2);
+
+    if (filtered.length === 0) {
+      salesList.innerHTML = `<p style="color:var(--text-secondary);">No hay ventas en este período.</p>`;
+      return;
+    }
+    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    let html = `<table class="sales-table">
+      <thead><tr><th>Fecha</th><th>Producto</th><th>Cant.</th><th>Precio unit.</th><th>Total</th><th>Acción</th></tr></thead><tbody>`;
+    filtered.forEach(s => {
+      const dateStr = new Date(s.date).toLocaleDateString() + ' ' + new Date(s.date).toLocaleTimeString();
+      html += `<tr>
+        <td>${dateStr}</td>
+        <td>${escHtml(s.productName)}</td>
+        <td>${s.quantity}</td>
+        <td>$${s.price.toFixed(2)}</td>
+        <td>$${s.total.toFixed(2)}</td>
+        <td><button class="lego-button small btn-void" onclick="voidSale('${s.id}');">↩️ Anular</button></td>
+      </tr>`;
+    });
+    const totalFiltered = filtered.reduce((sum, s) => sum + s.total, 0);
+    html += `<tr class="total-row"><td colspan="4" style="text-align:right;">Total filtrado:</td><td>$${totalFiltered.toFixed(2)}</td><td></td></tr>`;
+    html += `</tbody></table>`;
+    salesList.innerHTML = html;
+  }
+
+  openHistoryBtn.addEventListener('click', function() {
+    if (!isAdmin) return;
+    historyModal.classList.add('active');
+    renderInventory();
+    renderSales();
+  });
+
+  function closeHistoryFn() {
+    historyModal.classList.remove('active');
+  }
+  closeHistory.addEventListener('click', closeHistoryFn);
+  closeHistoryBtn.addEventListener('click', closeHistoryFn);
+  historyModal.addEventListener('click', function(e) {
+    if (e.target === this) closeHistoryFn();
+  });
+
+  tabs.forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (!isAdmin) return;
+      tabs.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const tab = this.dataset.tab;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      if (tab === 'inventario') {
+        tabInventario.classList.add('active');
+        renderInventory();
+      } else {
+        tabVentas.classList.add('active');
+        renderSales();
+      }
+    });
+  });
+
+  invSearch.addEventListener('input', renderInventory);
+
+  salesDateFilter.addEventListener('change', function() {
+    if (!isAdmin) return;
+    if (this.value) {
+      salesFilter = 'date';
+      renderSales();
+    }
+  });
+
+  filterToday.addEventListener('click', function() {
+    if (!isAdmin) return;
+    salesFilter = 'today';
+    salesDateFilter.value = '';
+    renderSales();
+  });
+  filterMonth.addEventListener('click', function() {
+    if (!isAdmin) return;
+    salesFilter = 'month';
+    salesDateFilter.value = '';
+    renderSales();
+  });
+  filterYear.addEventListener('click', function() {
+    if (!isAdmin) return;
+    salesFilter = 'year';
+    salesDateFilter.value = '';
+    renderSales();
+  });
+  clearSalesFilter.addEventListener('click', function() {
+    if (!isAdmin) return;
+    salesFilter = 'all';
+    salesDateFilter.value = '';
+    renderSales();
+  });
+
+  // =====================================================
+  // 15. TEMAS
+  // =====================================================
+  const themes = ['default', 'dark', 'lego'];
+  let themeIndex = themes.indexOf(currentTheme);
+  if (themeIndex === -1) themeIndex = 0;
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme === 'default' ? '' : theme);
+    localStorage.setItem('legoTheme', theme);
+    currentTheme = theme;
+  }
+
+  themeToggle.addEventListener('click', function() {
+    if (!isAdmin) return;
+    themeIndex = (themeIndex + 1) % themes.length;
+    applyTheme(themes[themeIndex]);
+  });
+
+  const savedTheme = localStorage.getItem('legoTheme') || 'default';
+  applyTheme(savedTheme);
+  themeIndex = themes.indexOf(savedTheme);
+  if (themeIndex === -1) themeIndex = 0;
+
+  // =====================================================
+  // 16. INICIALIZACIÓN
+  // =====================================================
+  loadBusinessToUI();
+  checkAdminSession();
+
+  console.log('🧱 LEGO Shop Manager cargado correctamente.');
+  console.log(`📦 ${products.length} productos en base de datos.`);
+  console.log(`💰 ${sales.length} ventas registradas.`);
+  console.log(`🔐 Modo ${isAdmin ? 'Administrador' : 'Cliente'}`);
+</script>
+</body>
+</html>
