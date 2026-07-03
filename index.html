@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageTitle">LEGO Shop - Catálogo</title>
+  <title id="pageTitle">FANS TOYS - Catálogo</title>
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -299,12 +299,12 @@
 <div class="container">
   <header class="header" id="mainHeader">
     <div class="brand">
-      <h1 id="shopTitle">LEGO Shop</h1>
+      <h1 id="shopTitle">FANS TOYS</h1>
       <small id="businessName">Autos de Colección &amp; Juguetes LEGO</small>
     </div>
     <div class="contact-info" id="businessContact">
-      <div>📞 <span id="businessPhone">+54 9 11 1234-5678</span></div>
-      <div>📍 <span id="businessAddress">Av. Brick 123, Ciudad LEGO</span></div>
+      <div>📞 <span id="businessPhone">3512 15-5006</span></div>
+      <div>📍 <span id="businessAddress">Av. COLON 375, CORDOBA</span></div>
     </div>
     <div class="admin-area">
       <span class="admin-status admin-only" id="adminStatusBadge">👑 Admin</span>
@@ -334,7 +334,7 @@
   <div id="productGrid" class="product-grid"></div>
 
   <footer class="footer">
-    <p>🧱 LEGO Shop Manager — Todos los derechos reservados © 2026</p>
+    <p>🧱 FANS TOYS Manager — Todos los derechos reservados © 2026</p>
   </footer>
 </div>
 
@@ -438,7 +438,7 @@
     <form id="controlForm">
       <div class="form-group">
         <label>Título de la página</label>
-        <input type="text" id="shopTitleInput" class="lego-input" placeholder="LEGO Shop">
+        <input type="text" id="shopTitleInput" class="lego-input" placeholder="FANS TOYS">
       </div>
       <div class="form-group">
         <label>Nombre del negocio</label>
@@ -542,7 +542,7 @@
   // =====================================================
   let products = [];
   let sales = [];
-  let business = { shopTitle: 'LEGO Shop', name: 'Autos de Colección & Juguetes LEGO', phone: '+54 9 11 1234-5678', address: 'Av. Brick 123, Ciudad LEGO', whatsapp: '5491112345678', logo: '' };
+  let business = { shopTitle: 'FANS TOYS', name: 'Autos de Colección & Juguetes LEGO', phone: '+54 9 11 1234-5678', address: 'Av. Brick 123, Ciudad LEGO', whatsapp: '5491112345678', logo: '' };
   let admin = { user: 'admin', pass: 'admin123' };
   let isAdmin = false;
   let editingId = null;
@@ -991,7 +991,7 @@
     if (!phone) { alert('⚠️ El administrador no ha configurado un número de WhatsApp para contactos.'); return; }
     const offer = getOfferDisplay(p);
     const priceDisplay = offer ? `$${formatPrice(offer.offer)} (antes $${formatPrice(offer.original)}, -${offer.percent}%)` : `$${formatPrice(p.price)}`;
-    const msg = `🧱 *LEGO Shop* - Consulta sobre producto\n\n📦 *Producto:* ${p.name}\n💰 *Precio:* ${priceDisplay}\n📊 *Stock disponible:* ${p.stock} unidades\n\n👋 ¡Hola! Me interesa este producto. ¿Podrías darme más información?`;
+    const msg = `🧱 *FANS TOYS* - Consulta sobre producto\n\n📦 *Producto:* ${p.name}\n💰 *Precio:* ${priceDisplay}\n📊 *Stock disponible:* ${p.stock} unidades\n\n👋 ¡Hola! Me interesa este producto. ¿Podrías darme más información?`;
     window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
@@ -1165,13 +1165,13 @@
 
   // ---- loadBusinessToUI modificada ----
   function loadBusinessToUI() {
-    document.getElementById('shopTitle').textContent = business.shopTitle || 'LEGO Shop';
+    document.getElementById('shopTitle').textContent = business.shopTitle || 'FANS TOYS';
     document.getElementById('businessName').textContent = business.name || 'Autos de Colección & Juguetes LEGO';
     document.getElementById('businessPhone').textContent = business.phone || '+54 9 11 1234-5678';
     document.getElementById('businessAddress').textContent = business.address || 'Av. Brick 123, Ciudad LEGO';
-    document.title = (business.shopTitle || 'LEGO Shop') + ' Manager';
+    document.title = (business.shopTitle || 'FANS TOYS') + ' Manager';
 
-    shopTitleInput.value = business.shopTitle || 'LEGO Shop';
+    shopTitleInput.value = business.shopTitle || 'FANS TOYS';
     bizName.value = business.name || '';
     bizPhone.value = business.phone || '';
     bizAddress.value = business.address || '';
@@ -1217,7 +1217,7 @@
     if (!isAdmin) return;
     const logoUrlInput = document.getElementById('logoUrlInput');
     const data = {
-      shopTitle: shopTitleInput.value.trim() || 'LEGO Shop',
+      shopTitle: shopTitleInput.value.trim() || 'FANS TOYS',
       name: bizName.value.trim(),
       phone: bizPhone.value.trim(),
       address: bizAddress.value.trim(),
@@ -1434,7 +1434,7 @@
   loadAllData().then(() => {
     checkAdminSession();
     startListeners();
-    console.log('🧱 LEGO Shop Manager con Firebase y fallback local cargado.');
+    console.log('🧱 FANS TOYS Manager con Firebase y fallback local cargado.');
     console.log(`📦 ${products.length} productos, 💰 ${sales.length} ventas.`);
     console.log('🔑 Credenciales por defecto: admin / admin123');
   }).catch(err => console.error('Error inicial:', err));
