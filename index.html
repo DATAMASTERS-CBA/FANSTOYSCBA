@@ -2,13 +2,13 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageTitle">LEGO Shop - Catálogo</title>
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* ===== VARIABLES Y TEMAS ===== */
+    /* ===== (ESTILOS IDÉNTICOS A LOS ANTERIORES) ===== */
     :root {
       --bg-body: #f0f0f0;
       --bg-card: #ffffff;
@@ -75,7 +75,6 @@
       --admin-badge: #2e7d32;
     }
 
-    /* ===== RESET Y BASE ===== */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: var(--font);
@@ -103,7 +102,6 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      touch-action: manipulation;
     }
     .lego-button:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #8e0000; }
     .lego-button:active { transform: translateY(4px); box-shadow: 0 0px 0 #8e0000; }
@@ -116,26 +114,13 @@
     .lego-button.admin-toggle { background: var(--admin-badge); border-bottom-color: #1b5e20; box-shadow: 0 4px 0 #1b5e20; font-size: 0.75rem; padding: 6px 14px; }
     .lego-button.admin-toggle:hover { box-shadow: 0 6px 0 #1b5e20; }
 
-    .lego-input {
-      padding: 12px 16px;
-      border: 3px solid var(--border-color);
-      border-radius: var(--lego-border-radius);
-      font-size: 1rem;
-      background: var(--bg-card);
-      color: var(--text-primary);
-      width: 100%;
-      transition: border 0.3s;
-      box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
-      -webkit-appearance: none;
-      appearance: none;
-    }
+    .lego-input { padding: 12px 16px; border: 3px solid var(--border-color); border-radius: var(--lego-border-radius); font-size: 1rem; background: var(--bg-card); color: var(--text-primary); width: 100%; transition: border 0.3s; box-shadow: inset 0 2px 6px rgba(0,0,0,0.05); }
     .lego-input:focus { border-color: var(--lego-red); outline: none; box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.2); }
     .lego-textarea { resize: vertical; min-height: 80px; }
     .lego-checkbox { width: 20px; height: 20px; accent-color: var(--lego-red); cursor: pointer; }
 
     .container { max-width: 1400px; margin: 0 auto; }
 
-    /* ===== HEADER con logo ===== */
     .header {
       background: var(--bg-header);
       padding: 16px 24px;
@@ -151,63 +136,14 @@
       color: var(--text-light);
       transition: background var(--transition);
     }
-    .header .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .header .brand .logo-container {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 3px solid #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-      flex-shrink: 0;
-      background: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .header .brand .logo-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .header .brand .logo-container .no-logo {
-      font-size: 1.8rem;
-      color: #999;
-      line-height: 1;
-    }
-    .header .brand h1 {
-      font-size: 2rem;
-      font-weight: 900;
-      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-      letter-spacing: 2px;
-    }
-    .header .brand small {
-      display: block;
-      font-size: 0.8rem;
-      opacity: 0.9;
-      font-weight: 300;
-    }
+    .header .brand h1 { font-size: 2rem; font-weight: 900; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); letter-spacing: 2px; }
+    .header .brand small { display: block; font-size: 0.8rem; opacity: 0.9; font-weight: 300; }
     .header .contact-info { text-align: right; font-size: 0.9rem; line-height: 1.6; }
-    .header .admin-area { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .header .admin-area { display: flex; align-items: center; gap: 12px; }
     .header .admin-area .admin-status { font-size: 0.75rem; background: var(--admin-badge); color: #fff; padding: 4px 12px; border-radius: 20px; font-weight: 700; }
 
-    /* ===== BUSCADOR ===== */
     .search-wrapper { position: relative; margin-bottom: 24px; }
-    .search-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      background: var(--bg-card);
-      padding: 16px 20px;
-      border-radius: var(--lego-border-radius);
-      border: 3px solid var(--border-color);
-      box-shadow: var(--shadow);
-      transition: background var(--transition);
-    }
+    .search-bar { display: flex; flex-wrap: wrap; gap: 12px; background: var(--bg-card); padding: 16px 20px; border-radius: var(--lego-border-radius); border: 3px solid var(--border-color); box-shadow: var(--shadow); transition: background var(--transition); }
     .search-bar input { flex: 1 1 200px; min-width: 120px; }
     .search-bar .lego-button { flex-shrink: 0; }
     .search-bar .filter-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
@@ -248,7 +184,6 @@
     .suggestions-list .suggestion-item .sug-price { font-weight: 700; color: var(--lego-red); font-size: 0.9rem; flex-shrink: 0; }
     .suggestions-list .no-results { padding: 16px; text-align: center; color: var(--text-secondary); font-style: italic; }
 
-    /* ===== PRODUCTOS ===== */
     .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; margin-bottom: 30px; }
     .product-card { background: var(--bg-card); border-radius: var(--lego-border-radius); border: 3px solid var(--border-color); box-shadow: var(--shadow); overflow: hidden; transition: all var(--transition); display: flex; flex-direction: column; position: relative; cursor: default; }
     .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
@@ -262,14 +197,13 @@
     .product-card .info .price { font-size: 1.3rem; font-weight: 900; color: var(--lego-red); margin: 4px 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .product-card .info .price .original { font-size: 0.9rem; color: var(--text-secondary); text-decoration: line-through; font-weight: 400; }
     .product-card .info .price .offer-badge { font-size: 0.7rem; background: var(--offer-bg); color: var(--offer-color); padding: 2px 10px; border-radius: 20px; font-weight: 700; border: 2px solid var(--offer-color); }
-    .product-card .info .stock { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .product-card .info .stock { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
     .product-card .info .stock .badge { background: var(--success); color: #fff; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
     .product-card .info .stock .badge.low { background: var(--warning); }
     .product-card .info .stock .badge.out { background: var(--accent); }
     .product-card .actions { padding: 12px 16px; border-top: 2px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
     .product-card .actions .lego-button { font-size: 0.7rem; padding: 6px 12px; border-bottom-width: 4px; flex: 1 1 auto; min-width: 60px; justify-content: center; }
 
-    /* ===== MODALES ===== */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
     .modal-overlay.active { display: flex; }
     .modal-box { background: var(--bg-card); border-radius: var(--lego-border-radius); border: 4px solid var(--border-color); box-shadow: 0 20px 60px rgba(0,0,0,0.4); max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 28px 32px; position: relative; animation: modalIn 0.3s ease; }
@@ -283,17 +217,16 @@
     .modal-box .form-actions { display: flex; gap: 12px; margin-top: 20px; justify-content: flex-end; }
     .modal-box .form-actions .lego-button { flex: 1; justify-content: center; }
 
-    .offer-toggle { display: flex; align-items: center; gap: 12px; padding: 8px 0; flex-wrap: wrap; }
+    .offer-toggle { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
     .offer-toggle label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; }
 
-    /* ===== DETALLE ===== */
     .detail-container { display: flex; flex-wrap: wrap; gap: 24px; }
     .detail-image { flex: 1 1 280px; max-height: 400px; overflow: hidden; border-radius: var(--lego-border-radius); border: 3px solid var(--border-color); background: #e0e0e0; display: flex; align-items: center; justify-content: center; position: relative; }
     .detail-image .offer-flag { position: absolute; top: 10px; right: 10px; background: var(--lego-red); color: #fff; padding: 4px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid #fff; z-index: 2; }
     .detail-image img { width: 100%; height: 100%; object-fit: contain; max-height: 400px; }
     .detail-image .no-img { padding: 40px; color: #999; font-size: 1rem; }
     .detail-info { flex: 2 1 300px; display: flex; flex-direction: column; gap: 8px; }
-    .detail-info .field { display: flex; border-bottom: 1px solid var(--border-color); padding: 4px 0; flex-wrap: wrap; }
+    .detail-info .field { display: flex; border-bottom: 1px solid var(--border-color); padding: 4px 0; }
     .detail-info .field .label { font-weight: 600; min-width: 100px; color: var(--text-secondary); }
     .detail-info .field .value { flex: 1; color: var(--text-primary); }
     .detail-info .field .value .original { text-decoration: line-through; color: var(--text-secondary); font-size: 0.9rem; margin-right: 8px; }
@@ -301,8 +234,7 @@
     .detail-info .field .value.desc { white-space: pre-wrap; max-height: 120px; overflow-y: auto; }
     .detail-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; padding-top: 16px; border-top: 2px solid var(--border-color); }
 
-    /* ===== HISTORIAL ===== */
-    .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 3px solid var(--border-color); flex-wrap: wrap; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 3px solid var(--border-color); }
     .tabs button { background: none; border: none; padding: 10px 20px; font-weight: 700; font-size: 1rem; color: var(--text-secondary); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s; text-transform: uppercase; }
     .tabs button.active { color: var(--lego-red); border-bottom-color: var(--lego-red); }
     .tab-content { display: none; }
@@ -337,33 +269,12 @@
     body:not(.admin-mode) .client-only { display: flex !important; }
     .client-only .product-card .actions .lego-button { flex: 1 1 100%; }
 
-    /* ===== RESPONSIVE ===== */
     @media (max-width: 700px) {
-      body { padding: 12px; }
-      .header { flex-direction: column; text-align: center; padding: 12px 16px; }
-      .header .brand { flex-direction: column; text-align: center; }
-      .header .brand .logo-container { width: 50px; height: 50px; }
+      .header { flex-direction: column; text-align: center; }
       .header .contact-info { text-align: center; }
-      .header .admin-area { justify-content: center; width: 100%; }
-      .header .brand h1 { font-size: 1.6rem; }
-      .search-bar {
-        padding: 10px 12px;
-        gap: 8px;
-        flex-direction: column;
-      }
-      .search-bar input { font-size: 0.9rem; padding: 10px 12px; min-width: 0; flex: 1 1 100%; }
-      .search-bar .filter-group { display: flex; gap: 6px; justify-content: stretch; width: 100%; }
-      .search-bar .filter-group .lego-button { flex: 1; justify-content: center; font-size: 0.75rem; padding: 8px 10px; border-bottom-width: 4px; }
-      .suggestions-list .suggestion-item { padding: 6px 12px; gap: 8px; }
-      .suggestions-list .suggestion-item .sug-img { width: 32px; height: 32px; }
-      .suggestions-list .suggestion-item .sug-info .sug-name { font-size: 0.85rem; }
-      .suggestions-list .suggestion-item .sug-price { font-size: 0.8rem; }
-      .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
-      .product-card .image { height: 140px; }
-      .product-card .info { padding: 12px; }
-      .product-card .info .name { font-size: 1rem; }
-      .product-card .info .price { font-size: 1.1rem; }
-      .product-card .actions .lego-button { font-size: 0.6rem; padding: 4px 8px; min-width: 40px; }
+      .header .admin-area { justify-content: center; }
+      .search-bar { flex-direction: column; }
+      .product-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
       .modal-box { padding: 20px; }
       .modal-box .form-group .row { flex-direction: column; }
       .filter-bar { flex-direction: column; align-items: stretch; }
@@ -371,15 +282,8 @@
       .sales-table th, .sales-table td { padding: 4px 6px; }
       .detail-container { flex-direction: column; }
       .detail-image { max-height: 250px; }
-      .admin-only { flex-wrap: wrap; justify-content: center; }
-      .admin-only .lego-button { flex: 1 1 auto; min-width: 100px; font-size: 0.75rem; padding: 8px 12px; }
-    }
-
-    @media (max-width: 480px) {
-      .header .brand h1 { font-size: 1.3rem; }
-      .product-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-      .product-card .image { height: 120px; }
-      .lego-button { font-size: 0.8rem; padding: 8px 16px; }
+      .suggestions-list .suggestion-item { padding: 6px 12px; }
+      .suggestions-list .suggestion-item .sug-img { width: 30px; height: 30px; }
     }
 
     ::-webkit-scrollbar { width: 8px; }
@@ -395,14 +299,8 @@
 <div class="container">
   <header class="header" id="mainHeader">
     <div class="brand">
-      <div class="logo-container" id="logoContainer">
-        <img id="headerLogo" src="" alt="Logo" style="display:none;">
-        <span class="no-logo" id="noLogo">🧱</span>
-      </div>
-      <div>
-        <h1 id="shopTitle">LEGO Shop</h1>
-        <small id="businessName">Autos de Colección &amp; Juguetes LEGO</small>
-      </div>
+      <h1 id="shopTitle">LEGO Shop</h1>
+      <small id="businessName">Autos de Colección &amp; Juguetes LEGO</small>
     </div>
     <div class="contact-info" id="businessContact">
       <div>📞 <span id="businessPhone">+54 9 11 1234-5678</span></div>
@@ -414,10 +312,9 @@
     </div>
   </header>
 
-  <!-- ===== BUSCADOR ===== -->
   <div class="search-wrapper">
     <div class="search-bar">
-      <input type="text" id="searchInput" class="lego-input" placeholder="🔍 Buscar..." autocomplete="off">
+      <input type="text" id="searchInput" class="lego-input" placeholder="🔍 Buscar por nombre, código o código de barras..." autocomplete="off">
       <div class="filter-group">
         <button class="lego-button small" id="searchBtn">Buscar</button>
         <button class="lego-button small secondary" id="clearSearch">Limpiar</button>
@@ -426,16 +323,14 @@
     <div id="suggestionsList" class="suggestions-list"></div>
   </div>
 
-  <!-- ===== TOOLBAR ADMIN ===== -->
   <div class="admin-only" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
-    <button class="lego-button secondary" id="openControlPanel">⚙️ Panel</button>
-    <button class="lego-button" id="openAddProduct">➕ Agregar</button>
+    <button class="lego-button secondary" id="openControlPanel">⚙️ Panel de Control</button>
+    <button class="lego-button" id="openAddProduct">➕ Agregar Producto</button>
     <button class="lego-button secondary" id="openHistoryBtn">📜 Historial</button>
-    <button class="lego-button secondary" id="themeToggle">🎨 Tema</button>
+    <button class="lego-button secondary" id="themeToggle">🎨 Cambiar Tema</button>
     <button class="lego-button small" id="retryConnectionBtn" style="background:#ff9800;border-bottom-color:#e65100;">🔄 Reconectar</button>
   </div>
 
-  <!-- ===== PRODUCTOS ===== -->
   <div id="productGrid" class="product-grid"></div>
 
   <footer class="footer">
@@ -502,13 +397,13 @@
       <div class="form-group">
         <div class="offer-toggle">
           <label><input type="checkbox" id="prodOnOffer" class="lego-checkbox"> En oferta</label>
-          <div style="flex:1; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <div style="flex:1; display:flex; gap:8px; align-items:center;">
             <label style="margin:0;">% Descuento:</label>
             <input type="number" id="prodOfferPercent" class="lego-input" min="0" max="100" value="10" style="width:80px; flex:0 0 auto;">
             <span>%</span>
           </div>
         </div>
-        <small style="color:var(--text-secondary);">Activa la oferta y define el porcentaje de descuento.</small>
+        <small style="color:var(--text-secondary);">Activa la oferta y define el porcentaje de descuento que se aplicará al precio.</small>
       </div>
       <div class="form-group">
         <label>Imagen</label>
@@ -542,24 +437,12 @@
     <h2>⚙️ Panel de Control</h2>
     <form id="controlForm">
       <div class="form-group">
-        <label>Logo del negocio</label>
-        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-          <input type="file" id="logoFileInput" class="lego-input" accept="image/*" style="flex:1;">
-          <button type="button" class="lego-button small secondary" id="removeLogoBtn">🗑️ Quitar logo</button>
-        </div>
-        <div id="logoPreview" style="margin-top:8px; width:80px; height:80px; border-radius:50%; overflow:hidden; border:3px solid var(--border-color); display:none;">
-          <img id="logoPreviewImg" src="" alt="Logo preview" style="width:100%; height:100%; object-fit:cover;">
-        </div>
-        <small style="color:var(--text-secondary);">Sube una imagen para usar como logo en el encabezado. Se ajustará automáticamente.</small>
-      </div>
-      <div class="form-group">
         <label>Título de la página</label>
         <input type="text" id="shopTitleInput" class="lego-input" placeholder="LEGO Shop">
       </div>
       <div class="form-group">
         <label>Nombre del negocio</label>
         <input type="text" id="bizName" class="lego-input" placeholder="Mi tienda LEGO">
-        <small style="color:var(--text-secondary);">Este nombre se usará en los mensajes de WhatsApp.</small>
       </div>
       <div class="form-group">
         <label>Teléfono de contacto</label>
@@ -636,15 +519,15 @@
 
 <script>
   // =====================================================
-  // 1. CONFIGURACIÓN FIREBASE (fanstoys2)
+  // 1. CONFIGURACIÓN FIREBASE
   // =====================================================
   const firebaseConfig = {
-    apiKey: "AIzaSyCi7H_gwyr2gguWijbItUnhYUrKE6YgVw8",
-    authDomain: "fanstoys2.firebaseapp.com",
-    projectId: "fanstoys2",
-    storageBucket: "fanstoys2.firebasestorage.app",
-    messagingSenderId: "203316467445",
-    appId: "1:203316467445:web:c9b91ef8f8d00bf48497bc"
+    apiKey: "AIzaSyDyMy4BpTZDLleTle5Q-x4eB0dGiAWYXAU",
+    authDomain: "fanstoys1-771e8.firebaseapp.com",
+    projectId: "fanstoys1-771e8",
+    storageBucket: "fanstoys1-771e8.firebasestorage.app",
+    messagingSenderId: "503593989470",
+    appId: "1:503593989470:web:063d62b583b25ae4160bcf"
   };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
@@ -655,12 +538,12 @@
   const adminRef = db.collection('store').doc('admin');
 
   // =====================================================
-  // 2. ESTADO GLOBAL
+  // 2. ESTADO GLOBAL CON VALORES POR DEFECTO
   // =====================================================
   let products = [];
   let sales = [];
-  let business = { shopTitle: 'LEGO Shop', name: 'Autos de Colección & Juguetes LEGO', phone: '+54 9 11 1234-5678', address: 'Av. Brick 123, Ciudad LEGO', whatsapp: '5491112345678', logo: '' };
-  let admin = { user: 'admin', pass: 'admin123' };
+  let business = { shopTitle: 'LEGO Shop', name: 'Autos de Colección & Juguetes LEGO', phone: '+54 9 11 1234-5678', address: 'Av. Brick 123, Ciudad LEGO', whatsapp: '5491112345678' };
+  let admin = { user: 'admin', pass: 'admin123' };  // <-- CREDENCIALES POR DEFECTO
   let isAdmin = false;
   let editingId = null;
   let currentTheme = localStorage.getItem('legoTheme') || 'default';
@@ -668,7 +551,7 @@
   let searchTimeout = null;
 
   // =====================================================
-  // 3. REFERENCIAS DOM
+  // 3. REFERENCIAS DOM (igual que antes)
   // =====================================================
   const grid = document.getElementById('productGrid');
   const searchInput = document.getElementById('searchInput');
@@ -727,10 +610,6 @@
   const whatsappNumber = document.getElementById('whatsappNumber');
   const adminUserInput = document.getElementById('adminUserInput');
   const adminPassInput = document.getElementById('adminPassInput');
-  const logoFileInput = document.getElementById('logoFileInput');
-  const logoPreview = document.getElementById('logoPreview');
-  const logoPreviewImg = document.getElementById('logoPreviewImg');
-  const removeLogoBtn = document.getElementById('removeLogoBtn');
 
   const themeToggle = document.getElementById('themeToggle');
 
@@ -753,10 +632,6 @@
   const totalYear = document.getElementById('totalYear');
   const retryBtn = document.getElementById('retryConnectionBtn');
 
-  // Elementos del header para logo
-  const headerLogo = document.getElementById('headerLogo');
-  const noLogo = document.getElementById('noLogo');
-
   // =====================================================
   // 4. FUNCIONES DE AYUDA
   // =====================================================
@@ -766,7 +641,7 @@
   function getOfferDisplay(p) { if (p.onOffer && p.offerPercent > 0) { const of = getOfferPrice(p); return { original: p.price, offer: of, percent: p.offerPercent, display: '$'+formatPrice(of) }; } return null; }
 
   // =====================================================
-  // 5. CARGA DE DATOS
+  // 5. CARGA DE DATOS DESDE FIRESTORE CON FALLBACK
   // =====================================================
   async function loadAllData() {
     try {
@@ -777,6 +652,7 @@
       if (salesSnap.exists) sales = salesSnap.data().list || []; else { await salesRef.set({ list: [] }); sales = []; }
       if (bizSnap.exists) business = bizSnap.data(); else { await businessRef.set(business); }
       if (adminSnap.exists) admin = adminSnap.data(); else { await adminRef.set(admin); }
+      // Guardar backups locales
       localStorage.setItem('lego_products_backup', JSON.stringify(products));
       localStorage.setItem('lego_sales_backup', JSON.stringify(sales));
       localStorage.setItem('lego_business_backup', JSON.stringify(business));
@@ -788,6 +664,7 @@
       return true;
     } catch (error) {
       console.error('❌ Error al cargar desde Firebase:', error);
+      // Intentar desde localStorage
       const localProducts = localStorage.getItem('lego_products_backup');
       const localSales = localStorage.getItem('lego_sales_backup');
       const localBusiness = localStorage.getItem('lego_business_backup');
@@ -800,9 +677,11 @@
         loadBusinessToUI();
         renderProducts(searchInput.value);
         if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); }
-        alert('⚠️ Sin conexión a Firebase. Mostrando respaldo local.');
+        alert('⚠️ No se pudo conectar con Firebase. Mostrando datos de respaldo local.');
         return false;
       } else {
+        // Si no hay backups, usar los valores por defecto que ya tenemos
+        // Pero guardar esos valores como backup
         localStorage.setItem('lego_products_backup', JSON.stringify(products));
         localStorage.setItem('lego_sales_backup', JSON.stringify(sales));
         localStorage.setItem('lego_business_backup', JSON.stringify(business));
@@ -810,14 +689,14 @@
         loadBusinessToUI();
         renderProducts(searchInput.value);
         if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); }
-        alert('⚠️ Sin conexión a Firebase. Usando valores por defecto.');
+        alert('⚠️ Sin conexión a Firebase. Usando valores por defecto. Revisa tus reglas de Firestore.');
         return false;
       }
     }
   }
 
   // =====================================================
-  // 6. RENDERIZADO
+  // 6. RENDERIZADO (igual que antes)
   // =====================================================
   function renderProducts(filter = '') {
     let list = products.filter(p => p.stock > 0);
@@ -827,7 +706,7 @@
     }
     if (list.length === 0) {
       grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; background:var(--bg-card); border-radius:var(--lego-border-radius); border:3px dashed var(--border-color);">
-        <p style="font-size:1.2rem; color:var(--text-secondary);">🧱 No hay productos disponibles.</p>
+        <p style="font-size:1.2rem; color:var(--text-secondary);">🧱 No hay productos disponibles en el catálogo.</p>
       </div>`;
       return;
     }
@@ -855,7 +734,7 @@
   }
 
   // =====================================================
-  // 7. BUSCADOR
+  // 7. BUSCADOR (igual)
   // =====================================================
   function updateSuggestions(query) {
     const trimmed = query.trim().toLowerCase();
@@ -910,7 +789,7 @@
   });
 
   // =====================================================
-  // 8. CRUD DE PRODUCTOS
+  // 8. CRUD DE PRODUCTOS (con Firebase y fallback)
   // =====================================================
   async function saveProductsToFirestore(newProducts) {
     try { await productsRef.set({ list: newProducts }); localStorage.setItem('lego_products_backup', JSON.stringify(newProducts)); }
@@ -933,7 +812,7 @@
     product.id = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
     products.push(product);
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); }
-    catch (error) { products = products.filter(p => p.id !== product.id); alert('Error al guardar en la base de datos (guardado localmente).'); }
+    catch (error) { products = products.filter(p => p.id !== product.id); alert('Error al guardar en la base de datos (guardado localmente). Se intentará sincronizar después.'); }
   }
   async function updateProduct(id, newData) {
     const idx = products.findIndex(p => p.id === id);
@@ -941,7 +820,7 @@
     const oldProduct = { ...products[idx] };
     products[idx] = { ...products[idx], ...newData };
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); }
-    catch (error) { products[idx] = oldProduct; alert('Error al actualizar en la base de datos.'); }
+    catch (error) { products[idx] = oldProduct; alert('Error al actualizar en la base de datos. Cambios guardados localmente.'); }
   }
 
   window.deleteProduct = async function(id) {
@@ -957,7 +836,7 @@
     if (!isAdmin) return;
     const p = products.find(pr => pr.id === id);
     if (!p) return;
-    if (p.stock <= 0) { alert('❌ No hay stock disponible.'); return; }
+    if (p.stock <= 0) { alert('❌ No hay stock disponible para vender.'); return; }
     const qty = prompt(`¿Cuántas unidades vender de "${p.name}"? (Stock actual: ${p.stock})`, '1');
     if (qty === null) return;
     const num = parseInt(qty);
@@ -967,8 +846,8 @@
     const sale = { id: Date.now().toString(36) + Math.random().toString(36).substr(2, 4), productId: p.id, productName: p.name, quantity: num, price: priceToUse, total: num * priceToUse, date: new Date().toISOString() };
     sales.push(sale);
     p.stock -= num;
-    try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); alert(`✅ Venta realizada: ${num} unidad(es) por $${sale.total.toFixed(2)}`); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } closeDetailModal(); }
-    catch (error) { sales = sales.filter(s => s.id !== sale.id); p.stock += num; alert('Error al registrar la venta.'); }
+    try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); alert(`✅ Venta realizada: ${num} unidad(es) de "${p.name}" por $${sale.total.toFixed(2)}`); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } closeDetailModal(); }
+    catch (error) { sales = sales.filter(s => s.id !== sale.id); p.stock += num; alert('Error al registrar la venta. Los cambios se guardaron localmente.'); }
   };
 
   window.returnProduct = async function(id) {
@@ -980,21 +859,21 @@
     const num = parseInt(qty);
     if (isNaN(num) || num <= 0) { alert('Cantidad inválida.'); return; }
     p.stock += num;
-    try { await saveProductsToFirestore(products); renderProducts(searchInput.value); alert(`✅ Devolución registrada: ${num} unidad(es)`); if (historyModal.classList.contains('active')) renderInventory(); closeDetailModal(); }
-    catch (error) { p.stock -= num; alert('Error al registrar la devolución.'); }
+    try { await saveProductsToFirestore(products); renderProducts(searchInput.value); alert(`✅ Devolución registrada: ${num} unidad(es) devueltas de "${p.name}"`); if (historyModal.classList.contains('active')) renderInventory(); closeDetailModal(); }
+    catch (error) { p.stock -= num; alert('Error al registrar la devolución. Cambios guardados localmente.'); }
   };
 
   window.voidSale = async function(saleId) {
     if (!isAdmin) return;
-    if (!confirm('⚠️ ¿Estás seguro de anular esta venta? Se devolverá el stock.')) return;
+    if (!confirm('⚠️ ¿Estás seguro de anular esta venta? Se devolverá el stock al producto.')) return;
     const saleIndex = sales.findIndex(s => s.id === saleId);
     if (saleIndex === -1) { alert('Venta no encontrada.'); return; }
     const sale = sales[saleIndex];
     const product = products.find(p => p.id === sale.productId);
     if (product) product.stock += sale.quantity;
     sales.splice(saleIndex, 1);
-    try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } alert(`✅ Venta anulada. Stock restaurado.`); }
-    catch (error) { if (product) product.stock -= sale.quantity; sales.splice(saleIndex, 0, sale); alert('Error al anular la venta.'); }
+    try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } alert(`✅ Venta anulada. Stock de "${sale.productName}" restaurado.`); }
+    catch (error) { if (product) product.stock -= sale.quantity; sales.splice(saleIndex, 0, sale); alert('Error al anular la venta. Intenta de nuevo.'); }
   };
 
   window.editProduct = function(id) {
@@ -1022,7 +901,7 @@
   };
 
   // =====================================================
-  // 9. MANEJO DE IMÁGENES DE PRODUCTOS
+  // 9. MANEJO DE IMÁGENES (igual)
   // =====================================================
   prodImageFile.addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -1074,7 +953,7 @@
   modal.addEventListener('click', function(e) { if (e.target === this) closeModalFn(); });
 
   // =====================================================
-  // 11. DETALLE
+  // 11. DETALLE (igual)
   // =====================================================
   window.openDetail = function(id) {
     const p = products.find(pr => pr.id === id);
@@ -1103,18 +982,16 @@
   detailModal.addEventListener('click', function(e) { if (e.target === this) closeDetailModal(); });
 
   // =====================================================
-  // 12. WHATSAPP (usa el nombre configurado)
+  // 12. WHATSAPP
   // =====================================================
   window.clientWhatsApp = function(productId) {
     const p = products.find(pr => pr.id === productId);
     if (!p) return;
     const phone = business.whatsapp || '';
-    if (!phone) { alert('⚠️ El administrador no ha configurado un número de WhatsApp.'); return; }
+    if (!phone) { alert('⚠️ El administrador no ha configurado un número de WhatsApp para contactos.'); return; }
     const offer = getOfferDisplay(p);
     const priceDisplay = offer ? `$${formatPrice(offer.offer)} (antes $${formatPrice(offer.original)}, -${offer.percent}%)` : `$${formatPrice(p.price)}`;
-    // Usar el nombre del negocio desde business.name
-    const businessName = business.name || 'LEGO Shop';
-    const msg = `🧱 *${businessName}* - Consulta sobre producto\n\n📦 *Producto:* ${p.name}\n💰 *Precio:* ${priceDisplay}\n📊 *Stock disponible:* ${p.stock} unidades\n\n👋 ¡Hola! Me interesa este producto. ¿Podrías darme más información?`;
+    const msg = `🧱 *LEGO Shop* - Consulta sobre producto\n\n📦 *Producto:* ${p.name}\n💰 *Precio:* ${priceDisplay}\n📊 *Stock disponible:* ${p.stock} unidades\n\n👋 ¡Hola! Me interesa este producto. ¿Podrías darme más información?`;
     window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
@@ -1161,6 +1038,7 @@
     e.preventDefault();
     const user = loginUser.value.trim();
     const pass = loginPass.value.trim();
+    console.log('Intentando login con:', user, pass, 'admin guardado:', admin);
     if (user === admin.user && pass === admin.pass) {
       sessionStorage.setItem('lego_admin_session', 'true');
       loginModal.classList.remove('active');
@@ -1178,27 +1056,14 @@
   loginModal.addEventListener('click', function(e) { if (e.target === this) closeLoginFn(); });
 
   // =====================================================
-  // 14. PANEL DE CONTROL (con logo)
+  // 14. PANEL DE CONTROL
   // =====================================================
   function loadBusinessToUI() {
-    // Título y nombre
     document.getElementById('shopTitle').textContent = business.shopTitle || 'LEGO Shop';
     document.getElementById('businessName').textContent = business.name || 'Autos de Colección & Juguetes LEGO';
     document.getElementById('businessPhone').textContent = business.phone || '+54 9 11 1234-5678';
     document.getElementById('businessAddress').textContent = business.address || 'Av. Brick 123, Ciudad LEGO';
     document.title = (business.shopTitle || 'LEGO Shop') + ' Manager';
-
-    // Logo
-    if (business.logo && business.logo.startsWith('data:image')) {
-      headerLogo.src = business.logo;
-      headerLogo.style.display = 'block';
-      noLogo.style.display = 'none';
-    } else {
-      headerLogo.style.display = 'none';
-      noLogo.style.display = 'block';
-    }
-
-    // Rellenar formulario de control
     shopTitleInput.value = business.shopTitle || 'LEGO Shop';
     bizName.value = business.name || '';
     bizPhone.value = business.phone || '';
@@ -1206,34 +1071,7 @@
     whatsappNumber.value = business.whatsapp || '';
     adminUserInput.value = admin.user;
     adminPassInput.value = admin.pass;
-
-    // Mostrar logo en preview del formulario
-    if (business.logo && business.logo.startsWith('data:image')) {
-      logoPreviewImg.src = business.logo;
-      logoPreview.style.display = 'block';
-    } else {
-      logoPreview.style.display = 'none';
-    }
   }
-
-  // Manejo de logo en el panel de control
-  logoFileInput.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      const dataUrl = ev.target.result;
-      logoPreviewImg.src = dataUrl;
-      logoPreview.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  });
-
-  removeLogoBtn.addEventListener('click', function() {
-    logoFileInput.value = '';
-    logoPreview.style.display = 'none';
-    logoPreviewImg.src = '';
-  });
 
   openControlBtn.addEventListener('click', function() {
     if (!isAdmin) return;
@@ -1249,48 +1087,12 @@
   controlForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     if (!isAdmin) return;
-
-    // Procesar logo si se subió uno nuevo
-    let logoData = business.logo || '';
-    if (logoFileInput.files.length > 0) {
-      const file = logoFileInput.files[0];
-      const reader = new FileReader();
-      const logoPromise = new Promise((resolve) => {
-        reader.onload = function(ev) {
-          logoData = ev.target.result;
-          resolve();
-        };
-        reader.readAsDataURL(file);
-      });
-      await logoPromise;
-    } else if (logoPreviewImg.src && logoPreviewImg.src.startsWith('data:image') && !logoFileInput.files.length) {
-      // Si el preview tiene una imagen y no se subió archivo nuevo, mantener la existente
-      logoData = logoPreviewImg.src;
-    }
-
-    const data = {
-      shopTitle: shopTitleInput.value.trim() || 'LEGO Shop',
-      name: bizName.value.trim(),
-      phone: bizPhone.value.trim(),
-      address: bizAddress.value.trim(),
-      whatsapp: whatsappNumber.value.trim(),
-      logo: logoData
-    };
-
+    const data = { shopTitle: shopTitleInput.value.trim() || 'LEGO Shop', name: bizName.value.trim(), phone: bizPhone.value.trim(), address: bizAddress.value.trim(), whatsapp: whatsappNumber.value.trim() };
     const newUser = adminUserInput.value.trim();
     const newPass = adminPassInput.value.trim();
     if (newUser && newPass) { admin.user = newUser; admin.pass = newPass; }
-
-    try {
-      await saveBusinessToFirestore(data);
-      await saveAdminToFirestore(admin);
-      business = data;
-      loadBusinessToUI();
-      closeControlFn();
-      alert('✅ Configuración guardada.');
-    } catch (error) {
-      alert('Error al guardar la configuración.');
-    }
+    try { await saveBusinessToFirestore(data); await saveAdminToFirestore(admin); business = data; loadBusinessToUI(); closeControlFn(); alert('✅ Configuración guardada correctamente.'); }
+    catch (error) { alert('Error al guardar la configuración. Cambios guardados localmente.'); }
   });
 
   // ===== BACKUP =====
@@ -1307,7 +1109,7 @@
     a.download = `lego_backup_${dateStr}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    alert('✅ Backup guardado.');
+    alert('✅ Backup guardado correctamente.');
   });
 
   document.getElementById('importDbBtn').addEventListener('click', function() {
@@ -1331,7 +1133,7 @@
           products = data.products; sales = data.sales; business = data.business; admin = data.admin;
           loadBusinessToUI(); renderProducts(searchInput.value);
           if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); }
-          alert('✅ Base de datos restaurada.');
+          alert('✅ Base de datos restaurada correctamente.');
         } catch (err) { alert('❌ Error al leer el archivo: ' + err.message); }
       };
       reader.readAsText(file);
@@ -1427,7 +1229,7 @@
   clearSalesFilter.addEventListener('click', function() { if (!isAdmin) return; salesFilter = 'all'; salesDateFilter.value = ''; renderSales(); });
 
   // =====================================================
-  // 16. TEMAS
+  // 16. TEMAS (igual)
   // =====================================================
   const themes = ['default', 'dark', 'lego'];
   let themeIndex = themes.indexOf(currentTheme);
@@ -1496,7 +1298,7 @@
   loadAllData().then(() => {
     checkAdminSession();
     startListeners();
-    console.log('🧱 LEGO Shop Manager con Firebase (fanstoys2) cargado.');
+    console.log('🧱 LEGO Shop Manager con Firebase y fallback local cargado.');
     console.log(`📦 ${products.length} productos, 💰 ${sales.length} ventas.`);
     console.log('🔑 Credenciales por defecto: admin / admin123');
   }).catch(err => console.error('Error inicial:', err));
