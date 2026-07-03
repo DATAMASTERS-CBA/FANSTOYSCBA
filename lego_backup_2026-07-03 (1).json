@@ -1,0 +1,159 @@
+{
+  "products": [
+    {
+      "name": "AUTO BATMAN",
+      "code": "BAT01",
+      "barcode": "",
+      "cost": 5000,
+      "price": 15000,
+      "stock": 4,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxUPVIit66nwNiR8p2br2C2XZR9Vi_OiLJ4N0HJl8iDg&s=10",
+      "id": "mr51uhtw9tmc",
+      "minStock": 2
+    },
+    {
+      "name": "TREN LEGO",
+      "code": "TREN",
+      "barcode": "",
+      "cost": 25000,
+      "price": 65000,
+      "stock": 1,
+      "minStock": 1,
+      "description": "",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNjLOAbYRMWpy0nAHcb-Ji4jXNtkoFQiRCA7jNwnhiwA&s=10",
+      "id": "mr55csqgkuy6"
+    },
+    {
+      "name": "STARWARS NAVE",
+      "code": "STAR001",
+      "barcode": "",
+      "cost": 20000,
+      "price": 65000,
+      "stock": 3,
+      "minStock": 1,
+      "description": "",
+      "image": "https://images.fravega.com/f300/a0ee3182f2816974bd07a543ae868594.jpg.webp",
+      "id": "mr55ekkihmcc"
+    },
+    {
+      "name": "DINO CREATOR",
+      "code": "DINO222",
+      "barcode": "",
+      "cost": 15000,
+      "price": 45000,
+      "stock": 1,
+      "minStock": 1,
+      "description": "",
+      "image": "https://acdn-us.mitiendanube.com/stores/005/346/571/products/t-rex-5-b94d574f08ab78317c17518913901666-1024-1024.webp",
+      "id": "mr55flopsxlz"
+    },
+    {
+      "name": "BATMAN Y MOTO LEGO",
+      "code": "BAT 002",
+      "barcode": "",
+      "cost": 56000,
+      "price": 150000,
+      "stock": 1,
+      "minStock": 1,
+      "description": "",
+      "image": "https://http2.mlstatic.com/D_NQ_NP_898911-MLA83483104558_042025-O.webp",
+      "id": "mr55m65rbpfb"
+    },
+    {
+      "name": "BATMAN LEGO",
+      "code": "BATILEGO1",
+      "barcode": "",
+      "cost": 2000,
+      "price": 6500,
+      "stock": 1,
+      "minStock": 1,
+      "description": "",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb7qn_H8chVqvcUY3tShYppwVEsnl48smnRjCrJYLMc_9Xy6o08S9n1Cmt&s=10",
+      "id": "mr55n8iwd0db"
+    },
+    {
+      "name": "AUTO RENOLETA",
+      "code": "REN001",
+      "barcode": "",
+      "cost": 5000,
+      "price": 15000,
+      "stock": 3,
+      "minStock": 1,
+      "description": "",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQoa4duxijzPcIDGrNhZcszmh1MXHuFaG24GXqtVoU3ydrNFEKgfAe0yuu&s=10",
+      "id": "mr55o8rdb2py"
+    },
+    {
+      "name": "AUTO CITROEN",
+      "code": "AUTOCITROEN 2333",
+      "barcode": "",
+      "cost": 5000,
+      "price": 15000,
+      "stock": 5,
+      "minStock": 5,
+      "description": "",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjOw11UvqAGktpK3PDAHAwud87tOkdnVicyQdzFOiPSXGOwCGkqsvCuBXf&s=10",
+      "id": "mr55qdihx9ko"
+    },
+    {
+      "name": "AUTO FERRARI HOTWEELS",
+      "code": "AUTO 00222",
+      "barcode": "",
+      "cost": 5000,
+      "price": 20000,
+      "stock": 1,
+      "minStock": 1,
+      "description": "",
+      "image": "https://http2.mlstatic.com/D_Q_NP_2X_730829-MLA100697825374_122025-T.webp",
+      "id": "mr55rn8m1row"
+    },
+    {
+      "name": "AUTO CLASICO HOTWEELS",
+      "code": "AUTO2222",
+      "barcode": "",
+      "cost": 6000,
+      "price": 15000,
+      "stock": 1,
+      "minStock": 1,
+      "description": "",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX8cnoRBYG2lvcDcI5uKYluPGaqKvqI2LtzhfVRVxpHw&s=10",
+      "id": "mr55tods6r4y"
+    },
+    {
+      "name": "PERFUME KHAMRAHA",
+      "code": "",
+      "barcode": "6291108737194",
+      "cost": 4000,
+      "price": 6500,
+      "stock": 10,
+      "minStock": 5,
+      "description": "PERFUME",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuUGZeGt2C3BnEBb35aFvT2xayYMersh-9BkPriTcjCg&s=10",
+      "id": "mr55x32t9sgs"
+    },
+    {
+      "name": "LEGO HARRY POTTER",
+      "code": "POTER002",
+      "barcode": "",
+      "cost": 5000,
+      "price": 20000,
+      "stock": 5,
+      "minStock": 1,
+      "description": "HARRY POTTER",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHekve3qdszjtLbxyachQ8c4fe926Uf_XeolQczuWrHQ&s=10",
+      "id": "mr57bl1ghkj0"
+    }
+  ],
+  "sales": [],
+  "business": {
+    "shopTitle": "FANS TOYS",
+    "name": "Autos de Colección & Juguetes LEGO",
+    "phone": "+5493512155006",
+    "address": "COLON 375",
+    "whatsapp": "+5493512155006"
+  },
+  "admin": {
+    "user": "admin",
+    "pass": "admin123"
+  }
+}
