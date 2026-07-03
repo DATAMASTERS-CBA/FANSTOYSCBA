@@ -542,8 +542,8 @@
   // =====================================================
   let products = [];
   let sales = [];
-  let business = { shopTitle: 'LEGO Shop', name: 'Autos de Colección & Juguetes LEGO', phone: '+54 9 11 1234-5678', address: 'Av. Brick 123, Ciudad LEGO', whatsapp: '5491112345678' };
-  let admin = { user: 'admin', pass: 'admin123' };  // <-- CREDENCIALES POR DEFECTO
+  let business = { shopTitle: 'LEGO Shop', name: 'Autos de Colección & Juguetes LEGO', phone: '+54 9 11 1234-5678', address: 'Av. Brick 123, Ciudad LEGO', whatsapp: '5491112345678', logo: '' };
+  let admin = { user: 'admin', pass: 'admin123' };
   let isAdmin = false;
   let editingId = null;
   let currentTheme = localStorage.getItem('legoTheme') || 'default';
@@ -551,7 +551,7 @@
   let searchTimeout = null;
 
   // =====================================================
-  // 3. REFERENCIAS DOM (igual que antes)
+  // 3. REFERENCIAS DOM
   // =====================================================
   const grid = document.getElementById('productGrid');
   const searchInput = document.getElementById('searchInput');
@@ -696,7 +696,7 @@
   }
 
   // =====================================================
-  // 6. RENDERIZADO (igual que antes)
+  // 6. RENDERIZADO
   // =====================================================
   function renderProducts(filter = '') {
     let list = products.filter(p => p.stock > 0);
@@ -734,7 +734,7 @@
   }
 
   // =====================================================
-  // 7. BUSCADOR (igual)
+  // 7. BUSCADOR
   // =====================================================
   function updateSuggestions(query) {
     const trimmed = query.trim().toLowerCase();
@@ -901,7 +901,7 @@
   };
 
   // =====================================================
-  // 9. MANEJO DE IMÁGENES (igual)
+  // 9. MANEJO DE IMÁGENES
   // =====================================================
   prodImageFile.addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -953,7 +953,7 @@
   modal.addEventListener('click', function(e) { if (e.target === this) closeModalFn(); });
 
   // =====================================================
-  // 11. DETALLE (igual)
+  // 11. DETALLE
   // =====================================================
   window.openDetail = function(id) {
     const p = products.find(pr => pr.id === id);
@@ -1058,12 +1058,119 @@
   // =====================================================
   // 14. PANEL DE CONTROL
   // =====================================================
+  // ---- Inyección del campo de logo en el panel de control ----
+  function injectLogoField() {
+    const controlForm = document.getElementById('controlForm');
+    if (!controlForm) return;
+    const hr = controlForm.querySelector('hr');
+    if (!hr) return;
+
+    const group = document.createElement('div');
+    group.className = 'form-group';
+    group.id = 'logoGroup';
+
+    const label = document.createElement('label');
+    label.textContent = 'Logo de la tienda (URL o imagen)';
+    group.appendChild(label);
+
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.gap = '8px';
+    row.style.flexWrap = 'wrap';
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'logoFileInput';
+    fileInput.accept = 'image/*';
+    fileInput.className = 'lego-input';
+    fileInput.style.flex = '1';
+    row.appendChild(fileInput);
+
+    const urlInput = document.createElement('input');
+    urlInput.type = 'text';
+    urlInput.id = 'logoUrlInput';
+    urlInput.className = 'lego-input';
+    urlInput.placeholder = 'O escribe la URL de la imagen';
+    urlInput.style.flex = '2';
+    row.appendChild(urlInput);
+
+    group.appendChild(row);
+
+    const previewDiv = document.createElement('div');
+    previewDiv.id = 'logoPreview';
+    previewDiv.style.marginTop = '8px';
+    previewDiv.style.maxWidth = '150px';
+    previewDiv.style.borderRadius = '8px';
+    previewDiv.style.overflow = 'hidden';
+    previewDiv.style.border = '2px solid var(--border-color)';
+    previewDiv.style.display = 'none';
+    const previewImg = document.createElement('img');
+    previewImg.id = 'logoPreviewImg';
+    previewImg.style.width = '100%';
+    previewImg.style.height = 'auto';
+    previewImg.style.display = 'block';
+    previewDiv.appendChild(previewImg);
+    group.appendChild(previewDiv);
+
+    hr.parentNode.insertBefore(group, hr);
+
+    fileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const dataUrl = ev.target.result;
+        previewImg.src = dataUrl;
+        previewDiv.style.display = 'block';
+        urlInput.value = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    urlInput.addEventListener('input', function() {
+      const url = this.value.trim();
+      if (url) {
+        previewImg.src = url;
+        previewDiv.style.display = 'block';
+      } else {
+        previewDiv.style.display = 'none';
+      }
+    });
+
+    window._logoUrlInput = urlInput;
+    window._logoPreviewImg = previewImg;
+    window._logoPreviewDiv = previewDiv;
+  }
+
+  // ---- Función para mostrar el logo en el header ----
+  function showLogoInHeader(logoUrl) {
+    const brand = document.querySelector('.header .brand');
+    if (!brand) return;
+    let logoImg = brand.querySelector('.brand-logo');
+    if (!logoImg) {
+      logoImg = document.createElement('img');
+      logoImg.className = 'brand-logo';
+      logoImg.style.maxHeight = '50px';
+      logoImg.style.marginRight = '12px';
+      logoImg.style.verticalAlign = 'middle';
+      brand.insertBefore(logoImg, brand.firstChild);
+    }
+    if (logoUrl) {
+      logoImg.src = logoUrl;
+      logoImg.style.display = 'inline';
+    } else {
+      logoImg.style.display = 'none';
+    }
+  }
+
+  // ---- loadBusinessToUI modificada ----
   function loadBusinessToUI() {
     document.getElementById('shopTitle').textContent = business.shopTitle || 'LEGO Shop';
     document.getElementById('businessName').textContent = business.name || 'Autos de Colección & Juguetes LEGO';
     document.getElementById('businessPhone').textContent = business.phone || '+54 9 11 1234-5678';
     document.getElementById('businessAddress').textContent = business.address || 'Av. Brick 123, Ciudad LEGO';
     document.title = (business.shopTitle || 'LEGO Shop') + ' Manager';
+
     shopTitleInput.value = business.shopTitle || 'LEGO Shop';
     bizName.value = business.name || '';
     bizPhone.value = business.phone || '';
@@ -1071,8 +1178,29 @@
     whatsappNumber.value = business.whatsapp || '';
     adminUserInput.value = admin.user;
     adminPassInput.value = admin.pass;
+
+    // Cargar logo en el campo del panel
+    const logoUrlInput = document.getElementById('logoUrlInput');
+    const logoPreviewImg = document.getElementById('logoPreviewImg');
+    const logoPreviewDiv = document.getElementById('logoPreview');
+    if (logoUrlInput) {
+      logoUrlInput.value = business.logo || '';
+      if (business.logo) {
+        logoPreviewImg.src = business.logo;
+        logoPreviewDiv.style.display = 'block';
+      } else {
+        logoPreviewDiv.style.display = 'none';
+      }
+    }
+
+    // Mostrar logo en el header
+    showLogoInHeader(business.logo);
   }
 
+  // ---- Ejecutar inyección del campo de logo al cargar ----
+  injectLogoField();
+
+  // ---- Evento submit del panel de control (modificado para incluir logo) ----
   openControlBtn.addEventListener('click', function() {
     if (!isAdmin) return;
     loadBusinessToUI();
@@ -1087,7 +1215,15 @@
   controlForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     if (!isAdmin) return;
-    const data = { shopTitle: shopTitleInput.value.trim() || 'LEGO Shop', name: bizName.value.trim(), phone: bizPhone.value.trim(), address: bizAddress.value.trim(), whatsapp: whatsappNumber.value.trim() };
+    const logoUrlInput = document.getElementById('logoUrlInput');
+    const data = {
+      shopTitle: shopTitleInput.value.trim() || 'LEGO Shop',
+      name: bizName.value.trim(),
+      phone: bizPhone.value.trim(),
+      address: bizAddress.value.trim(),
+      whatsapp: whatsappNumber.value.trim(),
+      logo: logoUrlInput ? logoUrlInput.value.trim() : ''
+    };
     const newUser = adminUserInput.value.trim();
     const newPass = adminPassInput.value.trim();
     if (newUser && newPass) { admin.user = newUser; admin.pass = newPass; }
@@ -1229,7 +1365,7 @@
   clearSalesFilter.addEventListener('click', function() { if (!isAdmin) return; salesFilter = 'all'; salesDateFilter.value = ''; renderSales(); });
 
   // =====================================================
-  // 16. TEMAS (igual)
+  // 16. TEMAS
   // =====================================================
   const themes = ['default', 'dark', 'lego'];
   let themeIndex = themes.indexOf(currentTheme);
