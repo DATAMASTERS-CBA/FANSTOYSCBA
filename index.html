@@ -596,6 +596,26 @@
         </div>
       </div>
 
+      <!-- ===== NUEVA SECCIÓN: ENCABEZADO (logo, título y nombre) ===== -->
+      <div class="style-group" id="headerStyleGroup">
+        <h4>🖌️ Encabezado (logo, título y nombre)</h4>
+        <div class="row">
+          <div>
+            <label>Color de fondo</label>
+            <input type="color" id="headerBgColorInput" class="lego-input" value="#ffcc00">
+          </div>
+          <div>
+            <label>Alineación del contenido</label>
+            <select id="brandAlignInput" class="lego-input">
+              <option value="left">Izquierda</option>
+              <option value="center" selected>Centro</option>
+              <option value="right">Derecha</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- ================================================ -->
+
       <hr style="border-color:var(--border-color); margin: 16px 0;">
 
       <h3 style="margin-bottom:12px;">🔐 Acceso Administrador</h3>
@@ -708,7 +728,10 @@
     addressColor: '#1a1a1a',
     addressAlign: 'right',
     logoSize: 50,
-    logoAlign: 'left'
+    logoAlign: 'left',
+    // NUEVOS CAMPOS para el encabezado
+    headerBgColor: '#ffcc00',
+    brandAlign: 'left'
   };
   let admin = { user: 'admin', pass: 'admin123' };
   let isAdmin = false;
@@ -797,6 +820,9 @@
   const styleAddressAlign = document.getElementById('styleAddressAlign');
   const styleLogoSize = document.getElementById('styleLogoSize');
   const styleLogoAlign = document.getElementById('styleLogoAlign');
+  // nuevos campos del encabezado
+  const headerBgColorInput = document.getElementById('headerBgColorInput');
+  const brandAlignInput = document.getElementById('brandAlignInput');
 
   const themeToggle = document.getElementById('themeToggle');
 
@@ -905,6 +931,7 @@
     const addrEl = document.getElementById('businessAddress');
     const brandContainer = document.getElementById('brandContainer');
     const logoImg = document.getElementById('brandLogo');
+    const header = document.getElementById('mainHeader');
 
     // Aplicar estilos a los elementos
     applyStylesToElement(titleEl, business.titleFont || 'Arial', business.titleSize || 32, business.titleColor || '#1a1a1a', business.titleAlign || 'left');
@@ -926,6 +953,35 @@
     // Tema
     if (business.theme) {
       applyTheme(business.theme);
+    }
+
+    // ===== NUEVOS ESTILOS PARA EL ENCABEZADO =====
+    // Color de fondo del header
+    if (header && business.headerBgColor) {
+      header.style.backgroundColor = business.headerBgColor;
+      // También se puede ajustar el borde inferior, pero lo dejamos como está.
+    }
+
+    // Alineación del contenido del brand (logo, título y nombre)
+    if (brandContainer) {
+      const align = business.brandAlign || 'left';
+      if (align === 'left') {
+        brandContainer.style.alignItems = 'flex-start';
+        brandContainer.style.textAlign = 'left';
+      } else if (align === 'center') {
+        brandContainer.style.alignItems = 'center';
+        brandContainer.style.textAlign = 'center';
+      } else if (align === 'right') {
+        brandContainer.style.alignItems = 'flex-end';
+        brandContainer.style.textAlign = 'right';
+      }
+      // Asegurar que los hijos (logo, título, nombre) hereden la alineación
+      const children = brandContainer.querySelectorAll('*');
+      children.forEach(child => {
+        if (child.id !== 'brandContainer') {
+          child.style.textAlign = align;
+        }
+      });
     }
   }
 
@@ -984,6 +1040,10 @@
     styleAddressAlign.value = business.addressAlign || 'right';
     styleLogoSize.value = business.logoSize || 50;
     styleLogoAlign.value = business.logoAlign || 'left';
+
+    // Nuevos campos del encabezado
+    if (headerBgColorInput) headerBgColorInput.value = business.headerBgColor || '#ffcc00';
+    if (brandAlignInput) brandAlignInput.value = business.brandAlign || 'left';
 
     // Aplicar estilos en la vista
     applyBusinessStyles();
@@ -1463,7 +1523,10 @@
       addressAlign: styleAddressAlign.value,
       logoSize: parseInt(styleLogoSize.value) || 50,
       logoAlign: styleLogoAlign.value,
-      theme: business.theme || 'default'  // mantener el tema actual
+      theme: business.theme || 'default',
+      // NUEVOS CAMPOS
+      headerBgColor: headerBgColorInput ? headerBgColorInput.value : '#ffcc00',
+      brandAlign: brandAlignInput ? brandAlignInput.value : 'left'
     };
     const newUser = adminUserInput.value.trim();
     const newPass = adminPassInput.value.trim();
@@ -1568,18 +1631,19 @@
     }).join('');
   }
 
+  let salesFilter = 'all';
+
   function renderSales() {
     if (!isAdmin) return;
     let filtered = sales.slice();
-    const filterType = salesFilter;
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const yearStart = new Date(now.getFullYear(), 0, 1);
-    if (filterType === 'today') { filtered = filtered.filter(s => new Date(s.date) >= today); }
-    else if (filterType === 'month') { filtered = filtered.filter(s => new Date(s.date) >= monthStart); }
-    else if (filterType === 'year') { filtered = filtered.filter(s => new Date(s.date) >= yearStart); }
-    else if (filterType === 'date' && salesDateFilter.value) {
+    if (salesFilter === 'today') { filtered = filtered.filter(s => new Date(s.date) >= today); }
+    else if (salesFilter === 'month') { filtered = filtered.filter(s => new Date(s.date) >= monthStart); }
+    else if (salesFilter === 'year') { filtered = filtered.filter(s => new Date(s.date) >= yearStart); }
+    else if (salesFilter === 'date' && salesDateFilter.value) {
       const d = new Date(salesDateFilter.value);
       const dStart = new Date(d.getFullYear(), d.getMonth(), d.getDate());
       const dEnd = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
