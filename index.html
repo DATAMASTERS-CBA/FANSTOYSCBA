@@ -8,7 +8,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* ===== (ESTILOS IDÉNTICOS A LOS ANTERIORES) ===== */
+    /* ===== ESTILOS ===== */
     :root {
       --bg-body: #f0f0f0;
       --bg-card: #ffffff;
@@ -853,8 +853,33 @@
   // =====================================================
   function escHtml(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
   function getOfferPrice(p) { if (p.onOffer && p.offerPercent > 0) { const d = p.price * (p.offerPercent/100); return p.price - d; } return p.price; }
-  function formatPrice(p) { return p.toFixed(2); }
-  function getOfferDisplay(p) { if (p.onOffer && p.offerPercent > 0) { const of = getOfferPrice(p); return { original: p.price, offer: of, percent: p.offerPercent, display: '$'+formatPrice(of) }; } return null; }
+
+  // NUEVA FUNCIÓN DE FORMATO DE PRECIO EN PESOS ARGENTINOS
+  function formatPriceARS(value) {
+    // Redondear a entero (sin decimales)
+    const rounded = Math.round(value);
+    // Separador de miles con punto
+    const formatted = rounded.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return formatted + ' PESOS AR';
+  }
+
+  // La función formatPrice original se sobrescribe para usar el nuevo formato
+  function formatPrice(value) {
+    return formatPriceARS(value);
+  }
+
+  function getOfferDisplay(p) {
+    if (p.onOffer && p.offerPercent > 0) {
+      const offerPrice = p.price * (1 - p.offerPercent / 100);
+      return {
+        original: p.price,
+        offer: offerPrice,
+        percent: p.offerPercent,
+        display: '$' + formatPriceARS(offerPrice)
+      };
+    }
+    return null;
+  }
 
   // =====================================================
   // 5. CARGA DE DATOS DESDE FIRESTORE CON FALLBACK
@@ -959,7 +984,6 @@
     // Color de fondo del header
     if (header && business.headerBgColor) {
       header.style.backgroundColor = business.headerBgColor;
-      // También se puede ajustar el borde inferior, pero lo dejamos como está.
     }
 
     // Alineación del contenido del brand (logo, título y nombre)
@@ -1058,7 +1082,6 @@
       const f = filter.trim().toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(f) || (p.code && p.code.toLowerCase().includes(f)) || (p.barcode && p.barcode.toLowerCase().includes(f)));
     }
-    // Filtro por categoría
     if (currentCategoryFilter !== 'all') {
       list = list.filter(p => p.category === currentCategoryFilter);
     }
@@ -1075,11 +1098,13 @@
       else if (p.stock <= minStock) { stockClass = 'low'; stockLabel = 'Pocas unidades'; }
       const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="no-img">🧱<br>Sin imagen</div>`;
       const offer = getOfferDisplay(p);
-      let priceHtml = `<span>$${formatPrice(p.price)}</span>`;
+      let priceHtml = '';
       let offerFlag = '';
       if (offer) {
-        priceHtml = `<span class="original">$${formatPrice(offer.original)}</span><span>$${formatPrice(offer.offer)}</span><span class="offer-badge">-${offer.percent}%</span>`;
+        priceHtml = `<span class="original">$${formatPriceARS(offer.original)}</span><span>$${formatPriceARS(offer.offer)}</span><span class="offer-badge">-${offer.percent}%</span>`;
         offerFlag = `<div class="offer-flag">🔥 Oferta ${offer.percent}%</div>`;
+      } else {
+        priceHtml = `<span>$${formatPriceARS(p.price)}</span>`;
       }
       const categoryTag = p.category ? `<span class="category-tag">${escHtml(p.category)}</span>` : '';
       let actionsHtml = '';
@@ -1110,7 +1135,7 @@
       const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<span class="no-img">🧱</span>`;
       const stockStatus = p.stock > 0 ? `Stock: ${p.stock}` : 'Agotado';
       const offer = getOfferDisplay(p);
-      const priceDisplay = offer ? `$${formatPrice(offer.offer)}` : `$${formatPrice(p.price)}`;
+      const priceDisplay = offer ? `$${formatPriceARS(offer.offer)}` : `$${formatPriceARS(p.price)}`;
       const detail = isAdmin ? `${escHtml(p.code || '—')} · ${stockStatus}` : `Stock: ${p.stock}`;
       html += `<div class="suggestion-item" onclick="selectSuggestion('${p.id}')"><div class="sug-img">${imgHtml}</div><div class="sug-info"><span class="sug-name">${escHtml(p.name)}</span><span class="sug-detail">${detail}</span></div><span class="sug-price">${priceDisplay}</span></div>`;
     });
@@ -1132,7 +1157,6 @@
   document.addEventListener('click', function(e) {
     const wrapper = document.querySelector('.search-wrapper');
     if (wrapper && !wrapper.contains(e.target)) suggestionsList.classList.remove('active');
-    // Cerrar menú categorías si se clica fuera
     const menu = document.getElementById('categoryMenu');
     const toggle = document.getElementById('categoryToggle');
     if (menu && !menu.contains(e.target) && e.target !== toggle) {
@@ -1245,7 +1269,7 @@
     const sale = { id: Date.now().toString(36) + Math.random().toString(36).substr(2, 4), productId: p.id, productName: p.name, quantity: num, price: priceToUse, total: num * priceToUse, date: new Date().toISOString() };
     sales.push(sale);
     p.stock -= num;
-    try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); alert(`✅ Venta realizada: ${num} unidad(es) de "${p.name}" por $${sale.total.toFixed(2)}`); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } closeDetailModal(); }
+    try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); alert(`✅ Venta realizada: ${num} unidad(es) de "${p.name}" por $${formatPriceARS(sale.total)}`); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } closeDetailModal(); }
     catch (error) { sales = sales.filter(s => s.id !== sale.id); p.stock += num; alert('Error al registrar la venta. Los cambios se guardaron localmente.'); }
   };
 
@@ -1388,9 +1412,14 @@
     let stockClass = 'ok', stockLabel = 'En stock';
     if (p.stock === 0) { stockClass = 'out'; stockLabel = 'Agotado'; } else if (p.stock <= minStock) { stockClass = 'low'; stockLabel = 'Pocas unidades'; }
     const offer = getOfferDisplay(p);
-    let priceHtml = `<span>$${formatPrice(p.price)}</span>`;
+    let priceHtml = '';
     let offerFlag = '';
-    if (offer) { priceHtml = `<span class="original">$${formatPrice(offer.original)}</span><span>$${formatPrice(offer.offer)}</span><span class="offer-badge">-${offer.percent}%</span>`; offerFlag = `<div class="offer-flag">🔥 Oferta ${offer.percent}%</div>`; }
+    if (offer) {
+      priceHtml = `<span class="original">$${formatPriceARS(offer.original)}</span><span>$${formatPriceARS(offer.offer)}</span><span class="offer-badge">-${offer.percent}%</span>`;
+      offerFlag = `<div class="offer-flag">🔥 Oferta ${offer.percent}%</div>`;
+    } else {
+      priceHtml = `<span>$${formatPriceARS(p.price)}</span>`;
+    }
     const categoryTag = p.category ? `<div class="field"><span class="label">Categoría</span><span class="value">${escHtml(p.category)}</span></div>` : '';
     let actionsHtml = '';
     if (isAdmin) {
@@ -1398,7 +1427,7 @@
     } else {
       actionsHtml = `<div class="detail-actions"><button class="lego-button whatsapp small" onclick="clientWhatsApp('${p.id}');">📱 Consultar por WhatsApp</button><button class="lego-button small secondary" onclick="closeDetailModal();">Cerrar</button></div>`;
     }
-    detailContent.innerHTML = `<div class="detail-container"><div class="detail-image">${imgHtml}${offerFlag}</div><div class="detail-info"><div class="field"><span class="label">Nombre</span><span class="value">${escHtml(p.name)}</span></div>${isAdmin ? `<div class="field"><span class="label">Código</span><span class="value">${escHtml(p.code || '—')}</span></div>` : ''}${isAdmin ? `<div class="field"><span class="label">Código de barras</span><span class="value">${escHtml(p.barcode || '—')}</span></div>` : ''}${categoryTag}${isAdmin ? `<div class="field"><span class="label">Costo</span><span class="value">$${p.cost ? p.cost.toFixed(2) : '0.00'}</span></div>` : ''}<div class="field"><span class="label">Precio</span><span class="value">${priceHtml}</span></div><div class="field"><span class="label">Stock</span><span class="value">${p.stock} unidades <span class="stock-badge ${stockClass}">${stockLabel}</span>${isAdmin ? ` (mín: ${minStock})` : ''}</span></div><div class="field"><span class="label">Descripción</span><span class="value desc">${escHtml(p.description || 'Sin descripción')}</span></div>${actionsHtml}</div></div>`;
+    detailContent.innerHTML = `<div class="detail-container"><div class="detail-image">${imgHtml}${offerFlag}</div><div class="detail-info"><div class="field"><span class="label">Nombre</span><span class="value">${escHtml(p.name)}</span></div>${isAdmin ? `<div class="field"><span class="label">Código</span><span class="value">${escHtml(p.code || '—')}</span></div>` : ''}${isAdmin ? `<div class="field"><span class="label">Código de barras</span><span class="value">${escHtml(p.barcode || '—')}</span></div>` : ''}${categoryTag}${isAdmin ? `<div class="field"><span class="label">Costo</span><span class="value">$${formatPriceARS(p.cost || 0)}</span></div>` : ''}<div class="field"><span class="label">Precio</span><span class="value">${priceHtml}</span></div><div class="field"><span class="label">Stock</span><span class="value">${p.stock} unidades <span class="stock-badge ${stockClass}">${stockLabel}</span>${isAdmin ? ` (mín: ${minStock})` : ''}</span></div><div class="field"><span class="label">Descripción</span><span class="value desc">${escHtml(p.description || 'Sin descripción')}</span></div>${actionsHtml}</div></div>`;
     detailModal.classList.add('active');
   };
 
@@ -1415,7 +1444,7 @@
     const phone = business.whatsapp || '';
     if (!phone) { alert('⚠️ El administrador no ha configurado un número de WhatsApp para contactos.'); return; }
     const offer = getOfferDisplay(p);
-    const priceDisplay = offer ? `$${formatPrice(offer.offer)} (antes $${formatPrice(offer.original)}, -${offer.percent}%)` : `$${formatPrice(p.price)}`;
+    const priceDisplay = offer ? `$${formatPriceARS(offer.offer)} (antes $${formatPriceARS(offer.original)}, -${offer.percent}%)` : `$${formatPriceARS(p.price)}`;
     const msg = `🧱 *FANS TOYS* - Consulta sobre producto\n\n📦 *Producto:* ${p.name}\n💰 *Precio:* ${priceDisplay}\n📊 *Stock disponible:* ${p.stock} unidades\n\n👋 ¡Hola! Me interesa este producto. ¿Podrías darme más información?`;
     window.open(`https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
   };
@@ -1554,12 +1583,11 @@
     if (!isAdmin) return;
     themeIndex = (themeIndex + 1) % themes.length;
     const newTheme = themes[themeIndex];
-    // Actualizar en Firestore
     try {
       const updated = { ...business, theme: newTheme };
       await saveBusinessToFirestore(updated);
       business = updated;
-      loadBusinessToUI(); // aplica el tema y estilos
+      loadBusinessToUI();
       alert(`✅ Tema cambiado a: ${newTheme}. Todos los usuarios verán este tema.`);
     } catch (error) {
       alert('❌ Error al guardar el tema. Intenta de nuevo.');
@@ -1625,7 +1653,7 @@
     if (list.length === 0) { inventoryList.innerHTML = `<p style="color:var(--text-secondary);">No hay productos.</p>`; return; }
     inventoryList.innerHTML = list.map(p => {
       const offer = getOfferDisplay(p);
-      const priceDisplay = offer ? `$${formatPrice(offer.offer)} (${offer.percent}% dto)` : `$${formatPrice(p.price)}`;
+      const priceDisplay = offer ? `$${formatPriceARS(offer.offer)} (${offer.percent}% dto)` : `$${formatPriceARS(p.price)}`;
       const cat = p.category ? ` (${escHtml(p.category)})` : '';
       return `<div style="display:flex; align-items:center; gap:12px; padding:8px 12px; border-bottom:1px solid var(--border-color); flex-wrap:wrap;"><span style="flex:1; font-weight:600;">${escHtml(p.name)}${cat}</span><span style="font-size:0.85rem; color:var(--text-secondary);">Cód: ${escHtml(p.code || '—')}</span><span style="font-size:0.85rem; color:var(--text-secondary);">Stock: ${p.stock}</span><span style="font-weight:700; color:var(--lego-red);">${priceDisplay}</span><div style="display:flex; gap:4px;"><button class="lego-button small secondary" onclick="editProduct('${p.id}'); historyModal.classList.remove('active');">✏️</button><button class="lego-button small" onclick="deleteProduct('${p.id}'); renderInventory();">🗑️</button></div></div>`;
     }).join('');
@@ -1652,18 +1680,18 @@
     const totalHoy = sales.filter(s => new Date(s.date) >= today).reduce((sum, s) => sum + s.total, 0);
     const totalMes = sales.filter(s => new Date(s.date) >= monthStart).reduce((sum, s) => sum + s.total, 0);
     const totalAnio = sales.filter(s => new Date(s.date) >= yearStart).reduce((sum, s) => sum + s.total, 0);
-    totalToday.textContent = totalHoy.toFixed(2);
-    totalMonth.textContent = totalMes.toFixed(2);
-    totalYear.textContent = totalAnio.toFixed(2);
+    totalToday.textContent = formatPriceARS(totalHoy);
+    totalMonth.textContent = formatPriceARS(totalMes);
+    totalYear.textContent = formatPriceARS(totalAnio);
     if (filtered.length === 0) { salesList.innerHTML = `<p style="color:var(--text-secondary);">No hay ventas en este período.</p>`; return; }
     filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
     let html = `<table class="sales-table"><thead><tr><th>Fecha</th><th>Producto</th><th>Cant.</th><th>Precio unit.</th><th>Total</th><th>Acción</th></tr></thead><tbody>`;
     filtered.forEach(s => {
       const dateStr = new Date(s.date).toLocaleDateString() + ' ' + new Date(s.date).toLocaleTimeString();
-      html += `<tr><td>${dateStr}</td><td>${escHtml(s.productName)}</td><td>${s.quantity}</td><td>$${s.price.toFixed(2)}</td><td>$${s.total.toFixed(2)}</td><td><button class="lego-button small btn-void" onclick="voidSale('${s.id}');">↩️ Anular</button></td></tr>`;
+      html += `<tr><td>${dateStr}</td><td>${escHtml(s.productName)}</td><td>${s.quantity}</td><td>$${formatPriceARS(s.price)}</td><td>$${formatPriceARS(s.total)}</td><td><button class="lego-button small btn-void" onclick="voidSale('${s.id}');">↩️ Anular</button></td></tr>`;
     });
     const totalFiltered = filtered.reduce((sum, s) => sum + s.total, 0);
-    html += `<tr class="total-row"><td colspan="4" style="text-align:right;">Total filtrado:</td><td>$${totalFiltered.toFixed(2)}</td><td></td></tr></tbody></table>`;
+    html += `<tr class="total-row"><td colspan="4" style="text-align:right;">Total filtrado:</td><td>$${formatPriceARS(totalFiltered)}</td><td></td></tr></tbody></table>`;
     salesList.innerHTML = html;
   }
 
@@ -1725,7 +1753,7 @@
         const newBusiness = doc.data();
         if (JSON.stringify(newBusiness) !== JSON.stringify(business)) {
           business = newBusiness;
-          loadBusinessToUI(); // aplica estilos y tema
+          loadBusinessToUI();
         }
       }
     }, (error) => console.warn('Snapshot negocio error:', error));
