@@ -8,7 +8,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
   <style>
-    /* ===== ESTILOS ===== */
+    /* ===== ESTILOS EXISTENTES (sin cambios) ===== */
     :root {
       --bg-body: #f0f0f0;
       --bg-card: #ffffff;
@@ -679,7 +679,240 @@
 
 <script>
   // =====================================================
-  // 1. CONFIGURACIÓN FIREBASE
+  // 0. SPLASH SCREEN ANIMADA (inyectada al inicio)
+  // =====================================================
+  (function createSplash() {
+    // Estilos para el splash
+    const style = document.createElement('style');
+    style.textContent = `
+      #splashOverlay {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: #f5e6d3;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        font-family: 'Segoe UI', 'Arial Black', sans-serif;
+        overflow: hidden;
+        transition: opacity 0.8s ease;
+      }
+      #splashOverlay.hide {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .splash-block {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        box-shadow: 0 4px 0 rgba(0,0,0,0.3);
+        animation: floatBlock 3s infinite alternate ease-in-out;
+      }
+      .splash-block:nth-child(1) { background: #e63946; top: 15%; left: 10%; animation-delay: 0s; }
+      .splash-block:nth-child(2) { background: #ffcc00; top: 25%; right: 15%; animation-delay: 0.5s; width: 50px; height: 50px; }
+      .splash-block:nth-child(3) { background: #1565c0; bottom: 20%; left: 20%; animation-delay: 1s; }
+      .splash-block:nth-child(4) { background: #2e7d32; bottom: 30%; right: 10%; animation-delay: 1.5s; }
+      .splash-block:nth-child(5) { background: #ff6f00; top: 50%; left: 5%; animation-delay: 0.8s; width: 40px; height: 40px; }
+      .splash-block:nth-child(6) { background: #6a1b9a; top: 60%; right: 5%; animation-delay: 1.2s; width: 45px; height: 45px; }
+      @keyframes floatBlock {
+        0% { transform: translateY(0) rotate(0deg) scale(1); }
+        100% { transform: translateY(-30px) rotate(15deg) scale(1.05); }
+      }
+
+      .splash-car {
+        position: absolute;
+        bottom: 20%;
+        left: 15%;
+        width: 120px;
+        height: 50px;
+        background: #c62828;
+        border-radius: 12px 12px 0 0;
+        box-shadow: 0 6px 0 #8e0000;
+        animation: driveCar 4s infinite linear;
+      }
+      .splash-car .wheel {
+        position: absolute;
+        bottom: -12px;
+        width: 24px;
+        height: 24px;
+        background: #1a1a1a;
+        border-radius: 50%;
+        border: 3px solid #444;
+        box-shadow: inset 0 0 0 3px #888;
+      }
+      .splash-car .wheel.left { left: 12px; }
+      .splash-car .wheel.right { right: 12px; }
+      @keyframes driveCar {
+        0% { transform: translateX(-200px); }
+        100% { transform: translateX(calc(100vw + 200px)); }
+      }
+
+      .splash-figure {
+        position: absolute;
+        bottom: 22%;
+        right: 18%;
+        animation: bounceFigure 2s infinite alternate ease-in-out;
+      }
+      .splash-figure .head {
+        width: 30px;
+        height: 30px;
+        background: #ffb74d;
+        border-radius: 50%;
+        margin: 0 auto;
+        box-shadow: 0 4px 0 #d4893b;
+      }
+      .splash-figure .body {
+        width: 36px;
+        height: 44px;
+        background: #1565c0;
+        border-radius: 6px 6px 0 0;
+        margin: 0 auto;
+        box-shadow: 0 4px 0 #0a3a6a;
+        position: relative;
+      }
+      .splash-figure .body::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 14px;
+        background: #0a3a6a;
+        border-radius: 0 0 6px 6px;
+      }
+      .splash-figure .arm {
+        position: absolute;
+        width: 8px;
+        height: 26px;
+        background: #1565c0;
+        border-radius: 4px;
+        top: 8px;
+      }
+      .splash-figure .arm.left { left: -6px; transform: rotate(20deg); }
+      .splash-figure .arm.right { right: -6px; transform: rotate(-20deg); }
+      @keyframes bounceFigure {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-20px); }
+      }
+
+      .splash-text {
+        font-size: 4.5rem;
+        font-weight: 900;
+        color: #c62828;
+        text-shadow: 6px 6px 0 #ffcc00, 10px 10px 20px rgba(0,0,0,0.3);
+        letter-spacing: 6px;
+        z-index: 10;
+        animation: textPulse 1.5s infinite alternate;
+        text-align: center;
+        margin-top: 20px;
+        background: rgba(255,255,255,0.3);
+        padding: 10px 40px;
+        border-radius: 20px;
+        backdrop-filter: blur(4px);
+      }
+      .splash-text small {
+        display: block;
+        font-size: 1.2rem;
+        color: #1a1a1a;
+        text-shadow: 2px 2px 0 #ffcc00;
+        letter-spacing: 2px;
+        font-weight: 400;
+        margin-top: -10px;
+      }
+      @keyframes textPulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.05); }
+      }
+
+      .splash-loader {
+        margin-top: 20px;
+        width: 200px;
+        height: 8px;
+        background: #ddd;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        z-index: 10;
+      }
+      .splash-loader .bar {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #e63946, #ffcc00, #1565c0);
+        border-radius: 10px;
+        animation: loadBar 3.5s ease-in-out forwards;
+      }
+      @keyframes loadBar {
+        0% { width: 0%; }
+        100% { width: 100%; }
+      }
+
+      .splash-shadow {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.1) 100%);
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      @media (max-width: 700px) {
+        .splash-text { font-size: 2.8rem; padding: 8px 20px; }
+        .splash-text small { font-size: 0.9rem; }
+        .splash-car { width: 80px; height: 34px; left: 5%; }
+        .splash-car .wheel { width: 18px; height: 18px; bottom: -10px; }
+        .splash-figure { right: 8%; }
+        .splash-block { width: 40px; height: 40px; }
+        .splash-block:nth-child(2) { width: 35px; height: 35px; }
+        .splash-block:nth-child(5) { width: 30px; height: 30px; }
+        .splash-block:nth-child(6) { width: 32px; height: 32px; }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Crear el overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'splashOverlay';
+    overlay.innerHTML = `
+      <div class="splash-shadow"></div>
+      <div class="splash-block"></div>
+      <div class="splash-block"></div>
+      <div class="splash-block"></div>
+      <div class="splash-block"></div>
+      <div class="splash-block"></div>
+      <div class="splash-block"></div>
+      <div class="splash-car">
+        <div class="wheel left"></div>
+        <div class="wheel right"></div>
+      </div>
+      <div class="splash-figure">
+        <div class="head"></div>
+        <div class="body">
+          <div class="arm left"></div>
+          <div class="arm right"></div>
+        </div>
+      </div>
+      <div class="splash-text">
+        FANS TOYS
+        <small>🧱 Autos · Colección · LEGO</small>
+      </div>
+      <div class="splash-loader"><div class="bar"></div></div>
+    `;
+    document.body.prepend(overlay);
+
+    // Ocultar y eliminar después de 4 segundos
+    setTimeout(() => {
+      overlay.classList.add('hide');
+      setTimeout(() => {
+        if (overlay.parentNode) overlay.remove();
+      }, 900);
+    }, 4000);
+  })();
+
+  // =====================================================
+  // 1. CONFIGURACIÓN FIREBASE (resto del código)
   // =====================================================
   const firebaseConfig = {
     apiKey: "AIzaSyDyMy4BpTZDLleTle5Q-x4eB0dGiAWYXAU",
@@ -856,14 +1089,11 @@
 
   // NUEVA FUNCIÓN DE FORMATO DE PRECIO EN PESOS ARGENTINOS
   function formatPriceARS(value) {
-    // Redondear a entero (sin decimales)
     const rounded = Math.round(value);
-    // Separador de miles con punto
     const formatted = rounded.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     return formatted + ' PESOS AR';
   }
 
-  // La función formatPrice original se sobrescribe para usar el nuevo formato
   function formatPrice(value) {
     return formatPriceARS(value);
   }
@@ -981,12 +1211,10 @@
     }
 
     // ===== NUEVOS ESTILOS PARA EL ENCABEZADO =====
-    // Color de fondo del header
     if (header && business.headerBgColor) {
       header.style.backgroundColor = business.headerBgColor;
     }
 
-    // Alineación del contenido del brand (logo, título y nombre)
     if (brandContainer) {
       const align = business.brandAlign || 'left';
       if (align === 'left') {
@@ -999,7 +1227,6 @@
         brandContainer.style.alignItems = 'flex-end';
         brandContainer.style.textAlign = 'right';
       }
-      // Asegurar que los hijos (logo, título, nombre) hereden la alineación
       const children = brandContainer.querySelectorAll('*');
       children.forEach(child => {
         if (child.id !== 'brandContainer') {
@@ -1027,7 +1254,6 @@
     adminUserInput.value = admin.user;
     adminPassInput.value = admin.pass;
 
-    // Logo
     const logoUrlInput = document.getElementById('logoUrlInput');
     const logoPreviewImg = document.getElementById('logoPreviewImg');
     const logoPreviewDiv = document.getElementById('logoPreview');
@@ -1045,7 +1271,6 @@
       }
     }
 
-    // Estilos en el panel de control
     styleTitleFont.value = business.titleFont || 'Arial';
     styleTitleSize.value = business.titleSize || 32;
     styleTitleColor.value = business.titleColor || '#1a1a1a';
@@ -1065,11 +1290,9 @@
     styleLogoSize.value = business.logoSize || 50;
     styleLogoAlign.value = business.logoAlign || 'left';
 
-    // Nuevos campos del encabezado
     if (headerBgColorInput) headerBgColorInput.value = business.headerBgColor || '#ffcc00';
     if (brandAlignInput) brandAlignInput.value = business.brandAlign || 'left';
 
-    // Aplicar estilos en la vista
     applyBusinessStyles();
   }
 
@@ -1339,7 +1562,6 @@
     if (url) { previewImg.src = url; imagePreview.style.display = 'block'; } else { imagePreview.style.display = 'none'; }
   });
 
-  // Logo en panel de control
   document.getElementById('logoFileInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -1533,7 +1755,6 @@
       address: bizAddress.value.trim(),
       whatsapp: whatsappNumber.value.trim(),
       logo: logoUrlInput ? logoUrlInput.value.trim() : '',
-      // estilos
       titleFont: styleTitleFont.value,
       titleSize: parseInt(styleTitleSize.value) || 32,
       titleColor: styleTitleColor.value,
@@ -1553,7 +1774,6 @@
       logoSize: parseInt(styleLogoSize.value) || 50,
       logoAlign: styleLogoAlign.value,
       theme: business.theme || 'default',
-      // NUEVOS CAMPOS
       headerBgColor: headerBgColorInput ? headerBgColorInput.value : '#ffcc00',
       brandAlign: brandAlignInput ? brandAlignInput.value : 'left'
     };
@@ -1573,7 +1793,7 @@
   });
 
   // =====================================================
-  // 18. TEMA GLOBAL (guarda en Firestore)
+  // 18. TEMA GLOBAL
   // =====================================================
   const themes = ['default', 'dark', 'lego'];
   let themeIndex = themes.indexOf(business.theme || 'default');
