@@ -136,17 +136,55 @@
       color: var(--text-light);
       transition: background var(--transition);
     }
-    .header .brand h1 { font-size: 2rem; font-weight: 900; text-shadow: 2px 2px 0 rgba(0,0,0,0.2); letter-spacing: 2px; }
-    .header .brand small { display: block; font-size: 0.8rem; opacity: 0.9; font-weight: 300; }
-    .header .contact-info { text-align: right; font-size: 0.9rem; line-height: 1.6; }
+    .header .brand {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .header .brand .brand-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .header .brand .brand-logo {
+      max-height: 50px;
+      height: auto;
+      display: inline-block;
+    }
+    .header .brand h1 {
+      font-size: 2rem;
+      font-weight: 900;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+      letter-spacing: 2px;
+      margin: 0;
+    }
+    .header .brand small {
+      display: block;
+      font-size: 0.8rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    .header .contact-info {
+      text-align: right;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      flex: 0 0 auto;
+    }
     .header .admin-area { display: flex; align-items: center; gap: 12px; }
     .header .admin-area .admin-status { font-size: 0.75rem; background: var(--admin-badge); color: #fff; padding: 4px 12px; border-radius: 20px; font-weight: 700; }
 
     .search-wrapper { position: relative; margin-bottom: 24px; }
-    .search-bar { display: flex; flex-wrap: wrap; gap: 12px; background: var(--bg-card); padding: 16px 20px; border-radius: var(--lego-border-radius); border: 3px solid var(--border-color); box-shadow: var(--shadow); transition: background var(--transition); }
+    .search-bar { display: flex; flex-wrap: wrap; gap: 12px; background: var(--bg-card); padding: 16px 20px; border-radius: var(--lego-border-radius); border: 3px solid var(--border-color); box-shadow: var(--shadow); transition: background var(--transition); align-items: center; }
     .search-bar input { flex: 1 1 200px; min-width: 120px; }
-    .search-bar .lego-button { flex-shrink: 0; }
     .search-bar .filter-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .search-bar .category-dropdown { position: relative; display: inline-block; }
+    .search-bar .category-dropdown .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: var(--bg-card); border: 3px solid var(--border-color); border-radius: var(--lego-border-radius); box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 1000; min-width: 160px; padding: 8px 0; }
+    .search-bar .category-dropdown .dropdown-menu.active { display: block; }
+    .search-bar .category-dropdown .dropdown-menu button { display: block; width: 100%; padding: 8px 16px; background: none; border: none; text-align: left; color: var(--text-primary); cursor: pointer; font-size: 0.9rem; }
+    .search-bar .category-dropdown .dropdown-menu button:hover { background: var(--bg-header); color: #1a1a1a; }
+    .search-bar .category-dropdown .dropdown-menu button.active-cat { background: var(--lego-yellow); color: #1a1a1a; font-weight: 700; }
 
     .suggestions-list {
       position: absolute;
@@ -201,6 +239,7 @@
     .product-card .info .stock .badge { background: var(--success); color: #fff; padding: 2px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
     .product-card .info .stock .badge.low { background: var(--warning); }
     .product-card .info .stock .badge.out { background: var(--accent); }
+    .product-card .info .category-tag { font-size: 0.75rem; background: var(--bg-header); color: var(--text-primary); padding: 2px 10px; border-radius: 20px; display: inline-block; margin-top: 4px; }
     .product-card .actions { padding: 12px 16px; border-top: 2px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
     .product-card .actions .lego-button { font-size: 0.7rem; padding: 6px 12px; border-bottom-width: 4px; flex: 1 1 auto; min-width: 60px; justify-content: center; }
 
@@ -269,6 +308,11 @@
     body:not(.admin-mode) .client-only { display: flex !important; }
     .client-only .product-card .actions .lego-button { flex: 1 1 100%; }
 
+    .style-group { border: 2px solid var(--border-color); border-radius: var(--lego-border-radius); padding: 16px; margin-bottom: 16px; }
+    .style-group h4 { margin-bottom: 8px; color: var(--text-primary); }
+    .style-group .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .style-group .row > * { flex: 1 1 120px; }
+
     @media (max-width: 700px) {
       .header { flex-direction: column; text-align: center; }
       .header .contact-info { text-align: center; }
@@ -284,6 +328,7 @@
       .detail-image { max-height: 250px; }
       .suggestions-list .suggestion-item { padding: 6px 12px; }
       .suggestions-list .suggestion-item .sug-img { width: 30px; height: 30px; }
+      .style-group .row { flex-direction: column; align-items: stretch; }
     }
 
     ::-webkit-scrollbar { width: 8px; }
@@ -298,8 +343,11 @@
 
 <div class="container">
   <header class="header" id="mainHeader">
-    <div class="brand">
-      <h1 id="shopTitle">FANS TOYS</h1>
+    <div class="brand" id="brandContainer">
+      <div class="brand-top">
+        <img class="brand-logo" id="brandLogo" src="" alt="Logo" style="display:none;">
+        <h1 id="shopTitle">FANS TOYS</h1>
+      </div>
       <small id="businessName">Autos de Colección &amp; Juguetes LEGO</small>
     </div>
     <div class="contact-info" id="businessContact">
@@ -316,6 +364,18 @@
     <div class="search-bar">
       <input type="text" id="searchInput" class="lego-input" placeholder="🔍 Buscar por nombre, código o código de barras..." autocomplete="off">
       <div class="filter-group">
+        <div class="category-dropdown">
+          <button class="lego-button small secondary" id="categoryToggle">📂 Categorías</button>
+          <div class="dropdown-menu" id="categoryMenu">
+            <button data-cat="all" class="active-cat">Todas</button>
+            <button data-cat="Lego">Lego</button>
+            <button data-cat="Símil lego">Símil lego</button>
+            <button data-cat="mini figuras">mini figuras</button>
+            <button data-cat="Hot wheels">Hot wheels</button>
+            <button data-cat="Autos escala">Autos escala</button>
+            <button data-cat="Novedades">Novedades</button>
+          </div>
+        </div>
         <button class="lego-button small" id="searchBtn">Buscar</button>
         <button class="lego-button small secondary" id="clearSearch">Limpiar</button>
       </div>
@@ -379,14 +439,30 @@
       </div>
       <div class="form-group">
         <div class="row">
+          <div><label>Categoría</label>
+            <select id="prodCategory" class="lego-input">
+              <option value="">Sin categoría</option>
+              <option value="Lego">Lego</option>
+              <option value="Símil lego">Símil lego</option>
+              <option value="mini figuras">mini figuras</option>
+              <option value="Hot wheels">Hot wheels</option>
+              <option value="Autos escala">Autos escala</option>
+              <option value="Novedades">Novedades</option>
+            </select>
+          </div>
           <div><label>Costo (ARS)</label><input type="number" id="prodCost" class="lego-input" step="0.01" min="0"></div>
-          <div><label>Precio (ARS) *</label><input type="number" id="prodPrice" class="lego-input" step="0.01" min="0" required></div>
         </div>
       </div>
       <div class="form-group">
         <div class="row">
+          <div><label>Precio (ARS) *</label><input type="number" id="prodPrice" class="lego-input" step="0.01" min="0" required></div>
           <div><label>Stock inicial *</label><input type="number" id="prodStock" class="lego-input" min="0" value="1" required></div>
-          <div><label>Stock mínimo (alerta)</label><input type="number" id="prodMinStock" class="lego-input" min="0" value="5"><small style="color:var(--text-secondary);">Cuando el stock baje de este número, se mostrará "Pocas unidades".</small></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="row">
+          <div><label>Stock mínimo (alerta)</label><input type="number" id="prodMinStock" class="lego-input" min="0" value="5"></div>
+          <div></div>
         </div>
       </div>
       <div class="form-group">
@@ -457,7 +533,71 @@
         <input type="text" id="whatsappNumber" class="lego-input" placeholder="5491112345678">
         <small style="color:var(--text-secondary);">Número al que los clientes enviarán mensajes desde el catálogo.</small>
       </div>
+      <div class="form-group" id="logoGroup">
+        <label>Logo de la tienda (URL o imagen)</label>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <input type="file" id="logoFileInput" class="lego-input" accept="image/*" style="flex:1;">
+          <input type="text" id="logoUrlInput" class="lego-input" placeholder="O escribe la URL de la imagen" style="flex:2;">
+        </div>
+        <div id="logoPreview" style="margin-top:8px; max-width:150px; border-radius:8px; overflow:hidden; border:2px solid var(--border-color); display:none;">
+          <img id="logoPreviewImg" src="" style="width:100%; height:auto; display:block;">
+        </div>
+      </div>
+
       <hr style="border-color:var(--border-color); margin: 16px 0;">
+
+      <h3 style="margin-bottom:12px;">🎨 Estilos de Visualización</h3>
+
+      <div class="style-group">
+        <h4>Título</h4>
+        <div class="row">
+          <div><label>Fuente</label><select id="styleTitleFont" class="lego-input"><option value="Arial">Arial</option><option value="Verdana">Verdana</option><option value="Times New Roman">Times New Roman</option><option value="Georgia">Georgia</option><option value="'Segoe UI', sans-serif">Segoe UI</option><option value="Roboto, sans-serif">Roboto</option><option value="Impact">Impact</option></select></div>
+          <div><label>Tamaño (px)</label><input type="number" id="styleTitleSize" class="lego-input" min="10" max="80" value="32"></div>
+          <div><label>Color</label><input type="color" id="styleTitleColor" class="lego-input" value="#1a1a1a"></div>
+          <div><label>Alineación</label><select id="styleTitleAlign" class="lego-input"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></div>
+        </div>
+      </div>
+
+      <div class="style-group">
+        <h4>Nombre del negocio</h4>
+        <div class="row">
+          <div><label>Fuente</label><select id="styleBizFont" class="lego-input"><option value="Arial">Arial</option><option value="Verdana">Verdana</option><option value="Times New Roman">Times New Roman</option><option value="Georgia">Georgia</option><option value="'Segoe UI', sans-serif">Segoe UI</option><option value="Roboto, sans-serif">Roboto</option><option value="Impact">Impact</option></select></div>
+          <div><label>Tamaño (px)</label><input type="number" id="styleBizSize" class="lego-input" min="8" max="60" value="14"></div>
+          <div><label>Color</label><input type="color" id="styleBizColor" class="lego-input" value="#1a1a1a"></div>
+          <div><label>Alineación</label><select id="styleBizAlign" class="lego-input"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></div>
+        </div>
+      </div>
+
+      <div class="style-group">
+        <h4>Teléfono</h4>
+        <div class="row">
+          <div><label>Fuente</label><select id="stylePhoneFont" class="lego-input"><option value="Arial">Arial</option><option value="Verdana">Verdana</option><option value="Times New Roman">Times New Roman</option><option value="Georgia">Georgia</option><option value="'Segoe UI', sans-serif">Segoe UI</option><option value="Roboto, sans-serif">Roboto</option><option value="Impact">Impact</option></select></div>
+          <div><label>Tamaño (px)</label><input type="number" id="stylePhoneSize" class="lego-input" min="8" max="60" value="14"></div>
+          <div><label>Color</label><input type="color" id="stylePhoneColor" class="lego-input" value="#1a1a1a"></div>
+          <div><label>Alineación</label><select id="stylePhoneAlign" class="lego-input"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></div>
+        </div>
+      </div>
+
+      <div class="style-group">
+        <h4>Dirección</h4>
+        <div class="row">
+          <div><label>Fuente</label><select id="styleAddressFont" class="lego-input"><option value="Arial">Arial</option><option value="Verdana">Verdana</option><option value="Times New Roman">Times New Roman</option><option value="Georgia">Georgia</option><option value="'Segoe UI', sans-serif">Segoe UI</option><option value="Roboto, sans-serif">Roboto</option><option value="Impact">Impact</option></select></div>
+          <div><label>Tamaño (px)</label><input type="number" id="styleAddressSize" class="lego-input" min="8" max="60" value="14"></div>
+          <div><label>Color</label><input type="color" id="styleAddressColor" class="lego-input" value="#1a1a1a"></div>
+          <div><label>Alineación</label><select id="styleAddressAlign" class="lego-input"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></div>
+        </div>
+      </div>
+
+      <div class="style-group">
+        <h4>Logo</h4>
+        <div class="row">
+          <div><label>Tamaño (px)</label><input type="number" id="styleLogoSize" class="lego-input" min="20" max="200" value="50"></div>
+          <div><label>Alineación</label><select id="styleLogoAlign" class="lego-input"><option value="left">Izquierda</option><option value="center">Centro</option><option value="right">Derecha</option></select></div>
+        </div>
+      </div>
+
+      <hr style="border-color:var(--border-color); margin: 16px 0;">
+
       <h3 style="margin-bottom:12px;">🔐 Acceso Administrador</h3>
       <div class="form-group">
         <label>Usuario</label>
@@ -542,12 +682,39 @@
   // =====================================================
   let products = [];
   let sales = [];
-  let business = { shopTitle: 'FANS TOYS', name: 'Autos de Colección & Juguetes LEGO', phone: '+54 9 11 1234-5678', address: 'Av. Brick 123, Ciudad LEGO', whatsapp: '5491112345678', logo: '' };
+  let business = {
+    shopTitle: 'FANS TOYS',
+    name: 'Autos de Colección & Juguetes LEGO',
+    phone: '+54 9 11 1234-5678',
+    address: 'Av. Brick 123, Ciudad LEGO',
+    whatsapp: '5491112345678',
+    logo: '',
+    theme: 'default',
+    // estilos
+    titleFont: 'Arial',
+    titleSize: 32,
+    titleColor: '#1a1a1a',
+    titleAlign: 'left',
+    bizFont: 'Arial',
+    bizSize: 14,
+    bizColor: '#1a1a1a',
+    bizAlign: 'left',
+    phoneFont: 'Arial',
+    phoneSize: 14,
+    phoneColor: '#1a1a1a',
+    phoneAlign: 'right',
+    addressFont: 'Arial',
+    addressSize: 14,
+    addressColor: '#1a1a1a',
+    addressAlign: 'right',
+    logoSize: 50,
+    logoAlign: 'left'
+  };
   let admin = { user: 'admin', pass: 'admin123' };
   let isAdmin = false;
   let editingId = null;
-  let currentTheme = localStorage.getItem('legoTheme') || 'default';
-  let salesFilter = 'all';
+  let currentTheme = 'default';
+  let currentCategoryFilter = 'all';
   let searchTimeout = null;
 
   // =====================================================
@@ -578,6 +745,7 @@
   const prodName = document.getElementById('prodName');
   const prodCode = document.getElementById('prodCode');
   const prodBarcode = document.getElementById('prodBarcode');
+  const prodCategory = document.getElementById('prodCategory');
   const prodCost = document.getElementById('prodCost');
   const prodPrice = document.getElementById('prodPrice');
   const prodStock = document.getElementById('prodStock');
@@ -610,6 +778,25 @@
   const whatsappNumber = document.getElementById('whatsappNumber');
   const adminUserInput = document.getElementById('adminUserInput');
   const adminPassInput = document.getElementById('adminPassInput');
+  // estilos
+  const styleTitleFont = document.getElementById('styleTitleFont');
+  const styleTitleSize = document.getElementById('styleTitleSize');
+  const styleTitleColor = document.getElementById('styleTitleColor');
+  const styleTitleAlign = document.getElementById('styleTitleAlign');
+  const styleBizFont = document.getElementById('styleBizFont');
+  const styleBizSize = document.getElementById('styleBizSize');
+  const styleBizColor = document.getElementById('styleBizColor');
+  const styleBizAlign = document.getElementById('styleBizAlign');
+  const stylePhoneFont = document.getElementById('stylePhoneFont');
+  const stylePhoneSize = document.getElementById('stylePhoneSize');
+  const stylePhoneColor = document.getElementById('stylePhoneColor');
+  const stylePhoneAlign = document.getElementById('stylePhoneAlign');
+  const styleAddressFont = document.getElementById('styleAddressFont');
+  const styleAddressSize = document.getElementById('styleAddressSize');
+  const styleAddressColor = document.getElementById('styleAddressColor');
+  const styleAddressAlign = document.getElementById('styleAddressAlign');
+  const styleLogoSize = document.getElementById('styleLogoSize');
+  const styleLogoAlign = document.getElementById('styleLogoAlign');
 
   const themeToggle = document.getElementById('themeToggle');
 
@@ -631,6 +818,9 @@
   const totalMonth = document.getElementById('totalMonth');
   const totalYear = document.getElementById('totalYear');
   const retryBtn = document.getElementById('retryConnectionBtn');
+
+  const categoryToggle = document.getElementById('categoryToggle');
+  const categoryMenu = document.getElementById('categoryMenu');
 
   // =====================================================
   // 4. FUNCIONES DE AYUDA
@@ -664,7 +854,6 @@
       return true;
     } catch (error) {
       console.error('❌ Error al cargar desde Firebase:', error);
-      // Intentar desde localStorage
       const localProducts = localStorage.getItem('lego_products_backup');
       const localSales = localStorage.getItem('lego_sales_backup');
       const localBusiness = localStorage.getItem('lego_business_backup');
@@ -680,8 +869,6 @@
         alert('⚠️ No se pudo conectar con Firebase. Mostrando datos de respaldo local.');
         return false;
       } else {
-        // Si no hay backups, usar los valores por defecto que ya tenemos
-        // Pero guardar esos valores como backup
         localStorage.setItem('lego_products_backup', JSON.stringify(products));
         localStorage.setItem('lego_sales_backup', JSON.stringify(sales));
         localStorage.setItem('lego_business_backup', JSON.stringify(business));
@@ -696,13 +883,124 @@
   }
 
   // =====================================================
-  // 6. RENDERIZADO
+  // 6. APLICAR ESTILOS Y TEMA
+  // =====================================================
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme === 'default' ? '' : theme);
+    currentTheme = theme;
+  }
+
+  function applyStylesToElement(el, font, size, color, align) {
+    if (!el) return;
+    el.style.fontFamily = font;
+    el.style.fontSize = size + 'px';
+    el.style.color = color;
+    el.style.textAlign = align;
+  }
+
+  function applyBusinessStyles() {
+    const titleEl = document.getElementById('shopTitle');
+    const bizEl = document.getElementById('businessName');
+    const phoneEl = document.getElementById('businessPhone');
+    const addrEl = document.getElementById('businessAddress');
+    const brandContainer = document.getElementById('brandContainer');
+    const logoImg = document.getElementById('brandLogo');
+
+    // Aplicar estilos a los elementos
+    applyStylesToElement(titleEl, business.titleFont || 'Arial', business.titleSize || 32, business.titleColor || '#1a1a1a', business.titleAlign || 'left');
+    applyStylesToElement(bizEl, business.bizFont || 'Arial', business.bizSize || 14, business.bizColor || '#1a1a1a', business.bizAlign || 'left');
+    applyStylesToElement(phoneEl, business.phoneFont || 'Arial', business.phoneSize || 14, business.phoneColor || '#1a1a1a', business.phoneAlign || 'right');
+    applyStylesToElement(addrEl, business.addressFont || 'Arial', business.addressSize || 14, business.addressColor || '#1a1a1a', business.addressAlign || 'right');
+
+    // Logo: tamaño y alineación
+    if (logoImg) {
+      const size = business.logoSize || 50;
+      logoImg.style.maxHeight = size + 'px';
+      logoImg.style.height = 'auto';
+      logoImg.style.width = 'auto';
+    }
+    if (brandContainer) {
+      brandContainer.style.textAlign = business.logoAlign || 'left';
+    }
+
+    // Tema
+    if (business.theme) {
+      applyTheme(business.theme);
+    }
+  }
+
+  // =====================================================
+  // 7. CARGA DE BUSINESS EN UI
+  // =====================================================
+  function loadBusinessToUI() {
+    document.getElementById('shopTitle').textContent = business.shopTitle || 'FANS TOYS';
+    document.getElementById('businessName').textContent = business.name || 'Autos de Colección & Juguetes LEGO';
+    document.getElementById('businessPhone').textContent = business.phone || '+54 9 11 1234-5678';
+    document.getElementById('businessAddress').textContent = business.address || 'Av. Brick 123, Ciudad LEGO';
+    document.title = (business.shopTitle || 'FANS TOYS') + ' Manager';
+
+    shopTitleInput.value = business.shopTitle || 'FANS TOYS';
+    bizName.value = business.name || '';
+    bizPhone.value = business.phone || '';
+    bizAddress.value = business.address || '';
+    whatsappNumber.value = business.whatsapp || '';
+    adminUserInput.value = admin.user;
+    adminPassInput.value = admin.pass;
+
+    // Logo
+    const logoUrlInput = document.getElementById('logoUrlInput');
+    const logoPreviewImg = document.getElementById('logoPreviewImg');
+    const logoPreviewDiv = document.getElementById('logoPreview');
+    const brandLogo = document.getElementById('brandLogo');
+    if (logoUrlInput) {
+      logoUrlInput.value = business.logo || '';
+      if (business.logo) {
+        logoPreviewImg.src = business.logo;
+        logoPreviewDiv.style.display = 'block';
+        brandLogo.src = business.logo;
+        brandLogo.style.display = 'inline-block';
+      } else {
+        logoPreviewDiv.style.display = 'none';
+        brandLogo.style.display = 'none';
+      }
+    }
+
+    // Estilos en el panel de control
+    styleTitleFont.value = business.titleFont || 'Arial';
+    styleTitleSize.value = business.titleSize || 32;
+    styleTitleColor.value = business.titleColor || '#1a1a1a';
+    styleTitleAlign.value = business.titleAlign || 'left';
+    styleBizFont.value = business.bizFont || 'Arial';
+    styleBizSize.value = business.bizSize || 14;
+    styleBizColor.value = business.bizColor || '#1a1a1a';
+    styleBizAlign.value = business.bizAlign || 'left';
+    stylePhoneFont.value = business.phoneFont || 'Arial';
+    stylePhoneSize.value = business.phoneSize || 14;
+    stylePhoneColor.value = business.phoneColor || '#1a1a1a';
+    stylePhoneAlign.value = business.phoneAlign || 'right';
+    styleAddressFont.value = business.addressFont || 'Arial';
+    styleAddressSize.value = business.addressSize || 14;
+    styleAddressColor.value = business.addressColor || '#1a1a1a';
+    styleAddressAlign.value = business.addressAlign || 'right';
+    styleLogoSize.value = business.logoSize || 50;
+    styleLogoAlign.value = business.logoAlign || 'left';
+
+    // Aplicar estilos en la vista
+    applyBusinessStyles();
+  }
+
+  // =====================================================
+  // 8. RENDERIZADO DE PRODUCTOS (con filtro de categoría)
   // =====================================================
   function renderProducts(filter = '') {
     let list = products.filter(p => p.stock > 0);
     if (filter.trim()) {
       const f = filter.trim().toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(f) || (p.code && p.code.toLowerCase().includes(f)) || (p.barcode && p.barcode.toLowerCase().includes(f)));
+    }
+    // Filtro por categoría
+    if (currentCategoryFilter !== 'all') {
+      list = list.filter(p => p.category === currentCategoryFilter);
     }
     if (list.length === 0) {
       grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; background:var(--bg-card); border-radius:var(--lego-border-radius); border:3px dashed var(--border-color);">
@@ -723,23 +1021,27 @@
         priceHtml = `<span class="original">$${formatPrice(offer.original)}</span><span>$${formatPrice(offer.offer)}</span><span class="offer-badge">-${offer.percent}%</span>`;
         offerFlag = `<div class="offer-flag">🔥 Oferta ${offer.percent}%</div>`;
       }
+      const categoryTag = p.category ? `<span class="category-tag">${escHtml(p.category)}</span>` : '';
       let actionsHtml = '';
       if (isAdmin) {
         actionsHtml = `<div class="actions"><button class="lego-button small secondary" onclick="editProduct('${p.id}')">✏️ Editar</button><button class="lego-button small warning" onclick="sellProduct('${p.id}')">💰 Vender</button><button class="lego-button small success" onclick="returnProduct('${p.id}')">↩️ Devolver</button><button class="lego-button small" onclick="deleteProduct('${p.id}')">🗑️ Eliminar</button><button class="lego-button small" onclick="openDetail('${p.id}')">🔍 Ver</button></div>`;
       } else {
         actionsHtml = `<div class="actions"><button class="lego-button whatsapp small" onclick="clientWhatsApp('${p.id}')">📱 Consultar</button><button class="lego-button small secondary" onclick="openDetail('${p.id}')">🔍 Ver</button></div>`;
       }
-      return `<div class="product-card" data-id="${p.id}"><div class="image">${imgHtml}${offerFlag}</div><div class="info"><div class="name">${escHtml(p.name)}</div><div class="code">${isAdmin ? 'Código: '+escHtml(p.code || '—')+' | Barras: '+escHtml(p.barcode || '—') : ''}</div><div class="price">${priceHtml}</div><div class="stock"><span class="stock-badge ${stockClass}">${stockLabel}</span><span>${p.stock} unidades</span>${isAdmin && p.minStock !== undefined ? `<span style="font-size:0.65rem; color:var(--text-secondary);">(mín: ${p.minStock})</span>` : ''}</div></div>${actionsHtml}</div>`;
+      return `<div class="product-card" data-id="${p.id}"><div class="image">${imgHtml}${offerFlag}</div><div class="info"><div class="name">${escHtml(p.name)}</div><div class="code">${isAdmin ? 'Código: '+escHtml(p.code || '—')+' | Barras: '+escHtml(p.barcode || '—') : ''}</div>${categoryTag}<div class="price">${priceHtml}</div><div class="stock"><span class="stock-badge ${stockClass}">${stockLabel}</span><span>${p.stock} unidades</span>${isAdmin && p.minStock !== undefined ? `<span style="font-size:0.65rem; color:var(--text-secondary);">(mín: ${p.minStock})</span>` : ''}</div></div>${actionsHtml}</div>`;
     }).join('');
   }
 
   // =====================================================
-  // 7. BUSCADOR
+  // 9. BUSCADOR Y SUGERENCIAS
   // =====================================================
   function updateSuggestions(query) {
     const trimmed = query.trim().toLowerCase();
     if (!trimmed) { suggestionsList.classList.remove('active'); return; }
     let matches = isAdmin ? products : products.filter(p => p.stock > 0);
+    if (currentCategoryFilter !== 'all') {
+      matches = matches.filter(p => p.category === currentCategoryFilter);
+    }
     matches = matches.filter(p => p.name.toLowerCase().includes(trimmed) || (p.code && p.code.toLowerCase().includes(trimmed)) || (p.barcode && p.barcode.toLowerCase().includes(trimmed)));
     if (matches.length === 0) { suggestionsList.innerHTML = `<div class="no-results">🧱 No se encontraron productos</div>`; suggestionsList.classList.add('active'); return; }
     const top = matches.slice(0, 10);
@@ -770,6 +1072,12 @@
   document.addEventListener('click', function(e) {
     const wrapper = document.querySelector('.search-wrapper');
     if (wrapper && !wrapper.contains(e.target)) suggestionsList.classList.remove('active');
+    // Cerrar menú categorías si se clica fuera
+    const menu = document.getElementById('categoryMenu');
+    const toggle = document.getElementById('categoryToggle');
+    if (menu && !menu.contains(e.target) && e.target !== toggle) {
+      menu.classList.remove('active');
+    }
   });
 
   searchBtn.addEventListener('click', function() {
@@ -781,6 +1089,8 @@
   clearSearch.addEventListener('click', function() {
     searchInput.value = '';
     suggestionsList.classList.remove('active');
+    currentCategoryFilter = 'all';
+    highlightCategory('all');
     renderProducts('');
   });
 
@@ -789,7 +1099,36 @@
   });
 
   // =====================================================
-  // 8. CRUD DE PRODUCTOS (con Firebase y fallback)
+  // 10. CATEGORÍAS DROPDOWN
+  // =====================================================
+  categoryToggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    categoryMenu.classList.toggle('active');
+  });
+
+  categoryMenu.addEventListener('click', function(e) {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const cat = btn.dataset.cat;
+    if (cat === 'all') {
+      currentCategoryFilter = 'all';
+    } else {
+      currentCategoryFilter = cat;
+    }
+    highlightCategory(cat);
+    categoryMenu.classList.remove('active');
+    renderProducts(searchInput.value);
+  });
+
+  function highlightCategory(cat) {
+    const buttons = categoryMenu.querySelectorAll('button');
+    buttons.forEach(b => b.classList.remove('active-cat'));
+    const target = cat === 'all' ? categoryMenu.querySelector('[data-cat="all"]') : categoryMenu.querySelector(`[data-cat="${cat}"]`);
+    if (target) target.classList.add('active-cat');
+  }
+
+  // =====================================================
+  // 11. CRUD DE PRODUCTOS (con Firebase y fallback)
   // =====================================================
   async function saveProductsToFirestore(newProducts) {
     try { await productsRef.set({ list: newProducts }); localStorage.setItem('lego_products_backup', JSON.stringify(newProducts)); }
@@ -886,6 +1225,7 @@
     prodName.value = p.name || '';
     prodCode.value = p.code || '';
     prodBarcode.value = p.barcode || '';
+    prodCategory.value = p.category || '';
     prodCost.value = p.cost || '';
     prodPrice.value = p.price || '';
     prodStock.value = p.stock || 0;
@@ -901,7 +1241,7 @@
   };
 
   // =====================================================
-  // 9. MANEJO DE IMÁGENES
+  // 12. MANEJO DE IMÁGENES
   // =====================================================
   prodImageFile.addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -915,12 +1255,35 @@
     if (url) { previewImg.src = url; imagePreview.style.display = 'block'; } else { imagePreview.style.display = 'none'; }
   });
 
+  // Logo en panel de control
+  document.getElementById('logoFileInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const dataUrl = ev.target.result;
+      document.getElementById('logoPreviewImg').src = dataUrl;
+      document.getElementById('logoPreview').style.display = 'block';
+      document.getElementById('logoUrlInput').value = dataUrl;
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById('logoUrlInput').addEventListener('input', function() {
+    const url = this.value.trim();
+    if (url) {
+      document.getElementById('logoPreviewImg').src = url;
+      document.getElementById('logoPreview').style.display = 'block';
+    } else {
+      document.getElementById('logoPreview').style.display = 'none';
+    }
+  });
+
   // =====================================================
-  // 10. FORMULARIO PRODUCTO
+  // 13. FORMULARIO PRODUCTO
   // =====================================================
   function openProductForm(productData = null) {
     if (!isAdmin) return;
-    if (productData) { editingId = productData.id; modalTitle.textContent = '✏️ Editar Producto'; editId.value = productData.id; prodName.value = productData.name || ''; prodCode.value = productData.code || ''; prodBarcode.value = productData.barcode || ''; prodCost.value = productData.cost || ''; prodPrice.value = productData.price || ''; prodStock.value = productData.stock || 0; prodMinStock.value = productData.minStock !== undefined ? productData.minStock : 5; prodDescription.value = productData.description || ''; prodOnOffer.checked = productData.onOffer || false; prodOfferPercent.value = productData.offerPercent || 10; prodImageFile.value = ''; prodImageUrl.value = productData.image || ''; if (productData.image) { previewImg.src = productData.image; imagePreview.style.display = 'block'; } else { imagePreview.style.display = 'none'; } }
+    if (productData) { editingId = productData.id; modalTitle.textContent = '✏️ Editar Producto'; editId.value = productData.id; prodName.value = productData.name || ''; prodCode.value = productData.code || ''; prodBarcode.value = productData.barcode || ''; prodCategory.value = productData.category || ''; prodCost.value = productData.cost || ''; prodPrice.value = productData.price || ''; prodStock.value = productData.stock || 0; prodMinStock.value = productData.minStock !== undefined ? productData.minStock : 5; prodDescription.value = productData.description || ''; prodOnOffer.checked = productData.onOffer || false; prodOfferPercent.value = productData.offerPercent || 10; prodImageFile.value = ''; prodImageUrl.value = productData.image || ''; if (productData.image) { previewImg.src = productData.image; imagePreview.style.display = 'block'; } else { imagePreview.style.display = 'none'; } }
     else { editingId = null; modalTitle.textContent = '➕ Agregar Producto'; editId.value = ''; productForm.reset(); prodStock.value = 1; prodMinStock.value = 5; prodDescription.value = ''; prodOnOffer.checked = false; prodOfferPercent.value = 10; prodImageFile.value = ''; prodImageUrl.value = ''; imagePreview.style.display = 'none'; }
     modal.classList.add('active');
   }
@@ -941,7 +1304,8 @@
     const description = prodDescription.value.trim();
     const onOffer = prodOnOffer.checked;
     const offerPercent = parseInt(prodOfferPercent.value) || 0;
-    const data = { name, code: prodCode.value.trim(), barcode: prodBarcode.value.trim(), cost, price, stock, minStock, description, onOffer, offerPercent: onOffer ? Math.min(100, Math.max(0, offerPercent)) : 0, image };
+    const category = prodCategory.value.trim() || '';
+    const data = { name, code: prodCode.value.trim(), barcode: prodBarcode.value.trim(), category, cost, price, stock, minStock, description, onOffer, offerPercent: onOffer ? Math.min(100, Math.max(0, offerPercent)) : 0, image };
     if (editingId) { await updateProduct(editingId, data); } else { await addProduct(data); }
     modal.classList.remove('active');
     renderProducts(searchInput.value);
@@ -953,7 +1317,7 @@
   modal.addEventListener('click', function(e) { if (e.target === this) closeModalFn(); });
 
   // =====================================================
-  // 11. DETALLE
+  // 14. DETALLE
   // =====================================================
   window.openDetail = function(id) {
     const p = products.find(pr => pr.id === id);
@@ -967,13 +1331,14 @@
     let priceHtml = `<span>$${formatPrice(p.price)}</span>`;
     let offerFlag = '';
     if (offer) { priceHtml = `<span class="original">$${formatPrice(offer.original)}</span><span>$${formatPrice(offer.offer)}</span><span class="offer-badge">-${offer.percent}%</span>`; offerFlag = `<div class="offer-flag">🔥 Oferta ${offer.percent}%</div>`; }
+    const categoryTag = p.category ? `<div class="field"><span class="label">Categoría</span><span class="value">${escHtml(p.category)}</span></div>` : '';
     let actionsHtml = '';
     if (isAdmin) {
       actionsHtml = `<div class="detail-actions"><button class="lego-button small secondary" onclick="editProduct('${p.id}'); closeDetailModal();">✏️ Editar</button><button class="lego-button small warning" onclick="sellProduct('${p.id}');">💰 Vender</button><button class="lego-button small success" onclick="returnProduct('${p.id}');">↩️ Devolver</button><button class="lego-button small" onclick="deleteProduct('${p.id}');">🗑️ Eliminar</button><button class="lego-button small whatsapp" onclick="clientWhatsApp('${p.id}');">📱 WhatsApp</button><button class="lego-button small secondary" onclick="closeDetailModal();">Cerrar</button></div>`;
     } else {
       actionsHtml = `<div class="detail-actions"><button class="lego-button whatsapp small" onclick="clientWhatsApp('${p.id}');">📱 Consultar por WhatsApp</button><button class="lego-button small secondary" onclick="closeDetailModal();">Cerrar</button></div>`;
     }
-    detailContent.innerHTML = `<div class="detail-container"><div class="detail-image">${imgHtml}${offerFlag}</div><div class="detail-info"><div class="field"><span class="label">Nombre</span><span class="value">${escHtml(p.name)}</span></div>${isAdmin ? `<div class="field"><span class="label">Código</span><span class="value">${escHtml(p.code || '—')}</span></div>` : ''}${isAdmin ? `<div class="field"><span class="label">Código de barras</span><span class="value">${escHtml(p.barcode || '—')}</span></div>` : ''}${isAdmin ? `<div class="field"><span class="label">Costo</span><span class="value">$${p.cost ? p.cost.toFixed(2) : '0.00'}</span></div>` : ''}<div class="field"><span class="label">Precio</span><span class="value">${priceHtml}</span></div><div class="field"><span class="label">Stock</span><span class="value">${p.stock} unidades <span class="stock-badge ${stockClass}">${stockLabel}</span>${isAdmin ? ` (mín: ${minStock})` : ''}</span></div><div class="field"><span class="label">Descripción</span><span class="value desc">${escHtml(p.description || 'Sin descripción')}</span></div>${actionsHtml}</div></div>`;
+    detailContent.innerHTML = `<div class="detail-container"><div class="detail-image">${imgHtml}${offerFlag}</div><div class="detail-info"><div class="field"><span class="label">Nombre</span><span class="value">${escHtml(p.name)}</span></div>${isAdmin ? `<div class="field"><span class="label">Código</span><span class="value">${escHtml(p.code || '—')}</span></div>` : ''}${isAdmin ? `<div class="field"><span class="label">Código de barras</span><span class="value">${escHtml(p.barcode || '—')}</span></div>` : ''}${categoryTag}${isAdmin ? `<div class="field"><span class="label">Costo</span><span class="value">$${p.cost ? p.cost.toFixed(2) : '0.00'}</span></div>` : ''}<div class="field"><span class="label">Precio</span><span class="value">${priceHtml}</span></div><div class="field"><span class="label">Stock</span><span class="value">${p.stock} unidades <span class="stock-badge ${stockClass}">${stockLabel}</span>${isAdmin ? ` (mín: ${minStock})` : ''}</span></div><div class="field"><span class="label">Descripción</span><span class="value desc">${escHtml(p.description || 'Sin descripción')}</span></div>${actionsHtml}</div></div>`;
     detailModal.classList.add('active');
   };
 
@@ -982,7 +1347,7 @@
   detailModal.addEventListener('click', function(e) { if (e.target === this) closeDetailModal(); });
 
   // =====================================================
-  // 12. WHATSAPP
+  // 15. WHATSAPP
   // =====================================================
   window.clientWhatsApp = function(productId) {
     const p = products.find(pr => pr.id === productId);
@@ -996,7 +1361,7 @@
   };
 
   // =====================================================
-  // 13. ADMIN LOGIN / LOGOUT
+  // 16. ADMIN LOGIN / LOGOUT
   // =====================================================
   function checkAdminSession() {
     const session = sessionStorage.getItem('lego_admin_session');
@@ -1038,7 +1403,6 @@
     e.preventDefault();
     const user = loginUser.value.trim();
     const pass = loginPass.value.trim();
-    console.log('Intentando login con:', user, pass, 'admin guardado:', admin);
     if (user === admin.user && pass === admin.pass) {
       sessionStorage.setItem('lego_admin_session', 'true');
       loginModal.classList.remove('active');
@@ -1056,151 +1420,8 @@
   loginModal.addEventListener('click', function(e) { if (e.target === this) closeLoginFn(); });
 
   // =====================================================
-  // 14. PANEL DE CONTROL
+  // 17. PANEL DE CONTROL (con estilos)
   // =====================================================
-  // ---- Inyección del campo de logo en el panel de control ----
-  function injectLogoField() {
-    const controlForm = document.getElementById('controlForm');
-    if (!controlForm) return;
-    const hr = controlForm.querySelector('hr');
-    if (!hr) return;
-
-    const group = document.createElement('div');
-    group.className = 'form-group';
-    group.id = 'logoGroup';
-
-    const label = document.createElement('label');
-    label.textContent = 'Logo de la tienda (URL o imagen)';
-    group.appendChild(label);
-
-    const row = document.createElement('div');
-    row.style.display = 'flex';
-    row.style.gap = '8px';
-    row.style.flexWrap = 'wrap';
-
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.id = 'logoFileInput';
-    fileInput.accept = 'image/*';
-    fileInput.className = 'lego-input';
-    fileInput.style.flex = '1';
-    row.appendChild(fileInput);
-
-    const urlInput = document.createElement('input');
-    urlInput.type = 'text';
-    urlInput.id = 'logoUrlInput';
-    urlInput.className = 'lego-input';
-    urlInput.placeholder = 'O escribe la URL de la imagen';
-    urlInput.style.flex = '2';
-    row.appendChild(urlInput);
-
-    group.appendChild(row);
-
-    const previewDiv = document.createElement('div');
-    previewDiv.id = 'logoPreview';
-    previewDiv.style.marginTop = '8px';
-    previewDiv.style.maxWidth = '150px';
-    previewDiv.style.borderRadius = '8px';
-    previewDiv.style.overflow = 'hidden';
-    previewDiv.style.border = '2px solid var(--border-color)';
-    previewDiv.style.display = 'none';
-    const previewImg = document.createElement('img');
-    previewImg.id = 'logoPreviewImg';
-    previewImg.style.width = '100%';
-    previewImg.style.height = 'auto';
-    previewImg.style.display = 'block';
-    previewDiv.appendChild(previewImg);
-    group.appendChild(previewDiv);
-
-    hr.parentNode.insertBefore(group, hr);
-
-    fileInput.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        const dataUrl = ev.target.result;
-        previewImg.src = dataUrl;
-        previewDiv.style.display = 'block';
-        urlInput.value = dataUrl;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    urlInput.addEventListener('input', function() {
-      const url = this.value.trim();
-      if (url) {
-        previewImg.src = url;
-        previewDiv.style.display = 'block';
-      } else {
-        previewDiv.style.display = 'none';
-      }
-    });
-
-    window._logoUrlInput = urlInput;
-    window._logoPreviewImg = previewImg;
-    window._logoPreviewDiv = previewDiv;
-  }
-
-  // ---- Función para mostrar el logo en el header ----
-  function showLogoInHeader(logoUrl) {
-    const brand = document.querySelector('.header .brand');
-    if (!brand) return;
-    let logoImg = brand.querySelector('.brand-logo');
-    if (!logoImg) {
-      logoImg = document.createElement('img');
-      logoImg.className = 'brand-logo';
-      logoImg.style.maxHeight = '50px';
-      logoImg.style.marginRight = '12px';
-      logoImg.style.verticalAlign = 'middle';
-      brand.insertBefore(logoImg, brand.firstChild);
-    }
-    if (logoUrl) {
-      logoImg.src = logoUrl;
-      logoImg.style.display = 'inline';
-    } else {
-      logoImg.style.display = 'none';
-    }
-  }
-
-  // ---- loadBusinessToUI modificada ----
-  function loadBusinessToUI() {
-    document.getElementById('shopTitle').textContent = business.shopTitle || 'FANS TOYS';
-    document.getElementById('businessName').textContent = business.name || 'Autos de Colección & Juguetes LEGO';
-    document.getElementById('businessPhone').textContent = business.phone || '+54 9 11 1234-5678';
-    document.getElementById('businessAddress').textContent = business.address || 'Av. Brick 123, Ciudad LEGO';
-    document.title = (business.shopTitle || 'FANS TOYS') + ' Manager';
-
-    shopTitleInput.value = business.shopTitle || 'FANS TOYS';
-    bizName.value = business.name || '';
-    bizPhone.value = business.phone || '';
-    bizAddress.value = business.address || '';
-    whatsappNumber.value = business.whatsapp || '';
-    adminUserInput.value = admin.user;
-    adminPassInput.value = admin.pass;
-
-    // Cargar logo en el campo del panel
-    const logoUrlInput = document.getElementById('logoUrlInput');
-    const logoPreviewImg = document.getElementById('logoPreviewImg');
-    const logoPreviewDiv = document.getElementById('logoPreview');
-    if (logoUrlInput) {
-      logoUrlInput.value = business.logo || '';
-      if (business.logo) {
-        logoPreviewImg.src = business.logo;
-        logoPreviewDiv.style.display = 'block';
-      } else {
-        logoPreviewDiv.style.display = 'none';
-      }
-    }
-
-    // Mostrar logo en el header
-    showLogoInHeader(business.logo);
-  }
-
-  // ---- Ejecutar inyección del campo de logo al cargar ----
-  injectLogoField();
-
-  // ---- Evento submit del panel de control (modificado para incluir logo) ----
   openControlBtn.addEventListener('click', function() {
     if (!isAdmin) return;
     loadBusinessToUI();
@@ -1222,16 +1443,69 @@
       phone: bizPhone.value.trim(),
       address: bizAddress.value.trim(),
       whatsapp: whatsappNumber.value.trim(),
-      logo: logoUrlInput ? logoUrlInput.value.trim() : ''
+      logo: logoUrlInput ? logoUrlInput.value.trim() : '',
+      // estilos
+      titleFont: styleTitleFont.value,
+      titleSize: parseInt(styleTitleSize.value) || 32,
+      titleColor: styleTitleColor.value,
+      titleAlign: styleTitleAlign.value,
+      bizFont: styleBizFont.value,
+      bizSize: parseInt(styleBizSize.value) || 14,
+      bizColor: styleBizColor.value,
+      bizAlign: styleBizAlign.value,
+      phoneFont: stylePhoneFont.value,
+      phoneSize: parseInt(stylePhoneSize.value) || 14,
+      phoneColor: stylePhoneColor.value,
+      phoneAlign: stylePhoneAlign.value,
+      addressFont: styleAddressFont.value,
+      addressSize: parseInt(styleAddressSize.value) || 14,
+      addressColor: styleAddressColor.value,
+      addressAlign: styleAddressAlign.value,
+      logoSize: parseInt(styleLogoSize.value) || 50,
+      logoAlign: styleLogoAlign.value,
+      theme: business.theme || 'default'  // mantener el tema actual
     };
     const newUser = adminUserInput.value.trim();
     const newPass = adminPassInput.value.trim();
     if (newUser && newPass) { admin.user = newUser; admin.pass = newPass; }
-    try { await saveBusinessToFirestore(data); await saveAdminToFirestore(admin); business = data; loadBusinessToUI(); closeControlFn(); alert('✅ Configuración guardada correctamente.'); }
-    catch (error) { alert('Error al guardar la configuración. Cambios guardados localmente.'); }
+    try {
+      await saveBusinessToFirestore(data);
+      await saveAdminToFirestore(admin);
+      business = data;
+      loadBusinessToUI();
+      closeControlFn();
+      alert('✅ Configuración guardada correctamente.');
+    } catch (error) {
+      alert('Error al guardar la configuración. Cambios guardados localmente.');
+    }
   });
 
-  // ===== BACKUP =====
+  // =====================================================
+  // 18. TEMA GLOBAL (guarda en Firestore)
+  // =====================================================
+  const themes = ['default', 'dark', 'lego'];
+  let themeIndex = themes.indexOf(business.theme || 'default');
+  if (themeIndex === -1) themeIndex = 0;
+
+  themeToggle.addEventListener('click', async function() {
+    if (!isAdmin) return;
+    themeIndex = (themeIndex + 1) % themes.length;
+    const newTheme = themes[themeIndex];
+    // Actualizar en Firestore
+    try {
+      const updated = { ...business, theme: newTheme };
+      await saveBusinessToFirestore(updated);
+      business = updated;
+      loadBusinessToUI(); // aplica el tema y estilos
+      alert(`✅ Tema cambiado a: ${newTheme}. Todos los usuarios verán este tema.`);
+    } catch (error) {
+      alert('❌ Error al guardar el tema. Intenta de nuevo.');
+    }
+  });
+
+  // =====================================================
+  // 19. BACKUP
+  // =====================================================
   document.getElementById('exportDbBtn').addEventListener('click', function() {
     if (!isAdmin) return;
     const data = { products, sales, business, admin };
@@ -1278,7 +1552,7 @@
   });
 
   // =====================================================
-  // 15. HISTORIAL (Admin)
+  // 20. HISTORIAL (Admin)
   // =====================================================
   function renderInventory() {
     if (!isAdmin) return;
@@ -1289,7 +1563,8 @@
     inventoryList.innerHTML = list.map(p => {
       const offer = getOfferDisplay(p);
       const priceDisplay = offer ? `$${formatPrice(offer.offer)} (${offer.percent}% dto)` : `$${formatPrice(p.price)}`;
-      return `<div style="display:flex; align-items:center; gap:12px; padding:8px 12px; border-bottom:1px solid var(--border-color); flex-wrap:wrap;"><span style="flex:1; font-weight:600;">${escHtml(p.name)}</span><span style="font-size:0.85rem; color:var(--text-secondary);">Cód: ${escHtml(p.code || '—')}</span><span style="font-size:0.85rem; color:var(--text-secondary);">Stock: ${p.stock}</span><span style="font-weight:700; color:var(--lego-red);">${priceDisplay}</span><div style="display:flex; gap:4px;"><button class="lego-button small secondary" onclick="editProduct('${p.id}'); historyModal.classList.remove('active');">✏️</button><button class="lego-button small" onclick="deleteProduct('${p.id}'); renderInventory();">🗑️</button></div></div>`;
+      const cat = p.category ? ` (${escHtml(p.category)})` : '';
+      return `<div style="display:flex; align-items:center; gap:12px; padding:8px 12px; border-bottom:1px solid var(--border-color); flex-wrap:wrap;"><span style="flex:1; font-weight:600;">${escHtml(p.name)}${cat}</span><span style="font-size:0.85rem; color:var(--text-secondary);">Cód: ${escHtml(p.code || '—')}</span><span style="font-size:0.85rem; color:var(--text-secondary);">Stock: ${p.stock}</span><span style="font-weight:700; color:var(--lego-red);">${priceDisplay}</span><div style="display:flex; gap:4px;"><button class="lego-button small secondary" onclick="editProduct('${p.id}'); historyModal.classList.remove('active');">✏️</button><button class="lego-button small" onclick="deleteProduct('${p.id}'); renderInventory();">🗑️</button></div></div>`;
     }).join('');
   }
 
@@ -1365,31 +1640,7 @@
   clearSalesFilter.addEventListener('click', function() { if (!isAdmin) return; salesFilter = 'all'; salesDateFilter.value = ''; renderSales(); });
 
   // =====================================================
-  // 16. TEMAS
-  // =====================================================
-  const themes = ['default', 'dark', 'lego'];
-  let themeIndex = themes.indexOf(currentTheme);
-  if (themeIndex === -1) themeIndex = 0;
-
-  function applyTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme === 'default' ? '' : theme);
-    localStorage.setItem('legoTheme', theme);
-    currentTheme = theme;
-  }
-
-  themeToggle.addEventListener('click', function() {
-    if (!isAdmin) return;
-    themeIndex = (themeIndex + 1) % themes.length;
-    applyTheme(themes[themeIndex]);
-  });
-
-  const savedTheme = localStorage.getItem('legoTheme') || 'default';
-  applyTheme(savedTheme);
-  themeIndex = themes.indexOf(savedTheme);
-  if (themeIndex === -1) themeIndex = 0;
-
-  // =====================================================
-  // 17. Sincronización en tiempo real
+  // 21. Sincronización en tiempo real
   // =====================================================
   let productListener = null, salesListener = null, businessListener = null, adminListener = null;
 
@@ -1406,7 +1657,13 @@
 
     if (businessListener) businessListener();
     businessListener = businessRef.onSnapshot((doc) => {
-      if (doc.exists) { const newBusiness = doc.data(); if (JSON.stringify(newBusiness) !== JSON.stringify(business)) { business = newBusiness; loadBusinessToUI(); } }
+      if (doc.exists) {
+        const newBusiness = doc.data();
+        if (JSON.stringify(newBusiness) !== JSON.stringify(business)) {
+          business = newBusiness;
+          loadBusinessToUI(); // aplica estilos y tema
+        }
+      }
     }, (error) => console.warn('Snapshot negocio error:', error));
 
     if (adminListener) adminListener();
@@ -1416,7 +1673,7 @@
   }
 
   // =====================================================
-  // 18. RECONECTAR
+  // 22. RECONECTAR
   // =====================================================
   retryBtn.addEventListener('click', async function() {
     this.textContent = '⏳ Conectando...';
@@ -1429,7 +1686,7 @@
   });
 
   // =====================================================
-  // 19. INICIALIZACIÓN
+  // 23. INICIALIZACIÓN
   // =====================================================
   loadAllData().then(() => {
     checkAdminSession();
