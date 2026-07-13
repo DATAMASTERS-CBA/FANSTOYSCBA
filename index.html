@@ -679,237 +679,11 @@
 
 <script>
   // =====================================================
-  // 0. SPLASH SCREEN ANIMADA (inyectada al inicio)
+  // 0. SPLASH SCREEN CONTROLADA (ya NO se crea automáticamente)
   // =====================================================
-  (function createSplash() {
-    // Estilos para el splash
-    const style = document.createElement('style');
-    style.textContent = `
-      #splashOverlay {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: #f5e6d3;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        font-family: 'Segoe UI', 'Arial Black', sans-serif;
-        overflow: hidden;
-        transition: opacity 0.8s ease;
-      }
-      #splashOverlay.hide {
-        opacity: 0;
-        pointer-events: none;
-      }
-      .splash-block {
-        position: absolute;
-        width: 60px;
-        height: 60px;
-        border-radius: 8px;
-        box-shadow: 0 4px 0 rgba(0,0,0,0.3);
-        animation: floatBlock 3s infinite alternate ease-in-out;
-      }
-      .splash-block:nth-child(1) { background: #e63946; top: 15%; left: 10%; animation-delay: 0s; }
-      .splash-block:nth-child(2) { background: #ffcc00; top: 25%; right: 15%; animation-delay: 0.5s; width: 50px; height: 50px; }
-      .splash-block:nth-child(3) { background: #1565c0; bottom: 20%; left: 20%; animation-delay: 1s; }
-      .splash-block:nth-child(4) { background: #2e7d32; bottom: 30%; right: 10%; animation-delay: 1.5s; }
-      .splash-block:nth-child(5) { background: #ff6f00; top: 50%; left: 5%; animation-delay: 0.8s; width: 40px; height: 40px; }
-      .splash-block:nth-child(6) { background: #6a1b9a; top: 60%; right: 5%; animation-delay: 1.2s; width: 45px; height: 45px; }
-      @keyframes floatBlock {
-        0% { transform: translateY(0) rotate(0deg) scale(1); }
-        100% { transform: translateY(-30px) rotate(15deg) scale(1.05); }
-      }
-
-      .splash-car {
-        position: absolute;
-        bottom: 20%;
-        left: 15%;
-        width: 120px;
-        height: 50px;
-        background: #c62828;
-        border-radius: 12px 12px 0 0;
-        box-shadow: 0 6px 0 #8e0000;
-        animation: driveCar 4s infinite linear;
-      }
-      .splash-car .wheel {
-        position: absolute;
-        bottom: -12px;
-        width: 24px;
-        height: 24px;
-        background: #1a1a1a;
-        border-radius: 50%;
-        border: 3px solid #444;
-        box-shadow: inset 0 0 0 3px #888;
-      }
-      .splash-car .wheel.left { left: 12px; }
-      .splash-car .wheel.right { right: 12px; }
-      @keyframes driveCar {
-        0% { transform: translateX(-200px); }
-        100% { transform: translateX(calc(100vw + 200px)); }
-      }
-
-      .splash-figure {
-        position: absolute;
-        bottom: 22%;
-        right: 18%;
-        animation: bounceFigure 2s infinite alternate ease-in-out;
-      }
-      .splash-figure .head {
-        width: 30px;
-        height: 30px;
-        background: #ffb74d;
-        border-radius: 50%;
-        margin: 0 auto;
-        box-shadow: 0 4px 0 #d4893b;
-      }
-      .splash-figure .body {
-        width: 36px;
-        height: 44px;
-        background: #1565c0;
-        border-radius: 6px 6px 0 0;
-        margin: 0 auto;
-        box-shadow: 0 4px 0 #0a3a6a;
-        position: relative;
-      }
-      .splash-figure .body::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 20px;
-        height: 14px;
-        background: #0a3a6a;
-        border-radius: 0 0 6px 6px;
-      }
-      .splash-figure .arm {
-        position: absolute;
-        width: 8px;
-        height: 26px;
-        background: #1565c0;
-        border-radius: 4px;
-        top: 8px;
-      }
-      .splash-figure .arm.left { left: -6px; transform: rotate(20deg); }
-      .splash-figure .arm.right { right: -6px; transform: rotate(-20deg); }
-      @keyframes bounceFigure {
-        0% { transform: translateY(0); }
-        100% { transform: translateY(-20px); }
-      }
-
-      .splash-text {
-        font-size: 4.5rem;
-        font-weight: 900;
-        color: #c62828;
-        text-shadow: 6px 6px 0 #ffcc00, 10px 10px 20px rgba(0,0,0,0.3);
-        letter-spacing: 6px;
-        z-index: 10;
-        animation: textPulse 1.5s infinite alternate;
-        text-align: center;
-        margin-top: 20px;
-        background: rgba(255,255,255,0.3);
-        padding: 10px 40px;
-        border-radius: 20px;
-        backdrop-filter: blur(4px);
-      }
-      .splash-text small {
-        display: block;
-        font-size: 1.2rem;
-        color: #1a1a1a;
-        text-shadow: 2px 2px 0 #ffcc00;
-        letter-spacing: 2px;
-        font-weight: 400;
-        margin-top: -10px;
-      }
-      @keyframes textPulse {
-        0% { transform: scale(1); }
-        100% { transform: scale(1.05); }
-      }
-
-      .splash-loader {
-        margin-top: 20px;
-        width: 200px;
-        height: 8px;
-        background: #ddd;
-        border-radius: 10px;
-        overflow: hidden;
-        box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-        z-index: 10;
-      }
-      .splash-loader .bar {
-        width: 0%;
-        height: 100%;
-        background: linear-gradient(90deg, #e63946, #ffcc00, #1565c0);
-        border-radius: 10px;
-        animation: loadBar 3.5s ease-in-out forwards;
-      }
-      @keyframes loadBar {
-        0% { width: 0%; }
-        100% { width: 100%; }
-      }
-
-      .splash-shadow {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.1) 100%);
-        pointer-events: none;
-        z-index: 5;
-      }
-
-      @media (max-width: 700px) {
-        .splash-text { font-size: 2.8rem; padding: 8px 20px; }
-        .splash-text small { font-size: 0.9rem; }
-        .splash-car { width: 80px; height: 34px; left: 5%; }
-        .splash-car .wheel { width: 18px; height: 18px; bottom: -10px; }
-        .splash-figure { right: 8%; }
-        .splash-block { width: 40px; height: 40px; }
-        .splash-block:nth-child(2) { width: 35px; height: 35px; }
-        .splash-block:nth-child(5) { width: 30px; height: 30px; }
-        .splash-block:nth-child(6) { width: 32px; height: 32px; }
-      }
-    `;
-    document.head.appendChild(style);
-
-    // Crear el overlay
-    const overlay = document.createElement('div');
-    overlay.id = 'splashOverlay';
-    overlay.innerHTML = `
-      <div class="splash-shadow"></div>
-      <div class="splash-block"></div>
-      <div class="splash-block"></div>
-      <div class="splash-block"></div>
-      <div class="splash-block"></div>
-      <div class="splash-block"></div>
-      <div class="splash-block"></div>
-      <div class="splash-car">
-        <div class="wheel left"></div>
-        <div class="wheel right"></div>
-      </div>
-      <div class="splash-figure">
-        <div class="head"></div>
-        <div class="body">
-          <div class="arm left"></div>
-          <div class="arm right"></div>
-        </div>
-      </div>
-      <div class="splash-text">
-        FANS TOYS
-        <small>🧱 Autos · Colección · LEGO</small>
-      </div>
-      <div class="splash-loader"><div class="bar"></div></div>
-    `;
-    document.body.prepend(overlay);
-
-    // Ocultar y eliminar después de 4 segundos
-    setTimeout(() => {
-      overlay.classList.add('hide');
-      setTimeout(() => {
-        if (overlay.parentNode) overlay.remove();
-      }, 900);
-    }, 4000);
-  })();
+  // La splash se crea solo si business.splashEnabled es true,
+  // después de cargar los datos desde Firebase.
+  // =====================================================
 
   // =====================================================
   // 1. CONFIGURACIÓN FIREBASE (resto del código)
@@ -964,7 +738,11 @@
     logoAlign: 'left',
     // NUEVOS CAMPOS para el encabezado
     headerBgColor: '#ffcc00',
-    brandAlign: 'left'
+    brandAlign: 'left',
+    // NUEVOS CAMPOS para la animación de inicio (splash)
+    splashEnabled: false,
+    splashUrl: '',
+    splashDuration: 5
   };
   let admin = { user: 'admin', pass: 'admin123' };
   let isAdmin = false;
@@ -1292,6 +1070,14 @@
 
     if (headerBgColorInput) headerBgColorInput.value = business.headerBgColor || '#ffcc00';
     if (brandAlignInput) brandAlignInput.value = business.brandAlign || 'left';
+
+    // Actualizar campos de splash en el panel de control
+    const splashEnabledCheck = document.getElementById('splashEnabledCheck');
+    const splashUrlInput = document.getElementById('splashUrlInput');
+    const splashDurationInput = document.getElementById('splashDurationInput');
+    if (splashEnabledCheck) splashEnabledCheck.checked = business.splashEnabled || false;
+    if (splashUrlInput) splashUrlInput.value = business.splashUrl || '';
+    if (splashDurationInput) splashDurationInput.value = business.splashDuration || 5;
 
     applyBusinessStyles();
   }
@@ -1731,8 +1517,115 @@
   loginModal.addEventListener('click', function(e) { if (e.target === this) closeLoginFn(); });
 
   // =====================================================
-  // 17. PANEL DE CONTROL (con estilos)
+  // 17. PANEL DE CONTROL (con estilos y splash)
   // =====================================================
+
+  // Inyectar la sección de animación de inicio en el panel de control
+  function injectSplashSettings() {
+    const controlForm = document.getElementById('controlForm');
+    // Buscar el lugar donde insertar: antes del <hr> de "Acceso Administrador" o antes de los botones
+    // Insertamos antes del <hr> que separa "Acceso Administrador"
+    const hr = controlForm.querySelector('hr');
+    if (!hr) return;
+
+    const splashHTML = `
+      <hr style="border-color:var(--border-color); margin: 16px 0;">
+      <h3 style="margin-bottom:12px;">🎬 Animación de Inicio</h3>
+      <div class="form-group" style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="splashEnabledCheck" class="lego-checkbox" ${business.splashEnabled ? 'checked' : ''}>
+          Activar animación de bienvenida
+        </label>
+      </div>
+      <div class="form-group">
+        <label>URL del GIF (o imagen)</label>
+        <input type="text" id="splashUrlInput" class="lego-input" placeholder="https://ejemplo.com/mi-gif.gif" value="${business.splashUrl || ''}">
+      </div>
+      <div class="form-group">
+        <label>Cargar desde disco</label>
+        <input type="file" id="splashFileInput" class="lego-input" accept="image/gif,image/*">
+        <small style="color:var(--text-secondary);">Selecciona un GIF o imagen desde tu computadora (se convertirá a data URL).</small>
+      </div>
+      <div class="form-group">
+        <label>Duración (segundos)</label>
+        <input type="number" id="splashDurationInput" class="lego-input" min="1" max="30" value="${business.splashDuration || 5}">
+        <small style="color:var(--text-secondary);">Tiempo que se mostrará la animación antes de mostrar el catálogo.</small>
+      </div>
+      <div id="splashPreview" style="margin-top:8px; max-width:200px; border-radius:8px; overflow:hidden; border:2px solid var(--border-color); display:none;">
+        <img id="splashPreviewImg" src="" style="width:100%; height:auto; display:block;">
+      </div>
+    `;
+
+    hr.insertAdjacentHTML('beforebegin', splashHTML);
+
+    // Manejar el input file para splash
+    const splashFileInput = document.getElementById('splashFileInput');
+    const splashUrlInput = document.getElementById('splashUrlInput');
+    const splashPreview = document.getElementById('splashPreview');
+    const splashPreviewImg = document.getElementById('splashPreviewImg');
+
+    splashFileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const dataUrl = ev.target.result;
+        splashUrlInput.value = dataUrl;
+        splashPreviewImg.src = dataUrl;
+        splashPreview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    splashUrlInput.addEventListener('input', function() {
+      const url = this.value.trim();
+      if (url) {
+        splashPreviewImg.src = url;
+        splashPreview.style.display = 'block';
+      } else {
+        splashPreview.style.display = 'none';
+      }
+    });
+
+    // Si ya hay una URL guardada, mostrarla en preview
+    if (business.splashUrl) {
+      splashPreviewImg.src = business.splashUrl;
+      splashPreview.style.display = 'block';
+    }
+  }
+
+  // Llamar a la inyección después de que el DOM esté listo
+  document.addEventListener('DOMContentLoaded', function() {
+    injectSplashSettings();
+    // También cargar valores actuales (ya se hace en loadBusinessToUI)
+  });
+
+  // Modificar loadBusinessToUI para actualizar los campos de splash
+  // Ya se actualizan en la función existente, pero necesitamos que también
+  // se actualice el preview. Extendemos loadBusinessToUI para que también maneje el preview.
+  const originalLoadBusinessToUI = loadBusinessToUI;
+  loadBusinessToUI = function() {
+    originalLoadBusinessToUI();
+    // Actualizar campos de splash
+    const splashEnabledCheck = document.getElementById('splashEnabledCheck');
+    const splashUrlInput = document.getElementById('splashUrlInput');
+    const splashDurationInput = document.getElementById('splashDurationInput');
+    const splashPreview = document.getElementById('splashPreview');
+    const splashPreviewImg = document.getElementById('splashPreviewImg');
+    if (splashEnabledCheck) splashEnabledCheck.checked = business.splashEnabled || false;
+    if (splashUrlInput) {
+      splashUrlInput.value = business.splashUrl || '';
+      if (business.splashUrl) {
+        splashPreviewImg.src = business.splashUrl;
+        splashPreview.style.display = 'block';
+      } else {
+        splashPreview.style.display = 'none';
+      }
+    }
+    if (splashDurationInput) splashDurationInput.value = business.splashDuration || 5;
+  };
+
+  // Abrir panel de control y asegurar que los campos de splash estén actualizados
   openControlBtn.addEventListener('click', function() {
     if (!isAdmin) return;
     loadBusinessToUI();
@@ -1744,10 +1637,16 @@
   closeControlBtn.addEventListener('click', closeControlFn);
   controlModal.addEventListener('click', function(e) { if (e.target === this) closeControlFn(); });
 
+  // Guardar configuración incluyendo splash
   controlForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     if (!isAdmin) return;
     const logoUrlInput = document.getElementById('logoUrlInput');
+    // Obtener valores de splash
+    const splashEnabledCheck = document.getElementById('splashEnabledCheck');
+    const splashUrlInput = document.getElementById('splashUrlInput');
+    const splashDurationInput = document.getElementById('splashDurationInput');
+
     const data = {
       shopTitle: shopTitleInput.value.trim() || 'FANS TOYS',
       name: bizName.value.trim(),
@@ -1775,7 +1674,10 @@
       logoAlign: styleLogoAlign.value,
       theme: business.theme || 'default',
       headerBgColor: headerBgColorInput ? headerBgColorInput.value : '#ffcc00',
-      brandAlign: brandAlignInput ? brandAlignInput.value : 'left'
+      brandAlign: brandAlignInput ? brandAlignInput.value : 'left',
+      splashEnabled: splashEnabledCheck ? splashEnabledCheck.checked : false,
+      splashUrl: splashUrlInput ? splashUrlInput.value.trim() : '',
+      splashDuration: splashDurationInput ? parseInt(splashDurationInput.value) || 5 : 5
     };
     const newUser = adminUserInput.value.trim();
     const newPass = adminPassInput.value.trim();
@@ -1974,6 +1876,8 @@
         if (JSON.stringify(newBusiness) !== JSON.stringify(business)) {
           business = newBusiness;
           loadBusinessToUI();
+          // Si la splash cambia mientras la página está abierta, no la mostramos de nuevo.
+          // Solo se muestra al cargar la página.
         }
       }
     }, (error) => console.warn('Snapshot negocio error:', error));
@@ -1998,11 +1902,150 @@
   });
 
   // =====================================================
-  // 23. INICIALIZACIÓN
+  // 23. BOTÓN FLOTANTE "VOLVER ARRIBA" (para clientes)
+  // =====================================================
+  (function createBackToTop() {
+    // Estilos del botón
+    const style = document.createElement('style');
+    style.textContent = `
+      #backToTopBtn {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 56px;
+        height: 56px;
+        background: var(--lego-red, #e63946);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+        font-size: 2rem;
+        line-height: 1;
+        cursor: pointer;
+        display: none; /* oculto por defecto */
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        z-index: 998;
+        border-bottom: 4px solid #8e0000;
+        transform: scale(0.8);
+        opacity: 0;
+        pointer-events: none;
+      }
+      #backToTopBtn.show {
+        display: flex;
+        transform: scale(1);
+        opacity: 1;
+        pointer-events: auto;
+      }
+      #backToTopBtn:hover {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      }
+      #backToTopBtn:active {
+        transform: translateY(4px) scale(0.95);
+        border-bottom-width: 2px;
+      }
+      @media (max-width: 700px) {
+        #backToTopBtn {
+          bottom: 20px;
+          right: 20px;
+          width: 48px;
+          height: 48px;
+          font-size: 1.6rem;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Crear el botón
+    const btn = document.createElement('button');
+    btn.id = 'backToTopBtn';
+    btn.setAttribute('aria-label', 'Volver arriba');
+    btn.innerHTML = '↑';
+    document.body.appendChild(btn);
+
+    // Mostrar/ocultar según scroll
+    let isVisible = false;
+    window.addEventListener('scroll', function() {
+      const scrollY = window.scrollY || window.pageYOffset;
+      if (scrollY > 300 && !isVisible) {
+        btn.classList.add('show');
+        isVisible = true;
+      } else if (scrollY <= 300 && isVisible) {
+        btn.classList.remove('show');
+        isVisible = false;
+      }
+    });
+
+    // Acción: scroll suave al inicio
+    btn.addEventListener('click', function() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Opcional: también enfocar el buscador para una mejor experiencia
+      const search = document.getElementById('searchInput');
+      if (search) search.focus();
+    });
+  })();
+
+  // =====================================================
+  // 24. SPLASH CONTROLADA (se muestra solo si está habilitada)
+  // =====================================================
+  function showSplashIfNeeded() {
+    // Si está desactivada, no hacer nada
+    if (!business.splashEnabled) return;
+
+    // Si no hay URL, no mostrar
+    if (!business.splashUrl) {
+      console.warn('Splash activada pero sin URL.');
+      return;
+    }
+
+    // Crear overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'splashOverlay';
+    overlay.style.cssText = `
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-body, #f5e6d3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.8s ease;
+      opacity: 1;
+    `;
+
+    // Imagen del GIF
+    const img = document.createElement('img');
+    img.src = business.splashUrl;
+    img.style.maxWidth = '90%';
+    img.style.maxHeight = '80%';
+    img.style.borderRadius = '12px';
+    img.style.boxShadow = '0 10px 40px rgba(0,0,0,0.3)';
+    img.alt = 'Animación de inicio';
+
+    overlay.appendChild(img);
+    document.body.prepend(overlay);
+
+    // Ocultar después de la duración configurada
+    const duration = (business.splashDuration || 5) * 1000;
+    setTimeout(() => {
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        if (overlay.parentNode) overlay.remove();
+      }, 800);
+    }, duration);
+  }
+
+  // =====================================================
+  // 25. INICIALIZACIÓN
   // =====================================================
   loadAllData().then(() => {
     checkAdminSession();
     startListeners();
+    // Mostrar splash después de cargar datos (si está habilitada)
+    showSplashIfNeeded();
     console.log('🧱 FANS TOYS Manager con Firebase y fallback local cargado.');
     console.log(`📦 ${products.length} productos, 💰 ${sales.length} ventas.`);
     console.log('🔑 Credenciales por defecto: admin / admin123');
