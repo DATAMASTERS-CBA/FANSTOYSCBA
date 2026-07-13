@@ -751,6 +751,10 @@
   let currentCategoryFilter = 'all';
   let searchTimeout = null;
 
+  // ===== NUEVAS VARIABLES PARA FILTROS ADMIN =====
+  let adminOrder = 'none'; // 'none', 'price_asc', 'price_desc', 'stock_asc', 'stock_desc'
+  let adminShowZeroStock = false;
+
   // =====================================================
   // 3. REFERENCIAS DOM
   // =====================================================
@@ -890,7 +894,7 @@
   }
 
   // =====================================================
-  // 5. CARGA DE DATOS DESDE FIRESTORE CON FALLBACK
+  // 5. CARGA DE DATOS DESDE FIRESTORE CON FALLBACK (SIN ALERT)
   // =====================================================
   async function loadAllData() {
     try {
@@ -925,7 +929,7 @@
         loadBusinessToUI();
         renderProducts(searchInput.value);
         if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); }
-        alert('⚠️ No se pudo conectar con Firebase. Mostrando datos de respaldo local.');
+        // No mostramos alert, solo usamos los datos locales
         return false;
       } else {
         localStorage.setItem('lego_products_backup', JSON.stringify(products));
@@ -935,7 +939,7 @@
         loadBusinessToUI();
         renderProducts(searchInput.value);
         if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); }
-        alert('⚠️ Sin conexión a Firebase. Usando valores por defecto. Revisa tus reglas de Firestore.');
+        // No mostramos alert, usamos valores por defecto
         return false;
       }
     }
@@ -1083,23 +1087,53 @@
   }
 
   // =====================================================
-  // 8. RENDERIZADO DE PRODUCTOS (con filtro de categoría)
+  // 8. RENDERIZADO DE PRODUCTOS (con filtros admin)
   // =====================================================
   function renderProducts(filter = '') {
-    let list = products.filter(p => p.stock > 0);
+    // Los clientes solo ven productos con stock > 0; los administradores ven todos (pero pueden filtrar)
+    let list = isAdmin ? products : products.filter(p => p.stock > 0);
+
+    // Filtro por búsqueda
     if (filter.trim()) {
       const f = filter.trim().toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(f) || (p.code && p.code.toLowerCase().includes(f)) || (p.barcode && p.barcode.toLowerCase().includes(f)));
     }
+
+    // Filtro por categoría
     if (currentCategoryFilter !== 'all') {
       list = list.filter(p => p.category === currentCategoryFilter);
     }
+
+    // Filtro admin: solo agotados
+    if (isAdmin && adminShowZeroStock) {
+      list = list.filter(p => p.stock === 0);
+    }
+
+    // Orden admin
+    if (isAdmin && adminOrder !== 'none') {
+      switch (adminOrder) {
+        case 'price_asc':
+          list.sort((a, b) => a.price - b.price);
+          break;
+        case 'price_desc':
+          list.sort((a, b) => b.price - a.price);
+          break;
+        case 'stock_asc':
+          list.sort((a, b) => a.stock - b.stock);
+          break;
+        case 'stock_desc':
+          list.sort((a, b) => b.stock - a.stock);
+          break;
+      }
+    }
+
     if (list.length === 0) {
       grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; background:var(--bg-card); border-radius:var(--lego-border-radius); border:3px dashed var(--border-color);">
         <p style="font-size:1.2rem; color:var(--text-secondary);">🧱 No hay productos disponibles en el catálogo.</p>
       </div>`;
       return;
     }
+
     grid.innerHTML = list.map(p => {
       const minStock = p.minStock !== undefined ? p.minStock : 5;
       let stockClass = 'ok', stockLabel = 'En stock';
@@ -1124,6 +1158,12 @@
       }
       return `<div class="product-card" data-id="${p.id}"><div class="image">${imgHtml}${offerFlag}</div><div class="info"><div class="name">${escHtml(p.name)}</div><div class="code">${isAdmin ? 'Código: '+escHtml(p.code || '—')+' | Barras: '+escHtml(p.barcode || '—') : ''}</div>${categoryTag}<div class="price">${priceHtml}</div><div class="stock"><span class="stock-badge ${stockClass}">${stockLabel}</span><span>${p.stock} unidades</span>${isAdmin && p.minStock !== undefined ? `<span style="font-size:0.65rem; color:var(--text-secondary);">(mín: ${p.minStock})</span>` : ''}</div></div>${actionsHtml}</div>`;
     }).join('');
+
+    // Sincronizar el select de categoría admin con el filtro actual
+    const catSelect = document.getElementById('adminCategorySelect');
+    if (catSelect) {
+      catSelect.value = currentCategoryFilter;
+    }
   }
 
   // =====================================================
@@ -1132,9 +1172,14 @@
   function updateSuggestions(query) {
     const trimmed = query.trim().toLowerCase();
     if (!trimmed) { suggestionsList.classList.remove('active'); return; }
+    // Los clientes solo ven sugerencias de productos con stock > 0
     let matches = isAdmin ? products : products.filter(p => p.stock > 0);
     if (currentCategoryFilter !== 'all') {
       matches = matches.filter(p => p.category === currentCategoryFilter);
+    }
+    // Aplicar filtro de solo agotados en sugerencias (admin)
+    if (isAdmin && adminShowZeroStock) {
+      matches = matches.filter(p => p.stock === 0);
     }
     matches = matches.filter(p => p.name.toLowerCase().includes(trimmed) || (p.code && p.code.toLowerCase().includes(trimmed)) || (p.barcode && p.barcode.toLowerCase().includes(trimmed)));
     if (matches.length === 0) { suggestionsList.innerHTML = `<div class="no-results">🧱 No se encontraron productos</div>`; suggestionsList.classList.add('active'); return; }
@@ -1184,6 +1229,15 @@
     suggestionsList.classList.remove('active');
     currentCategoryFilter = 'all';
     highlightCategory('all');
+    // Resetear también los filtros admin? Solo si es admin.
+    if (isAdmin) {
+      adminOrder = 'none';
+      adminShowZeroStock = false;
+      const orderSelect = document.getElementById('adminOrderSelect');
+      const zeroCheck = document.getElementById('adminZeroStockCheck');
+      if (orderSelect) orderSelect.value = 'none';
+      if (zeroCheck) zeroCheck.checked = false;
+    }
     renderProducts('');
   });
 
@@ -1192,7 +1246,7 @@
   });
 
   // =====================================================
-  // 10. CATEGORÍAS DROPDOWN
+  // 10. CATEGORÍAS DROPDOWN (existente)
   // =====================================================
   categoryToggle.addEventListener('click', function(e) {
     e.stopPropagation();
@@ -1218,10 +1272,13 @@
     buttons.forEach(b => b.classList.remove('active-cat'));
     const target = cat === 'all' ? categoryMenu.querySelector('[data-cat="all"]') : categoryMenu.querySelector(`[data-cat="${cat}"]`);
     if (target) target.classList.add('active-cat');
+    // Sincronizar select admin
+    const catSelect = document.getElementById('adminCategorySelect');
+    if (catSelect) catSelect.value = cat;
   }
 
   // =====================================================
-  // 11. CRUD DE PRODUCTOS (con Firebase y fallback)
+  // 11. CRUD DE PRODUCTOS (con Firebase y fallback) - SIN ALERT DE ERROR
   // =====================================================
   async function saveProductsToFirestore(newProducts) {
     try { await productsRef.set({ list: newProducts }); localStorage.setItem('lego_products_backup', JSON.stringify(newProducts)); }
@@ -1244,7 +1301,7 @@
     product.id = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
     products.push(product);
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); }
-    catch (error) { products = products.filter(p => p.id !== product.id); alert('Error al guardar en la base de datos (guardado localmente). Se intentará sincronizar después.'); }
+    catch (error) { products = products.filter(p => p.id !== product.id); /* sin alert */ }
   }
   async function updateProduct(id, newData) {
     const idx = products.findIndex(p => p.id === id);
@@ -1252,7 +1309,7 @@
     const oldProduct = { ...products[idx] };
     products[idx] = { ...products[idx], ...newData };
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); }
-    catch (error) { products[idx] = oldProduct; alert('Error al actualizar en la base de datos. Cambios guardados localmente.'); }
+    catch (error) { products[idx] = oldProduct; /* sin alert */ }
   }
 
   window.deleteProduct = async function(id) {
@@ -1261,7 +1318,7 @@
     const oldProducts = [...products];
     products = products.filter(p => p.id !== id);
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); if (historyModal.classList.contains('active')) renderInventory(); closeDetailModal(); }
-    catch (error) { products = oldProducts; alert('Error al eliminar. Intenta de nuevo.'); }
+    catch (error) { products = oldProducts; /* sin alert */ }
   };
 
   window.sellProduct = async function(id) {
@@ -1279,7 +1336,7 @@
     sales.push(sale);
     p.stock -= num;
     try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); alert(`✅ Venta realizada: ${num} unidad(es) de "${p.name}" por $${formatPriceARS(sale.total)}`); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } closeDetailModal(); }
-    catch (error) { sales = sales.filter(s => s.id !== sale.id); p.stock += num; alert('Error al registrar la venta. Los cambios se guardaron localmente.'); }
+    catch (error) { sales = sales.filter(s => s.id !== sale.id); p.stock += num; /* sin alert */ }
   };
 
   window.returnProduct = async function(id) {
@@ -1292,7 +1349,7 @@
     if (isNaN(num) || num <= 0) { alert('Cantidad inválida.'); return; }
     p.stock += num;
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); alert(`✅ Devolución registrada: ${num} unidad(es) devueltas de "${p.name}"`); if (historyModal.classList.contains('active')) renderInventory(); closeDetailModal(); }
-    catch (error) { p.stock -= num; alert('Error al registrar la devolución. Cambios guardados localmente.'); }
+    catch (error) { p.stock -= num; /* sin alert */ }
   };
 
   window.voidSale = async function(saleId) {
@@ -1305,7 +1362,7 @@
     if (product) product.stock += sale.quantity;
     sales.splice(saleIndex, 1);
     try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } alert(`✅ Venta anulada. Stock de "${sale.productName}" restaurado.`); }
-    catch (error) { if (product) product.stock -= sale.quantity; sales.splice(saleIndex, 0, sale); alert('Error al anular la venta. Intenta de nuevo.'); }
+    catch (error) { if (product) product.stock -= sale.quantity; sales.splice(saleIndex, 0, sale); /* sin alert */ }
   };
 
   window.editProduct = function(id) {
@@ -1469,6 +1526,9 @@
       adminToggleBtn.textContent = '🚪 Salir';
       document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'flex');
       document.querySelectorAll('.client-only').forEach(el => el.style.display = 'none');
+      // Mostrar filtros admin
+      const adminFilters = document.getElementById('adminFiltersContainer');
+      if (adminFilters) adminFilters.style.display = 'flex';
       renderProducts(searchInput.value);
     } else {
       isAdmin = false;
@@ -1477,6 +1537,16 @@
       adminToggleBtn.textContent = '🔐 Admin';
       document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.client-only').forEach(el => el.style.display = 'flex');
+      // Ocultar filtros admin
+      const adminFilters = document.getElementById('adminFiltersContainer');
+      if (adminFilters) adminFilters.style.display = 'none';
+      // Resetear filtros admin
+      adminOrder = 'none';
+      adminShowZeroStock = false;
+      const orderSelect = document.getElementById('adminOrderSelect');
+      const zeroCheck = document.getElementById('adminZeroStockCheck');
+      if (orderSelect) orderSelect.value = 'none';
+      if (zeroCheck) zeroCheck.checked = false;
       renderProducts(searchInput.value);
     }
   }
@@ -1637,7 +1707,7 @@
   closeControlBtn.addEventListener('click', closeControlFn);
   controlModal.addEventListener('click', function(e) { if (e.target === this) closeControlFn(); });
 
-  // Guardar configuración incluyendo splash
+  // Guardar configuración incluyendo splash (sin alert de error)
   controlForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     if (!isAdmin) return;
@@ -1690,7 +1760,8 @@
       closeControlFn();
       alert('✅ Configuración guardada correctamente.');
     } catch (error) {
-      alert('Error al guardar la configuración. Cambios guardados localmente.');
+      // No mostrar alert de error, solo guardar localmente
+      console.error('Error al guardar configuración:', error);
     }
   });
 
@@ -1712,7 +1783,8 @@
       loadBusinessToUI();
       alert(`✅ Tema cambiado a: ${newTheme}. Todos los usuarios verán este tema.`);
     } catch (error) {
-      alert('❌ Error al guardar el tema. Intenta de nuevo.');
+      console.error('Error al cambiar tema:', error);
+      // No mostramos alert de error
     }
   });
 
@@ -1889,14 +1961,14 @@
   }
 
   // =====================================================
-  // 22. RECONECTAR
+  // 22. RECONECTAR (sin alert de error)
   // =====================================================
   retryBtn.addEventListener('click', async function() {
     this.textContent = '⏳ Conectando...';
     this.disabled = true;
     const result = await loadAllData();
     if (result) { startListeners(); alert('✅ Reconexión exitosa.'); }
-    else { alert('⚠️ No se pudo conectar. Verifica tu conexión y las reglas de Firestore.'); }
+    else { /* no mostramos alert de error */ }
     this.textContent = '🔄 Reconectar';
     this.disabled = false;
   });
@@ -1988,7 +2060,135 @@
   })();
 
   // =====================================================
-  // 24. SPLASH CONTROLADA (se muestra solo si está habilitada)
+  // 24. INYECCIÓN DE FILTROS ADMIN (nuevo)
+  // =====================================================
+  function injectAdminFilters() {
+    // Crear el contenedor de filtros (se colocará justo antes del grid)
+    const container = document.createElement('div');
+    container.id = 'adminFiltersContainer';
+    container.className = 'admin-only';
+    container.style.cssText = 'display: none; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding: 12px 16px; background: var(--bg-card); border-radius: var(--lego-border-radius); border: 2px solid var(--border-color); align-items: center;';
+
+    // Select de categorías
+    const catLabel = document.createElement('label');
+    catLabel.textContent = 'Categoría: ';
+    catLabel.style.fontWeight = '600';
+    catLabel.style.marginRight = '4px';
+    const catSelect = document.createElement('select');
+    catSelect.id = 'adminCategorySelect';
+    catSelect.className = 'lego-input';
+    catSelect.style.width = 'auto';
+    catSelect.style.padding = '6px 12px';
+    const categories = ['all', 'Lego', 'Símil lego', 'mini figuras', 'Hot wheels', 'Autos escala', 'Novedades'];
+    categories.forEach(cat => {
+      const opt = document.createElement('option');
+      opt.value = cat;
+      opt.textContent = cat === 'all' ? 'Todas' : cat;
+      catSelect.appendChild(opt);
+    });
+    catSelect.value = currentCategoryFilter;
+
+    // Checkbox solo agotados
+    const zeroLabel = document.createElement('label');
+    zeroLabel.style.display = 'flex';
+    zeroLabel.style.alignItems = 'center';
+    zeroLabel.style.gap = '6px';
+    zeroLabel.style.fontWeight = '600';
+    const zeroCheck = document.createElement('input');
+    zeroCheck.type = 'checkbox';
+    zeroCheck.id = 'adminZeroStockCheck';
+    zeroCheck.className = 'lego-checkbox';
+    zeroCheck.checked = adminShowZeroStock;
+    zeroLabel.appendChild(zeroCheck);
+    zeroLabel.appendChild(document.createTextNode(' Mostrar solo agotados'));
+
+    // Select de orden
+    const orderLabel = document.createElement('label');
+    orderLabel.textContent = 'Ordenar: ';
+    orderLabel.style.fontWeight = '600';
+    orderLabel.style.marginRight = '4px';
+    const orderSelect = document.createElement('select');
+    orderSelect.id = 'adminOrderSelect';
+    orderSelect.className = 'lego-input';
+    orderSelect.style.width = 'auto';
+    orderSelect.style.padding = '6px 12px';
+    const orders = [
+      { value: 'none', text: 'Sin orden' },
+      { value: 'price_asc', text: 'Precio ↑' },
+      { value: 'price_desc', text: 'Precio ↓' },
+      { value: 'stock_asc', text: 'Stock ↑' },
+      { value: 'stock_desc', text: 'Stock ↓' }
+    ];
+    orders.forEach(o => {
+      const opt = document.createElement('option');
+      opt.value = o.value;
+      opt.textContent = o.text;
+      orderSelect.appendChild(opt);
+    });
+    orderSelect.value = adminOrder;
+
+    // Botón reset
+    const resetBtn = document.createElement('button');
+    resetBtn.type = 'button';
+    resetBtn.className = 'lego-button small secondary';
+    resetBtn.textContent = '🔄 Restablecer filtros';
+
+    // Armar el contenedor
+    container.appendChild(catLabel);
+    container.appendChild(catSelect);
+    container.appendChild(zeroLabel);
+    container.appendChild(orderLabel);
+    container.appendChild(orderSelect);
+    container.appendChild(resetBtn);
+
+    // Insertar antes del grid
+    const grid = document.getElementById('productGrid');
+    grid.parentNode.insertBefore(container, grid);
+
+    // Eventos
+    catSelect.addEventListener('change', function() {
+      const cat = this.value;
+      currentCategoryFilter = cat;
+      highlightCategory(cat);
+      // Cerrar el menú desplegable si está abierto
+      const menu = document.getElementById('categoryMenu');
+      if (menu) menu.classList.remove('active');
+      renderProducts(searchInput.value);
+    });
+
+    zeroCheck.addEventListener('change', function() {
+      adminShowZeroStock = this.checked;
+      renderProducts(searchInput.value);
+    });
+
+    orderSelect.addEventListener('change', function() {
+      adminOrder = this.value;
+      renderProducts(searchInput.value);
+    });
+
+    resetBtn.addEventListener('click', function() {
+      // Resetear categoría a 'all'
+      currentCategoryFilter = 'all';
+      highlightCategory('all');
+      catSelect.value = 'all';
+      // Resetear orden
+      adminOrder = 'none';
+      orderSelect.value = 'none';
+      // Resetear checkbox
+      adminShowZeroStock = false;
+      zeroCheck.checked = false;
+      // Limpiar búsqueda? No, solo filtros admin.
+      renderProducts(searchInput.value);
+    });
+
+    // Inicialmente oculto (se muestra cuando admin inicia sesión)
+    if (isAdmin) {
+      container.style.display = 'flex';
+    }
+  }
+
+  // =====================================================
+  // 25. SPLASH CONTROLADA (se muestra solo si está habilitada)
   // =====================================================
   function showSplashIfNeeded() {
     // Si está desactivada, no hacer nada
@@ -2039,8 +2239,11 @@
   }
 
   // =====================================================
-  // 25. INICIALIZACIÓN
+  // 26. INICIALIZACIÓN
   // =====================================================
+  // Inyectar filtros admin antes de cargar datos para que estén disponibles
+  injectAdminFilters();
+
   loadAllData().then(() => {
     checkAdminSession();
     startListeners();
