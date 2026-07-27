@@ -180,7 +180,7 @@
     .search-bar input { flex: 1 1 200px; min-width: 120px; }
     .search-bar .filter-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
     .search-bar .category-dropdown { position: relative; display: inline-block; }
-    .search-bar .category-dropdown .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: var(--bg-card); border: 3px solid var(--border-color); border-radius: var(--lego-border-radius); box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 1000; min-width: 160px; padding: 8px 0; }
+    .search-bar .category-dropdown .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: var(--bg-card); border: 3px solid var(--border-color); border-radius: var(--lego-border-radius); box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 1000; min-width: 160px; padding: 8px 0; max-height: 300px; overflow-y: auto; }
     .search-bar .category-dropdown .dropdown-menu.active { display: block; }
     .search-bar .category-dropdown .dropdown-menu button { display: block; width: 100%; padding: 8px 16px; background: none; border: none; text-align: left; color: var(--text-primary); cursor: pointer; font-size: 0.9rem; }
     .search-bar .category-dropdown .dropdown-menu button:hover { background: var(--bg-header); color: #1a1a1a; }
@@ -225,10 +225,126 @@
     .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; margin-bottom: 30px; }
     .product-card { background: var(--bg-card); border-radius: var(--lego-border-radius); border: 3px solid var(--border-color); box-shadow: var(--shadow); overflow: hidden; transition: all var(--transition); display: flex; flex-direction: column; position: relative; cursor: default; }
     .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-    .product-card .image { height: 180px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 3px solid var(--border-color); position: relative; }
-    .product-card .image .offer-flag { position: absolute; top: 10px; right: 10px; background: var(--lego-red); color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid #fff; z-index: 2; }
-    .product-card .image img { width: 100%; height: 100%; object-fit: cover; }
-    .product-card .image .no-img { color: #999; font-size: 0.8rem; text-align: center; padding: 10px; }
+    .product-card .image {
+      height: 180px;
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border-bottom: 3px solid var(--border-color);
+      position: relative;
+    }
+    .product-card .image .offer-flag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--lego-red);
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      border: 2px solid #fff;
+      z-index: 2;
+    }
+    .product-card .image .image-counter {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      z-index: 2;
+    }
+    .product-card .image .carousel-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .product-card .image .carousel-container .carousel-track {
+      display: flex;
+      transition: transform 0.4s ease;
+      width: 100%;
+      height: 100%;
+    }
+    .product-card .image .carousel-container .carousel-track .carousel-slide {
+      flex: 0 0 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .product-card .image .carousel-container .carousel-track .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .product-card .image .carousel-container .carousel-track .carousel-slide .no-img {
+      color: #999;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 10px;
+    }
+    .product-card .image .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      font-size: 1.2rem;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+      transition: background 0.2s;
+    }
+    .product-card .image .carousel-btn:hover { background: rgba(0,0,0,0.6); }
+    .product-card .image .carousel-btn.left { left: 4px; }
+    .product-card .image .carousel-btn.right { right: 4px; }
+    .product-card .image .carousel-dots {
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 3;
+      background: rgba(0,0,0,0.3);
+      padding: 3px 10px;
+      border-radius: 20px;
+      backdrop-filter: blur(2px);
+    }
+    .product-card .image .carousel-dots .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .product-card .image .carousel-dots .dot.active { background: #fff; }
     .product-card .info { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 4px; }
     .product-card .info .name { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
     .product-card .info .code { font-size: 0.8rem; color: var(--text-secondary); }
@@ -260,10 +376,128 @@
     .offer-toggle label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 600; }
 
     .detail-container { display: flex; flex-wrap: wrap; gap: 24px; }
-    .detail-image { flex: 1 1 280px; max-height: 400px; overflow: hidden; border-radius: var(--lego-border-radius); border: 3px solid var(--border-color); background: #e0e0e0; display: flex; align-items: center; justify-content: center; position: relative; }
-    .detail-image .offer-flag { position: absolute; top: 10px; right: 10px; background: var(--lego-red); color: #fff; padding: 4px 16px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.3); border: 2px solid #fff; z-index: 2; }
-    .detail-image img { width: 100%; height: 100%; object-fit: contain; max-height: 400px; }
-    .detail-image .no-img { padding: 40px; color: #999; font-size: 1rem; }
+    .detail-image {
+      flex: 1 1 280px;
+      max-height: 400px;
+      overflow: hidden;
+      border-radius: var(--lego-border-radius);
+      border: 3px solid var(--border-color);
+      background: #e0e0e0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .detail-image .offer-flag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--lego-red);
+      color: #fff;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      border: 2px solid #fff;
+      z-index: 2;
+    }
+    .detail-image .image-counter {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 2px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.2);
+      z-index: 2;
+    }
+    .detail-image .carousel-container {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .detail-image .carousel-container .carousel-track {
+      display: flex;
+      transition: transform 0.4s ease;
+      width: 100%;
+      height: 100%;
+    }
+    .detail-image .carousel-container .carousel-track .carousel-slide {
+      flex: 0 0 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .detail-image .carousel-container .carousel-track .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .detail-image .carousel-container .carousel-track .carousel-slide .no-img {
+      padding: 40px;
+      color: #999;
+      font-size: 1rem;
+    }
+    .detail-image .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.3);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(2px);
+      transition: background 0.2s;
+    }
+    .detail-image .carousel-btn:hover { background: rgba(0,0,0,0.6); }
+    .detail-image .carousel-btn.left { left: 6px; }
+    .detail-image .carousel-btn.right { right: 6px; }
+    .detail-image .carousel-dots {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 3;
+      background: rgba(0,0,0,0.3);
+      padding: 4px 14px;
+      border-radius: 20px;
+      backdrop-filter: blur(2px);
+    }
+    .detail-image .carousel-dots .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .detail-image .carousel-dots .dot.active { background: #fff; }
+
     .detail-info { flex: 2 1 300px; display: flex; flex-direction: column; gap: 8px; }
     .detail-info .field { display: flex; border-bottom: 1px solid var(--border-color); padding: 4px 0; }
     .detail-info .field .label { font-weight: 600; min-width: 100px; color: var(--text-secondary); }
@@ -313,6 +547,22 @@
     .style-group .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
     .style-group .row > * { flex: 1 1 120px; }
 
+    .image-list { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
+    .image-list .image-entry { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--bg-body); padding: 8px 12px; border-radius: var(--lego-border-radius); border: 2px solid var(--border-color); }
+    .image-list .image-entry .img-preview { width: 50px; height: 50px; border-radius: 6px; overflow: hidden; background: #e0e0e0; flex-shrink: 0; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; }
+    .image-list .image-entry .img-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .image-list .image-entry .img-preview .no-preview { font-size: 0.6rem; color: #999; }
+    .image-list .image-entry .img-fields { flex: 1; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .image-list .image-entry .img-fields .lego-input { flex: 2 1 150px; padding: 6px 10px; }
+    .image-list .image-entry .img-fields .lego-input.small { flex: 0 1 100px; }
+    .image-list .image-entry .img-actions { display: flex; gap: 4px; }
+    .image-list .image-entry .img-actions .lego-button { padding: 4px 8px; font-size: 0.7rem; border-bottom-width: 3px; }
+
+    .category-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+    .category-list .category-item { display: flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--bg-body); border-radius: var(--lego-border-radius); border: 2px solid var(--border-color); }
+    .category-list .category-item .cat-name { flex: 1; font-weight: 500; }
+    .category-list .category-item .cat-actions { display: flex; gap: 4px; }
+
     @media (max-width: 700px) {
       .header { flex-direction: column; text-align: center; }
       .header .contact-info { text-align: center; }
@@ -329,6 +579,8 @@
       .suggestions-list .suggestion-item { padding: 6px 12px; }
       .suggestions-list .suggestion-item .sug-img { width: 30px; height: 30px; }
       .style-group .row { flex-direction: column; align-items: stretch; }
+      .image-list .image-entry { flex-direction: column; align-items: stretch; }
+      .image-list .image-entry .img-fields { flex-direction: column; }
     }
 
     ::-webkit-scrollbar { width: 8px; }
@@ -367,13 +619,7 @@
         <div class="category-dropdown">
           <button class="lego-button small secondary" id="categoryToggle">📂 Categorías</button>
           <div class="dropdown-menu" id="categoryMenu">
-            <button data-cat="all" class="active-cat">Todas</button>
-            <button data-cat="Lego">Lego</button>
-            <button data-cat="Símil lego">Símil lego</button>
-            <button data-cat="mini figuras">mini figuras</button>
-            <button data-cat="Hot wheels">Hot wheels</button>
-            <button data-cat="Autos escala">Autos escala</button>
-            <button data-cat="Novedades">Novedades</button>
+            <!-- Las categorías se generan dinámicamente desde business.categories -->
           </div>
         </div>
         <button class="lego-button small" id="searchBtn">Buscar</button>
@@ -442,12 +688,7 @@
           <div><label>Categoría</label>
             <select id="prodCategory" class="lego-input">
               <option value="">Sin categoría</option>
-              <option value="Lego">Lego</option>
-              <option value="Símil lego">Símil lego</option>
-              <option value="mini figuras">mini figuras</option>
-              <option value="Hot wheels">Hot wheels</option>
-              <option value="Autos escala">Autos escala</option>
-              <option value="Novedades">Novedades</option>
+              <!-- Las opciones se generan dinámicamente desde business.categories -->
             </select>
           </div>
           <div><label>Costo (ARS)</label><input type="number" id="prodCost" class="lego-input" step="0.01" min="0"></div>
@@ -481,16 +722,17 @@
         </div>
         <small style="color:var(--text-secondary);">Activa la oferta y define el porcentaje de descuento que se aplicará al precio.</small>
       </div>
+
+      <!-- ===== NUEVA SECCIÓN: MÚLTIPLES IMÁGENES ===== -->
       <div class="form-group">
-        <label>Imagen</label>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <input type="file" id="prodImageFile" class="lego-input" accept="image/*" style="flex:1;">
-          <input type="text" id="prodImageUrl" class="lego-input" placeholder="O URL de la imagen" style="flex:2;">
+        <label>Imágenes</label>
+        <div id="imageList" class="image-list">
+          <!-- Las entradas se generan dinámicamente -->
         </div>
-        <div id="imagePreview" style="margin-top:8px; max-width:150px; border-radius:8px; overflow:hidden; border:2px solid var(--border-color); display:none;">
-          <img id="previewImg" src="" alt="preview" style="width:100%; height:auto; display:block;">
-        </div>
+        <button type="button" class="lego-button small secondary" id="addImageBtn" style="margin-top:8px;">➕ Agregar imagen</button>
+        <small style="color:var(--text-secondary);">Puedes agregar varias imágenes y ordenarlas con las flechas.</small>
       </div>
+
       <div class="form-actions">
         <button type="button" class="lego-button secondary" id="cancelModal">Cancelar</button>
         <button type="submit" class="lego-button" id="saveProductBtn">💾 Guardar</button>
@@ -546,6 +788,21 @@
 
       <hr style="border-color:var(--border-color); margin: 16px 0;">
 
+      <!-- ===== NUEVA SECCIÓN: GESTIÓN DE CATEGORÍAS ===== -->
+      <h3 style="margin-bottom:12px;">📂 Categorías</h3>
+      <div class="form-group">
+        <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:8px;">
+          <input type="text" id="newCategoryInput" class="lego-input" placeholder="Nueva categoría" style="flex:1;">
+          <button type="button" class="lego-button small" id="addCategoryBtn">➕ Agregar</button>
+        </div>
+        <div id="categoryList" class="category-list">
+          <!-- Renderizado dinámico -->
+        </div>
+        <small style="color:var(--text-secondary);">Las categorías se actualizan automáticamente en los filtros y formularios.</small>
+      </div>
+
+      <hr style="border-color:var(--border-color); margin: 16px 0;">
+
       <h3 style="margin-bottom:12px;">🎨 Estilos de Visualización</h3>
 
       <div class="style-group">
@@ -596,7 +853,6 @@
         </div>
       </div>
 
-      <!-- ===== NUEVA SECCIÓN: ENCABEZADO (logo, título y nombre) ===== -->
       <div class="style-group" id="headerStyleGroup">
         <h4>🖌️ Encabezado (logo, título y nombre)</h4>
         <div class="row">
@@ -614,7 +870,6 @@
           </div>
         </div>
       </div>
-      <!-- ================================================ -->
 
       <hr style="border-color:var(--border-color); margin: 16px 0;">
 
@@ -736,13 +991,13 @@
     addressAlign: 'right',
     logoSize: 50,
     logoAlign: 'left',
-    // NUEVOS CAMPOS para el encabezado
     headerBgColor: '#ffcc00',
     brandAlign: 'left',
-    // NUEVOS CAMPOS para la animación de inicio (splash)
     splashEnabled: false,
     splashUrl: '',
-    splashDuration: 5
+    splashDuration: 5,
+    // NUEVO: categorías dinámicas
+    categories: ['Lego', 'Símil lego', 'mini figuras', 'Hot wheels', 'Autos escala', 'Novedades']
   };
   let admin = { user: 'admin', pass: 'admin123' };
   let isAdmin = false;
@@ -752,7 +1007,7 @@
   let searchTimeout = null;
 
   // ===== NUEVAS VARIABLES PARA FILTROS ADMIN =====
-  let adminOrder = 'none'; // 'none', 'price_asc', 'price_desc', 'stock_asc', 'stock_desc'
+  let adminOrder = 'none';
   let adminShowZeroStock = false;
 
   // =====================================================
@@ -791,10 +1046,9 @@
   const prodDescription = document.getElementById('prodDescription');
   const prodOnOffer = document.getElementById('prodOnOffer');
   const prodOfferPercent = document.getElementById('prodOfferPercent');
-  const prodImageFile = document.getElementById('prodImageFile');
-  const prodImageUrl = document.getElementById('prodImageUrl');
-  const imagePreview = document.getElementById('imagePreview');
-  const previewImg = document.getElementById('previewImg');
+  // NUEVO: contenedor de imágenes
+  const imageList = document.getElementById('imageList');
+  const addImageBtn = document.getElementById('addImageBtn');
 
   const detailModal = document.getElementById('detailModal');
   const closeDetail = document.getElementById('closeDetail');
@@ -835,7 +1089,6 @@
   const styleAddressAlign = document.getElementById('styleAddressAlign');
   const styleLogoSize = document.getElementById('styleLogoSize');
   const styleLogoAlign = document.getElementById('styleLogoAlign');
-  // nuevos campos del encabezado
   const headerBgColorInput = document.getElementById('headerBgColorInput');
   const brandAlignInput = document.getElementById('brandAlignInput');
 
@@ -863,23 +1116,22 @@
   const categoryToggle = document.getElementById('categoryToggle');
   const categoryMenu = document.getElementById('categoryMenu');
 
+  // NUEVO: categorías en panel de control
+  const newCategoryInput = document.getElementById('newCategoryInput');
+  const addCategoryBtn = document.getElementById('addCategoryBtn');
+  const categoryListEl = document.getElementById('categoryList');
+
   // =====================================================
   // 4. FUNCIONES DE AYUDA
   // =====================================================
   function escHtml(str) { if (!str) return ''; const div = document.createElement('div'); div.textContent = str; return div.innerHTML; }
   function getOfferPrice(p) { if (p.onOffer && p.offerPercent > 0) { const d = p.price * (p.offerPercent/100); return p.price - d; } return p.price; }
-
-  // NUEVA FUNCIÓN DE FORMATO DE PRECIO EN PESOS ARGENTINOS
   function formatPriceARS(value) {
     const rounded = Math.round(value);
     const formatted = rounded.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     return formatted + ' PESOS AR';
   }
-
-  function formatPrice(value) {
-    return formatPriceARS(value);
-  }
-
+  function formatPrice(value) { return formatPriceARS(value); }
   function getOfferDisplay(p) {
     if (p.onOffer && p.offerPercent > 0) {
       const offerPrice = p.price * (1 - p.offerPercent / 100);
@@ -894,16 +1146,33 @@
   }
 
   // =====================================================
-  // 5. CARGA DE DATOS DESDE FIRESTORE CON FALLBACK (SIN ALERT)
+  // 5. CARGA DE DATOS DESDE FIRESTORE CON FALLBACK Y MIGRACIÓN
   // =====================================================
   async function loadAllData() {
     try {
       const [prodSnap, salesSnap, bizSnap, adminSnap] = await Promise.all([
         productsRef.get(), salesRef.get(), businessRef.get(), adminRef.get()
       ]);
-      if (prodSnap.exists) products = prodSnap.data().list || []; else { await productsRef.set({ list: [] }); products = []; }
+      if (prodSnap.exists) {
+        let raw = prodSnap.data().list || [];
+        // Migrar productos antiguos: si tienen 'image' y no 'images', crear images
+        raw = raw.map(p => {
+          if (p.image && !p.images) {
+            p.images = [{ url: p.image, fit: 'cover' }];
+            delete p.image;
+          }
+          if (!p.images) p.images = [];
+          return p;
+        });
+        products = raw;
+      } else { await productsRef.set({ list: [] }); products = []; }
       if (salesSnap.exists) sales = salesSnap.data().list || []; else { await salesRef.set({ list: [] }); sales = []; }
-      if (bizSnap.exists) business = bizSnap.data(); else { await businessRef.set(business); }
+      if (bizSnap.exists) {
+        const bizData = bizSnap.data();
+        // Asegurar que categories exista
+        if (!bizData.categories) bizData.categories = ['Lego', 'Símil lego', 'mini figuras', 'Hot wheels', 'Autos escala', 'Novedades'];
+        business = bizData;
+      } else { await businessRef.set(business); }
       if (adminSnap.exists) admin = adminSnap.data(); else { await adminRef.set(admin); }
       // Guardar backups locales
       localStorage.setItem('lego_products_backup', JSON.stringify(products));
@@ -926,12 +1195,31 @@
         sales = JSON.parse(localSales);
         business = JSON.parse(localBusiness);
         admin = JSON.parse(localAdmin);
+        // Migrar si es necesario
+        products = products.map(p => {
+          if (p.image && !p.images) {
+            p.images = [{ url: p.image, fit: 'cover' }];
+            delete p.image;
+          }
+          if (!p.images) p.images = [];
+          return p;
+        });
+        if (!business.categories) business.categories = ['Lego', 'Símil lego', 'mini figuras', 'Hot wheels', 'Autos escala', 'Novedades'];
         loadBusinessToUI();
         renderProducts(searchInput.value);
         if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); }
-        // No mostramos alert, solo usamos los datos locales
         return false;
       } else {
+        // Valores por defecto con migración
+        products = products.map(p => {
+          if (p.image && !p.images) {
+            p.images = [{ url: p.image, fit: 'cover' }];
+            delete p.image;
+          }
+          if (!p.images) p.images = [];
+          return p;
+        });
+        if (!business.categories) business.categories = ['Lego', 'Símil lego', 'mini figuras', 'Hot wheels', 'Autos escala', 'Novedades'];
         localStorage.setItem('lego_products_backup', JSON.stringify(products));
         localStorage.setItem('lego_sales_backup', JSON.stringify(sales));
         localStorage.setItem('lego_business_backup', JSON.stringify(business));
@@ -939,7 +1227,6 @@
         loadBusinessToUI();
         renderProducts(searchInput.value);
         if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); }
-        // No mostramos alert, usamos valores por defecto
         return false;
       }
     }
@@ -970,13 +1257,11 @@
     const logoImg = document.getElementById('brandLogo');
     const header = document.getElementById('mainHeader');
 
-    // Aplicar estilos a los elementos
     applyStylesToElement(titleEl, business.titleFont || 'Arial', business.titleSize || 32, business.titleColor || '#1a1a1a', business.titleAlign || 'left');
     applyStylesToElement(bizEl, business.bizFont || 'Arial', business.bizSize || 14, business.bizColor || '#1a1a1a', business.bizAlign || 'left');
     applyStylesToElement(phoneEl, business.phoneFont || 'Arial', business.phoneSize || 14, business.phoneColor || '#1a1a1a', business.phoneAlign || 'right');
     applyStylesToElement(addrEl, business.addressFont || 'Arial', business.addressSize || 14, business.addressColor || '#1a1a1a', business.addressAlign || 'right');
 
-    // Logo: tamaño y alineación
     if (logoImg) {
       const size = business.logoSize || 50;
       logoImg.style.maxHeight = size + 'px';
@@ -987,16 +1272,11 @@
       brandContainer.style.textAlign = business.logoAlign || 'left';
     }
 
-    // Tema
-    if (business.theme) {
-      applyTheme(business.theme);
-    }
+    if (business.theme) applyTheme(business.theme);
 
-    // ===== NUEVOS ESTILOS PARA EL ENCABEZADO =====
     if (header && business.headerBgColor) {
       header.style.backgroundColor = business.headerBgColor;
     }
-
     if (brandContainer) {
       const align = business.brandAlign || 'left';
       if (align === 'left') {
@@ -1071,11 +1351,10 @@
     styleAddressAlign.value = business.addressAlign || 'right';
     styleLogoSize.value = business.logoSize || 50;
     styleLogoAlign.value = business.logoAlign || 'left';
-
     if (headerBgColorInput) headerBgColorInput.value = business.headerBgColor || '#ffcc00';
     if (brandAlignInput) brandAlignInput.value = business.brandAlign || 'left';
 
-    // Actualizar campos de splash en el panel de control
+    // Splash
     const splashEnabledCheck = document.getElementById('splashEnabledCheck');
     const splashUrlInput = document.getElementById('splashUrlInput');
     const splashDurationInput = document.getElementById('splashDurationInput');
@@ -1083,47 +1362,111 @@
     if (splashUrlInput) splashUrlInput.value = business.splashUrl || '';
     if (splashDurationInput) splashDurationInput.value = business.splashDuration || 5;
 
+    // Actualizar categorías en UI
+    populateCategories();
+    renderCategoryList();
+
     applyBusinessStyles();
   }
 
   // =====================================================
-  // 8. RENDERIZADO DE PRODUCTOS (con filtros admin)
+  // 7b. POBLAR CATEGORÍAS EN MENÚ Y SELECT
+  // =====================================================
+  function populateCategories() {
+    const cats = business.categories || [];
+    // Menú desplegable de búsqueda
+    const menu = categoryMenu;
+    menu.innerHTML = '<button data-cat="all" class="active-cat">Todas</button>';
+    cats.forEach(c => {
+      const btn = document.createElement('button');
+      btn.dataset.cat = c;
+      btn.textContent = c;
+      menu.appendChild(btn);
+    });
+    // Select en formulario de producto
+    const select = prodCategory;
+    select.innerHTML = '<option value="">Sin categoría</option>';
+    cats.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      select.appendChild(opt);
+    });
+    // Seleccionar la categoría actual en el filtro
+    if (currentCategoryFilter !== 'all') {
+      const btn = menu.querySelector(`[data-cat="${currentCategoryFilter}"]`);
+      if (btn) {
+        menu.querySelectorAll('button').forEach(b => b.classList.remove('active-cat'));
+        btn.classList.add('active-cat');
+      }
+    }
+  }
+
+  function renderCategoryList() {
+    if (!categoryListEl) return;
+    const cats = business.categories || [];
+    if (cats.length === 0) {
+      categoryListEl.innerHTML = '<p style="color:var(--text-secondary);">No hay categorías.</p>';
+      return;
+    }
+    categoryListEl.innerHTML = cats.map((cat, idx) => {
+      return `<div class="category-item">
+        <span class="cat-name">${escHtml(cat)}</span>
+        <div class="cat-actions">
+          <button class="lego-button small secondary" onclick="editCategory(${idx})">✏️</button>
+          <button class="lego-button small" onclick="deleteCategory(${idx})">🗑️</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Funciones globales para editar/eliminar categorías (se llaman desde onclick)
+  window.editCategory = function(idx) {
+    const newName = prompt('Editar categoría:', business.categories[idx]);
+    if (newName !== null && newName.trim() !== '') {
+      business.categories[idx] = newName.trim();
+      saveBusinessToFirestore(business).then(() => {
+        loadBusinessToUI();
+        renderProducts(searchInput.value);
+      });
+    }
+  };
+
+  window.deleteCategory = function(idx) {
+    if (!confirm('¿Eliminar la categoría "' + business.categories[idx] + '"?')) return;
+    const removed = business.categories.splice(idx, 1)[0];
+    // Si algún producto tiene esta categoría, la dejamos (no la borramos del producto)
+    saveBusinessToFirestore(business).then(() => {
+      loadBusinessToUI();
+      renderProducts(searchInput.value);
+    });
+  };
+
+  // =====================================================
+  // 8. RENDERIZADO DE PRODUCTOS (con carrusel)
   // =====================================================
   function renderProducts(filter = '') {
-    // Los clientes solo ven productos con stock > 0; los administradores ven todos (pero pueden filtrar)
     let list = isAdmin ? products : products.filter(p => p.stock > 0);
 
-    // Filtro por búsqueda
     if (filter.trim()) {
       const f = filter.trim().toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(f) || (p.code && p.code.toLowerCase().includes(f)) || (p.barcode && p.barcode.toLowerCase().includes(f)));
     }
 
-    // Filtro por categoría
     if (currentCategoryFilter !== 'all') {
       list = list.filter(p => p.category === currentCategoryFilter);
     }
 
-    // Filtro admin: solo agotados
     if (isAdmin && adminShowZeroStock) {
       list = list.filter(p => p.stock === 0);
     }
 
-    // Orden admin
     if (isAdmin && adminOrder !== 'none') {
       switch (adminOrder) {
-        case 'price_asc':
-          list.sort((a, b) => a.price - b.price);
-          break;
-        case 'price_desc':
-          list.sort((a, b) => b.price - a.price);
-          break;
-        case 'stock_asc':
-          list.sort((a, b) => a.stock - b.stock);
-          break;
-        case 'stock_desc':
-          list.sort((a, b) => b.stock - a.stock);
-          break;
+        case 'price_asc': list.sort((a,b) => a.price - b.price); break;
+        case 'price_desc': list.sort((a,b) => b.price - a.price); break;
+        case 'stock_asc': list.sort((a,b) => a.stock - b.stock); break;
+        case 'stock_desc': list.sort((a,b) => b.stock - a.stock); break;
       }
     }
 
@@ -1139,7 +1482,7 @@
       let stockClass = 'ok', stockLabel = 'En stock';
       if (p.stock === 0) { stockClass = 'out'; stockLabel = 'Agotado'; }
       else if (p.stock <= minStock) { stockClass = 'low'; stockLabel = 'Pocas unidades'; }
-      const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="no-img">🧱<br>Sin imagen</div>`;
+
       const offer = getOfferDisplay(p);
       let priceHtml = '';
       let offerFlag = '';
@@ -1149,35 +1492,135 @@
       } else {
         priceHtml = `<span>$${formatPriceARS(p.price)}</span>`;
       }
+
       const categoryTag = p.category ? `<span class="category-tag">${escHtml(p.category)}</span>` : '';
+
+      // ---- Carrusel de imágenes ----
+      const images = p.images && p.images.length > 0 ? p.images : [{ url: null, fit: 'cover' }];
+      const totalImages = images.length;
+      const imageCounter = totalImages > 1 ? `<div class="image-counter">📷 ${totalImages}</div>` : '';
+
+      let carouselSlides = images.map((img, idx) => {
+        const fit = img.fit || 'cover';
+        if (img.url) {
+          return `<div class="carousel-slide"><img src="${img.url}" alt="${p.name}" style="object-fit:${fit};"></div>`;
+        } else {
+          return `<div class="carousel-slide"><div class="no-img">🧱<br>Sin imagen</div></div>`;
+        }
+      }).join('');
+
+      // Controles solo si hay más de 1 imagen
+      let controls = '';
+      if (totalImages > 1) {
+        controls = `
+          <button class="carousel-btn left" data-direction="prev" data-id="${p.id}">‹</button>
+          <button class="carousel-btn right" data-direction="next" data-id="${p.id}">›</button>
+          <div class="carousel-dots" data-id="${p.id}">
+            ${images.map((_, i) => `<button class="dot ${i===0?'active':''}" data-index="${i}" data-id="${p.id}"></button>`).join('')}
+          </div>
+        `;
+      }
+
       let actionsHtml = '';
       if (isAdmin) {
         actionsHtml = `<div class="actions"><button class="lego-button small secondary" onclick="editProduct('${p.id}')">✏️ Editar</button><button class="lego-button small warning" onclick="sellProduct('${p.id}')">💰 Vender</button><button class="lego-button small success" onclick="returnProduct('${p.id}')">↩️ Devolver</button><button class="lego-button small" onclick="deleteProduct('${p.id}')">🗑️ Eliminar</button><button class="lego-button small" onclick="openDetail('${p.id}')">🔍 Ver</button></div>`;
       } else {
         actionsHtml = `<div class="actions"><button class="lego-button whatsapp small" onclick="clientWhatsApp('${p.id}')">📱 Consultar</button><button class="lego-button small secondary" onclick="openDetail('${p.id}')">🔍 Ver</button></div>`;
       }
-      return `<div class="product-card" data-id="${p.id}"><div class="image">${imgHtml}${offerFlag}</div><div class="info"><div class="name">${escHtml(p.name)}</div><div class="code">${isAdmin ? 'Código: '+escHtml(p.code || '—')+' | Barras: '+escHtml(p.barcode || '—') : ''}</div>${categoryTag}<div class="price">${priceHtml}</div><div class="stock"><span class="stock-badge ${stockClass}">${stockLabel}</span><span>${p.stock} unidades</span>${isAdmin && p.minStock !== undefined ? `<span style="font-size:0.65rem; color:var(--text-secondary);">(mín: ${p.minStock})</span>` : ''}</div></div>${actionsHtml}</div>`;
+
+      return `<div class="product-card" data-id="${p.id}">
+        <div class="image">
+          ${offerFlag}
+          ${imageCounter}
+          <div class="carousel-container" data-id="${p.id}" data-total="${totalImages}" data-current="0">
+            <div class="carousel-track" data-id="${p.id}">
+              ${carouselSlides}
+            </div>
+            ${controls}
+          </div>
+        </div>
+        <div class="info">
+          <div class="name">${escHtml(p.name)}</div>
+          <div class="code">${isAdmin ? 'Código: '+escHtml(p.code || '—')+' | Barras: '+escHtml(p.barcode || '—') : ''}</div>
+          ${categoryTag}
+          <div class="price">${priceHtml}</div>
+          <div class="stock"><span class="stock-badge ${stockClass}">${stockLabel}</span><span>${p.stock} unidades</span>${isAdmin && p.minStock !== undefined ? `<span style="font-size:0.65rem; color:var(--text-secondary);">(mín: ${p.minStock})</span>` : ''}</div>
+        </div>
+        ${actionsHtml}
+      </div>`;
     }).join('');
 
-    // Sincronizar el select de categoría admin con el filtro actual
+    // Sincronizar select de categoría admin
     const catSelect = document.getElementById('adminCategorySelect');
-    if (catSelect) {
-      catSelect.value = currentCategoryFilter;
-    }
+    if (catSelect) catSelect.value = currentCategoryFilter;
+
+    // Inicializar carruseles (asignar eventos)
+    initCarousels();
   }
 
   // =====================================================
-  // 9. BUSCADOR Y SUGERENCIAS
+  // 8b. INICIALIZAR CARRUSELES
+  // =====================================================
+  function initCarousels() {
+    // Delegación de eventos para todos los carruseles
+    document.querySelectorAll('.carousel-container').forEach(container => {
+      const id = container.dataset.id;
+      const total = parseInt(container.dataset.total) || 1;
+      let current = parseInt(container.dataset.current) || 0;
+
+      const track = container.querySelector('.carousel-track');
+      const dots = container.querySelectorAll('.dot');
+      const leftBtn = container.querySelector('.carousel-btn.left');
+      const rightBtn = container.querySelector('.carousel-btn.right');
+
+      function updateCarousel(index) {
+        if (index < 0) index = total - 1;
+        if (index >= total) index = 0;
+        current = index;
+        container.dataset.current = current;
+        if (track) {
+          track.style.transform = `translateX(-${current * 100}%)`;
+        }
+        dots.forEach((dot, i) => {
+          dot.classList.toggle('active', i === current);
+        });
+      }
+
+      // Eventos
+      if (leftBtn) {
+        leftBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          updateCarousel(current - 1);
+        });
+      }
+      if (rightBtn) {
+        rightBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          updateCarousel(current + 1);
+        });
+      }
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          updateCarousel(idx);
+        });
+      });
+
+      // Inicializar posición
+      updateCarousel(current);
+    });
+  }
+
+  // =====================================================
+  // 9. BUSCADOR Y SUGERENCIAS (sin cambios)
   // =====================================================
   function updateSuggestions(query) {
     const trimmed = query.trim().toLowerCase();
     if (!trimmed) { suggestionsList.classList.remove('active'); return; }
-    // Los clientes solo ven sugerencias de productos con stock > 0
     let matches = isAdmin ? products : products.filter(p => p.stock > 0);
     if (currentCategoryFilter !== 'all') {
       matches = matches.filter(p => p.category === currentCategoryFilter);
     }
-    // Aplicar filtro de solo agotados en sugerencias (admin)
     if (isAdmin && adminShowZeroStock) {
       matches = matches.filter(p => p.stock === 0);
     }
@@ -1186,7 +1629,7 @@
     const top = matches.slice(0, 10);
     let html = '';
     top.forEach(p => {
-      const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<span class="no-img">🧱</span>`;
+      const imgHtml = (p.images && p.images[0] && p.images[0].url) ? `<img src="${p.images[0].url}" alt="${p.name}">` : `<span class="no-img">🧱</span>`;
       const stockStatus = p.stock > 0 ? `Stock: ${p.stock}` : 'Agotado';
       const offer = getOfferDisplay(p);
       const priceDisplay = offer ? `$${formatPriceARS(offer.offer)}` : `$${formatPriceARS(p.price)}`;
@@ -1229,7 +1672,6 @@
     suggestionsList.classList.remove('active');
     currentCategoryFilter = 'all';
     highlightCategory('all');
-    // Resetear también los filtros admin? Solo si es admin.
     if (isAdmin) {
       adminOrder = 'none';
       adminShowZeroStock = false;
@@ -1246,7 +1688,7 @@
   });
 
   // =====================================================
-  // 10. CATEGORÍAS DROPDOWN (existente)
+  // 10. CATEGORÍAS DROPDOWN (actualizado)
   // =====================================================
   categoryToggle.addEventListener('click', function(e) {
     e.stopPropagation();
@@ -1272,13 +1714,12 @@
     buttons.forEach(b => b.classList.remove('active-cat'));
     const target = cat === 'all' ? categoryMenu.querySelector('[data-cat="all"]') : categoryMenu.querySelector(`[data-cat="${cat}"]`);
     if (target) target.classList.add('active-cat');
-    // Sincronizar select admin
     const catSelect = document.getElementById('adminCategorySelect');
     if (catSelect) catSelect.value = cat;
   }
 
   // =====================================================
-  // 11. CRUD DE PRODUCTOS (con Firebase y fallback) - SIN ALERT DE ERROR
+  // 11. CRUD DE PRODUCTOS CON IMÁGENES
   // =====================================================
   async function saveProductsToFirestore(newProducts) {
     try { await productsRef.set({ list: newProducts }); localStorage.setItem('lego_products_backup', JSON.stringify(newProducts)); }
@@ -1301,15 +1742,16 @@
     product.id = Date.now().toString(36) + Math.random().toString(36).substr(2, 4);
     products.push(product);
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); }
-    catch (error) { products = products.filter(p => p.id !== product.id); /* sin alert */ }
+    catch (error) { products = products.filter(p => p.id !== product.id); }
   }
+
   async function updateProduct(id, newData) {
     const idx = products.findIndex(p => p.id === id);
     if (idx === -1) return;
     const oldProduct = { ...products[idx] };
     products[idx] = { ...products[idx], ...newData };
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); }
-    catch (error) { products[idx] = oldProduct; /* sin alert */ }
+    catch (error) { products[idx] = oldProduct; }
   }
 
   window.deleteProduct = async function(id) {
@@ -1318,7 +1760,7 @@
     const oldProducts = [...products];
     products = products.filter(p => p.id !== id);
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); if (historyModal.classList.contains('active')) renderInventory(); closeDetailModal(); }
-    catch (error) { products = oldProducts; /* sin alert */ }
+    catch (error) { products = oldProducts; }
   };
 
   window.sellProduct = async function(id) {
@@ -1336,7 +1778,7 @@
     sales.push(sale);
     p.stock -= num;
     try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); alert(`✅ Venta realizada: ${num} unidad(es) de "${p.name}" por $${formatPriceARS(sale.total)}`); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } closeDetailModal(); }
-    catch (error) { sales = sales.filter(s => s.id !== sale.id); p.stock += num; /* sin alert */ }
+    catch (error) { sales = sales.filter(s => s.id !== sale.id); p.stock += num; }
   };
 
   window.returnProduct = async function(id) {
@@ -1349,7 +1791,7 @@
     if (isNaN(num) || num <= 0) { alert('Cantidad inválida.'); return; }
     p.stock += num;
     try { await saveProductsToFirestore(products); renderProducts(searchInput.value); alert(`✅ Devolución registrada: ${num} unidad(es) devueltas de "${p.name}"`); if (historyModal.classList.contains('active')) renderInventory(); closeDetailModal(); }
-    catch (error) { p.stock -= num; /* sin alert */ }
+    catch (error) { p.stock -= num; }
   };
 
   window.voidSale = async function(saleId) {
@@ -1362,7 +1804,7 @@
     if (product) product.stock += sale.quantity;
     sales.splice(saleIndex, 1);
     try { await saveProductsToFirestore(products); await saveSalesToFirestore(sales); renderProducts(searchInput.value); if (historyModal.classList.contains('active')) { renderInventory(); renderSales(); } alert(`✅ Venta anulada. Stock de "${sale.productName}" restaurado.`); }
-    catch (error) { if (product) product.stock -= sale.quantity; sales.splice(saleIndex, 0, sale); /* sin alert */ }
+    catch (error) { if (product) product.stock -= sale.quantity; sales.splice(saleIndex, 0, sale); }
   };
 
   window.editProduct = function(id) {
@@ -1383,57 +1825,154 @@
     prodDescription.value = p.description || '';
     prodOnOffer.checked = p.onOffer || false;
     prodOfferPercent.value = p.offerPercent || 10;
-    prodImageFile.value = '';
-    prodImageUrl.value = p.image || '';
-    if (p.image) { previewImg.src = p.image; imagePreview.style.display = 'block'; } else { imagePreview.style.display = 'none'; }
+    // Cargar imágenes
+    renderImageList(p.images || []);
     modal.classList.add('active');
     closeDetailModal();
   };
 
   // =====================================================
-  // 12. MANEJO DE IMÁGENES
+  // 11b. MANEJO DE LISTA DE IMÁGENES EN FORMULARIO
   // =====================================================
-  prodImageFile.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) { const dataUrl = ev.target.result; previewImg.src = dataUrl; imagePreview.style.display = 'block'; prodImageUrl.value = dataUrl; };
-    reader.readAsDataURL(file);
-  });
-  prodImageUrl.addEventListener('input', function() {
-    const url = this.value.trim();
-    if (url) { previewImg.src = url; imagePreview.style.display = 'block'; } else { imagePreview.style.display = 'none'; }
+  let tempImages = [];
+
+  function renderImageList(images) {
+    tempImages = images.map(img => ({ url: img.url || '', fit: img.fit || 'cover' }));
+    if (tempImages.length === 0) tempImages.push({ url: '', fit: 'cover' });
+    updateImageListUI();
+  }
+
+  function updateImageListUI() {
+    if (!imageList) return;
+    let html = '';
+    tempImages.forEach((img, idx) => {
+      const preview = img.url ? `<img src="${img.url}" alt="preview">` : `<span class="no-preview">🧱</span>`;
+      html += `<div class="image-entry" data-index="${idx}">
+        <div class="img-preview">${preview}</div>
+        <div class="img-fields">
+          <input type="text" class="lego-input" placeholder="URL de la imagen" value="${escHtml(img.url)}" data-field="url">
+          <select class="lego-input small" data-field="fit">
+            <option value="cover" ${img.fit==='cover'?'selected':''}>Cubrir</option>
+            <option value="contain" ${img.fit==='contain'?'selected':''}>Contener</option>
+            <option value="fill" ${img.fit==='fill'?'selected':''}>Rellenar</option>
+            <option value="none" ${img.fit==='none'?'selected':''}>Normal</option>
+          </select>
+          <input type="file" class="lego-input small" accept="image/*" data-field="file" style="flex:1; padding:4px;">
+        </div>
+        <div class="img-actions">
+          <button type="button" class="lego-button small secondary" data-action="moveUp" ${idx===0?'disabled':''}>↑</button>
+          <button type="button" class="lego-button small secondary" data-action="moveDown" ${idx===tempImages.length-1?'disabled':''}>↓</button>
+          <button type="button" class="lego-button small" data-action="remove" ${tempImages.length<=1?'disabled':''}>✕</button>
+        </div>
+      </div>`;
+    });
+    imageList.innerHTML = html;
+
+    // Asignar eventos a los campos
+    imageList.querySelectorAll('.image-entry').forEach(entry => {
+      const idx = parseInt(entry.dataset.index);
+      const urlInput = entry.querySelector('[data-field="url"]');
+      const fitSelect = entry.querySelector('[data-field="fit"]');
+      const fileInput = entry.querySelector('[data-field="file"]');
+      const moveUp = entry.querySelector('[data-action="moveUp"]');
+      const moveDown = entry.querySelector('[data-action="moveDown"]');
+      const removeBtn = entry.querySelector('[data-action="remove"]');
+
+      urlInput.addEventListener('input', function() {
+        tempImages[idx].url = this.value;
+        const preview = entry.querySelector('.img-preview img');
+        if (preview) preview.src = this.value;
+        else {
+          const previewDiv = entry.querySelector('.img-preview');
+          if (this.value) previewDiv.innerHTML = `<img src="${this.value}" alt="preview">`;
+          else previewDiv.innerHTML = `<span class="no-preview">🧱</span>`;
+        }
+      });
+
+      fitSelect.addEventListener('change', function() {
+        tempImages[idx].fit = this.value;
+      });
+
+      fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          const dataUrl = ev.target.result;
+          tempImages[idx].url = dataUrl;
+          urlInput.value = dataUrl;
+          const previewDiv = entry.querySelector('.img-preview');
+          previewDiv.innerHTML = `<img src="${dataUrl}" alt="preview">`;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      if (moveUp) {
+        moveUp.addEventListener('click', function() {
+          if (idx > 0) {
+            const [removed] = tempImages.splice(idx, 1);
+            tempImages.splice(idx - 1, 0, removed);
+            updateImageListUI();
+          }
+        });
+      }
+      if (moveDown) {
+        moveDown.addEventListener('click', function() {
+          if (idx < tempImages.length - 1) {
+            const [removed] = tempImages.splice(idx, 1);
+            tempImages.splice(idx + 1, 0, removed);
+            updateImageListUI();
+          }
+        });
+      }
+      if (removeBtn) {
+        removeBtn.addEventListener('click', function() {
+          if (tempImages.length <= 1) return;
+          tempImages.splice(idx, 1);
+          updateImageListUI();
+        });
+      }
+    });
+  }
+
+  addImageBtn.addEventListener('click', function() {
+    tempImages.push({ url: '', fit: 'cover' });
+    updateImageListUI();
   });
 
-  document.getElementById('logoFileInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function(ev) {
-      const dataUrl = ev.target.result;
-      document.getElementById('logoPreviewImg').src = dataUrl;
-      document.getElementById('logoPreview').style.display = 'block';
-      document.getElementById('logoUrlInput').value = dataUrl;
-    };
-    reader.readAsDataURL(file);
-  });
-  document.getElementById('logoUrlInput').addEventListener('input', function() {
-    const url = this.value.trim();
-    if (url) {
-      document.getElementById('logoPreviewImg').src = url;
-      document.getElementById('logoPreview').style.display = 'block';
-    } else {
-      document.getElementById('logoPreview').style.display = 'none';
-    }
-  });
-
   // =====================================================
-  // 13. FORMULARIO PRODUCTO
+  // 12. FORMULARIO PRODUCTO (con imágenes)
   // =====================================================
   function openProductForm(productData = null) {
     if (!isAdmin) return;
-    if (productData) { editingId = productData.id; modalTitle.textContent = '✏️ Editar Producto'; editId.value = productData.id; prodName.value = productData.name || ''; prodCode.value = productData.code || ''; prodBarcode.value = productData.barcode || ''; prodCategory.value = productData.category || ''; prodCost.value = productData.cost || ''; prodPrice.value = productData.price || ''; prodStock.value = productData.stock || 0; prodMinStock.value = productData.minStock !== undefined ? productData.minStock : 5; prodDescription.value = productData.description || ''; prodOnOffer.checked = productData.onOffer || false; prodOfferPercent.value = productData.offerPercent || 10; prodImageFile.value = ''; prodImageUrl.value = productData.image || ''; if (productData.image) { previewImg.src = productData.image; imagePreview.style.display = 'block'; } else { imagePreview.style.display = 'none'; } }
-    else { editingId = null; modalTitle.textContent = '➕ Agregar Producto'; editId.value = ''; productForm.reset(); prodStock.value = 1; prodMinStock.value = 5; prodDescription.value = ''; prodOnOffer.checked = false; prodOfferPercent.value = 10; prodImageFile.value = ''; prodImageUrl.value = ''; imagePreview.style.display = 'none'; }
+    if (productData) {
+      editingId = productData.id;
+      modalTitle.textContent = '✏️ Editar Producto';
+      editId.value = productData.id;
+      prodName.value = productData.name || '';
+      prodCode.value = productData.code || '';
+      prodBarcode.value = productData.barcode || '';
+      prodCategory.value = productData.category || '';
+      prodCost.value = productData.cost || '';
+      prodPrice.value = productData.price || '';
+      prodStock.value = productData.stock || 0;
+      prodMinStock.value = productData.minStock !== undefined ? productData.minStock : 5;
+      prodDescription.value = productData.description || '';
+      prodOnOffer.checked = productData.onOffer || false;
+      prodOfferPercent.value = productData.offerPercent || 10;
+      renderImageList(productData.images || []);
+    } else {
+      editingId = null;
+      modalTitle.textContent = '➕ Agregar Producto';
+      editId.value = '';
+      productForm.reset();
+      prodStock.value = 1;
+      prodMinStock.value = 5;
+      prodDescription.value = '';
+      prodOnOffer.checked = false;
+      prodOfferPercent.value = 10;
+      renderImageList([{ url: '', fit: 'cover' }]);
+    }
     modal.classList.add('active');
   }
 
@@ -1448,13 +1987,30 @@
     if (isNaN(price) || price < 0) { alert('Precio inválido.'); return; }
     const stock = parseInt(prodStock.value) || 0;
     const cost = parseFloat(prodCost.value) || 0;
-    const image = prodImageUrl.value.trim() || '';
     const minStock = parseInt(prodMinStock.value) || 5;
     const description = prodDescription.value.trim();
     const onOffer = prodOnOffer.checked;
     const offerPercent = parseInt(prodOfferPercent.value) || 0;
     const category = prodCategory.value.trim() || '';
-    const data = { name, code: prodCode.value.trim(), barcode: prodBarcode.value.trim(), category, cost, price, stock, minStock, description, onOffer, offerPercent: onOffer ? Math.min(100, Math.max(0, offerPercent)) : 0, image };
+
+    // Obtener imágenes de tempImages
+    const images = tempImages.filter(img => img.url && img.url.trim() !== '').map(img => ({ url: img.url.trim(), fit: img.fit || 'cover' }));
+
+    const data = {
+      name,
+      code: prodCode.value.trim(),
+      barcode: prodBarcode.value.trim(),
+      category,
+      cost,
+      price,
+      stock,
+      minStock,
+      description,
+      onOffer,
+      offerPercent: onOffer ? Math.min(100, Math.max(0, offerPercent)) : 0,
+      images
+    };
+
     if (editingId) { await updateProduct(editingId, data); } else { await addProduct(data); }
     modal.classList.remove('active');
     renderProducts(searchInput.value);
@@ -1466,16 +2022,37 @@
   modal.addEventListener('click', function(e) { if (e.target === this) closeModalFn(); });
 
   // =====================================================
-  // 14. DETALLE
+  // 13. DETALLE (con carrusel)
   // =====================================================
   window.openDetail = function(id) {
     const p = products.find(pr => pr.id === id);
     if (!p) return;
     detailTitle.textContent = `🔍 ${p.name}`;
-    const imgHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="no-img">🧱 Sin imagen</div>`;
-    const minStock = p.minStock !== undefined ? p.minStock : 5;
-    let stockClass = 'ok', stockLabel = 'En stock';
-    if (p.stock === 0) { stockClass = 'out'; stockLabel = 'Agotado'; } else if (p.stock <= minStock) { stockClass = 'low'; stockLabel = 'Pocas unidades'; }
+
+    const images = p.images && p.images.length > 0 ? p.images : [{ url: null, fit: 'contain' }];
+    const totalImages = images.length;
+    const imageCounter = totalImages > 1 ? `<div class="image-counter">📷 ${totalImages}</div>` : '';
+
+    let carouselSlides = images.map((img, idx) => {
+      const fit = img.fit || 'contain';
+      if (img.url) {
+        return `<div class="carousel-slide"><img src="${img.url}" alt="${p.name}" style="object-fit:${fit};"></div>`;
+      } else {
+        return `<div class="carousel-slide"><div class="no-img">🧱 Sin imagen</div></div>`;
+      }
+    }).join('');
+
+    let controls = '';
+    if (totalImages > 1) {
+      controls = `
+        <button class="carousel-btn left" data-direction="prev" data-id="detail-${p.id}">‹</button>
+        <button class="carousel-btn right" data-direction="next" data-id="detail-${p.id}">›</button>
+        <div class="carousel-dots" data-id="detail-${p.id}">
+          ${images.map((_, i) => `<button class="dot ${i===0?'active':''}" data-index="${i}" data-id="detail-${p.id}"></button>`).join('')}
+        </div>
+      `;
+    }
+
     const offer = getOfferDisplay(p);
     let priceHtml = '';
     let offerFlag = '';
@@ -1485,15 +2062,74 @@
     } else {
       priceHtml = `<span>$${formatPriceARS(p.price)}</span>`;
     }
+    const minStock = p.minStock !== undefined ? p.minStock : 5;
+    let stockClass = 'ok', stockLabel = 'En stock';
+    if (p.stock === 0) { stockClass = 'out'; stockLabel = 'Agotado'; }
+    else if (p.stock <= minStock) { stockClass = 'low'; stockLabel = 'Pocas unidades'; }
     const categoryTag = p.category ? `<div class="field"><span class="label">Categoría</span><span class="value">${escHtml(p.category)}</span></div>` : '';
+
     let actionsHtml = '';
     if (isAdmin) {
       actionsHtml = `<div class="detail-actions"><button class="lego-button small secondary" onclick="editProduct('${p.id}'); closeDetailModal();">✏️ Editar</button><button class="lego-button small warning" onclick="sellProduct('${p.id}');">💰 Vender</button><button class="lego-button small success" onclick="returnProduct('${p.id}');">↩️ Devolver</button><button class="lego-button small" onclick="deleteProduct('${p.id}');">🗑️ Eliminar</button><button class="lego-button small whatsapp" onclick="clientWhatsApp('${p.id}');">📱 WhatsApp</button><button class="lego-button small secondary" onclick="closeDetailModal();">Cerrar</button></div>`;
     } else {
       actionsHtml = `<div class="detail-actions"><button class="lego-button whatsapp small" onclick="clientWhatsApp('${p.id}');">📱 Consultar por WhatsApp</button><button class="lego-button small secondary" onclick="closeDetailModal();">Cerrar</button></div>`;
     }
-    detailContent.innerHTML = `<div class="detail-container"><div class="detail-image">${imgHtml}${offerFlag}</div><div class="detail-info"><div class="field"><span class="label">Nombre</span><span class="value">${escHtml(p.name)}</span></div>${isAdmin ? `<div class="field"><span class="label">Código</span><span class="value">${escHtml(p.code || '—')}</span></div>` : ''}${isAdmin ? `<div class="field"><span class="label">Código de barras</span><span class="value">${escHtml(p.barcode || '—')}</span></div>` : ''}${categoryTag}${isAdmin ? `<div class="field"><span class="label">Costo</span><span class="value">$${formatPriceARS(p.cost || 0)}</span></div>` : ''}<div class="field"><span class="label">Precio</span><span class="value">${priceHtml}</span></div><div class="field"><span class="label">Stock</span><span class="value">${p.stock} unidades <span class="stock-badge ${stockClass}">${stockLabel}</span>${isAdmin ? ` (mín: ${minStock})` : ''}</span></div><div class="field"><span class="label">Descripción</span><span class="value desc">${escHtml(p.description || 'Sin descripción')}</span></div>${actionsHtml}</div></div>`;
+
+    detailContent.innerHTML = `<div class="detail-container">
+      <div class="detail-image">
+        ${offerFlag}
+        ${imageCounter}
+        <div class="carousel-container" data-id="detail-${p.id}" data-total="${totalImages}" data-current="0">
+          <div class="carousel-track" data-id="detail-${p.id}">
+            ${carouselSlides}
+          </div>
+          ${controls}
+        </div>
+      </div>
+      <div class="detail-info">
+        <div class="field"><span class="label">Nombre</span><span class="value">${escHtml(p.name)}</span></div>
+        ${isAdmin ? `<div class="field"><span class="label">Código</span><span class="value">${escHtml(p.code || '—')}</span></div>` : ''}
+        ${isAdmin ? `<div class="field"><span class="label">Código de barras</span><span class="value">${escHtml(p.barcode || '—')}</span></div>` : ''}
+        ${categoryTag}
+        ${isAdmin ? `<div class="field"><span class="label">Costo</span><span class="value">$${formatPriceARS(p.cost || 0)}</span></div>` : ''}
+        <div class="field"><span class="label">Precio</span><span class="value">${priceHtml}</span></div>
+        <div class="field"><span class="label">Stock</span><span class="value">${p.stock} unidades <span class="stock-badge ${stockClass}">${stockLabel}</span>${isAdmin ? ` (mín: ${minStock})` : ''}</span></div>
+        <div class="field"><span class="label">Descripción</span><span class="value desc">${escHtml(p.description || 'Sin descripción')}</span></div>
+        ${actionsHtml}
+      </div>
+    </div>`;
+
     detailModal.classList.add('active');
+
+    // Inicializar carrusel del detalle
+    setTimeout(() => {
+      const container = detailContent.querySelector('.carousel-container');
+      if (container) {
+        const id = container.dataset.id;
+        const total = parseInt(container.dataset.total) || 1;
+        let current = 0;
+        const track = container.querySelector('.carousel-track');
+        const dots = container.querySelectorAll('.dot');
+        const leftBtn = container.querySelector('.carousel-btn.left');
+        const rightBtn = container.querySelector('.carousel-btn.right');
+
+        function updateCarousel(index) {
+          if (index < 0) index = total - 1;
+          if (index >= total) index = 0;
+          current = index;
+          container.dataset.current = current;
+          if (track) track.style.transform = `translateX(-${current * 100}%)`;
+          dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+        }
+
+        if (leftBtn) leftBtn.addEventListener('click', (e) => { e.stopPropagation(); updateCarousel(current - 1); });
+        if (rightBtn) rightBtn.addEventListener('click', (e) => { e.stopPropagation(); updateCarousel(current + 1); });
+        dots.forEach((dot, idx) => {
+          dot.addEventListener('click', (e) => { e.stopPropagation(); updateCarousel(idx); });
+        });
+        updateCarousel(0);
+      }
+    }, 50);
   };
 
   function closeDetailModal() { detailModal.classList.remove('active'); }
@@ -1501,7 +2137,7 @@
   detailModal.addEventListener('click', function(e) { if (e.target === this) closeDetailModal(); });
 
   // =====================================================
-  // 15. WHATSAPP
+  // 14. WHATSAPP (sin cambios)
   // =====================================================
   window.clientWhatsApp = function(productId) {
     const p = products.find(pr => pr.id === productId);
@@ -1515,7 +2151,7 @@
   };
 
   // =====================================================
-  // 16. ADMIN LOGIN / LOGOUT
+  // 15. ADMIN LOGIN / LOGOUT (sin cambios)
   // =====================================================
   function checkAdminSession() {
     const session = sessionStorage.getItem('lego_admin_session');
@@ -1526,7 +2162,6 @@
       adminToggleBtn.textContent = '🚪 Salir';
       document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'flex');
       document.querySelectorAll('.client-only').forEach(el => el.style.display = 'none');
-      // Mostrar filtros admin
       const adminFilters = document.getElementById('adminFiltersContainer');
       if (adminFilters) adminFilters.style.display = 'flex';
       renderProducts(searchInput.value);
@@ -1537,10 +2172,8 @@
       adminToggleBtn.textContent = '🔐 Admin';
       document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
       document.querySelectorAll('.client-only').forEach(el => el.style.display = 'flex');
-      // Ocultar filtros admin
       const adminFilters = document.getElementById('adminFiltersContainer');
       if (adminFilters) adminFilters.style.display = 'none';
-      // Resetear filtros admin
       adminOrder = 'none';
       adminShowZeroStock = false;
       const orderSelect = document.getElementById('adminOrderSelect');
@@ -1587,17 +2220,12 @@
   loginModal.addEventListener('click', function(e) { if (e.target === this) closeLoginFn(); });
 
   // =====================================================
-  // 17. PANEL DE CONTROL (con estilos y splash)
+  // 16. PANEL DE CONTROL (incluye categorías y splash)
   // =====================================================
-
-  // Inyectar la sección de animación de inicio en el panel de control
   function injectSplashSettings() {
     const controlForm = document.getElementById('controlForm');
-    // Buscar el lugar donde insertar: antes del <hr> de "Acceso Administrador" o antes de los botones
-    // Insertamos antes del <hr> que separa "Acceso Administrador"
     const hr = controlForm.querySelector('hr');
     if (!hr) return;
-
     const splashHTML = `
       <hr style="border-color:var(--border-color); margin: 16px 0;">
       <h3 style="margin-bottom:12px;">🎬 Animación de Inicio</h3>
@@ -1625,10 +2253,8 @@
         <img id="splashPreviewImg" src="" style="width:100%; height:auto; display:block;">
       </div>
     `;
-
     hr.insertAdjacentHTML('beforebegin', splashHTML);
 
-    // Manejar el input file para splash
     const splashFileInput = document.getElementById('splashFileInput');
     const splashUrlInput = document.getElementById('splashUrlInput');
     const splashPreview = document.getElementById('splashPreview');
@@ -1657,26 +2283,20 @@
       }
     });
 
-    // Si ya hay una URL guardada, mostrarla en preview
     if (business.splashUrl) {
       splashPreviewImg.src = business.splashUrl;
       splashPreview.style.display = 'block';
     }
   }
 
-  // Llamar a la inyección después de que el DOM esté listo
   document.addEventListener('DOMContentLoaded', function() {
     injectSplashSettings();
-    // También cargar valores actuales (ya se hace en loadBusinessToUI)
   });
 
-  // Modificar loadBusinessToUI para actualizar los campos de splash
-  // Ya se actualizan en la función existente, pero necesitamos que también
-  // se actualice el preview. Extendemos loadBusinessToUI para que también maneje el preview.
+  // Extender loadBusinessToUI para splash
   const originalLoadBusinessToUI = loadBusinessToUI;
   loadBusinessToUI = function() {
     originalLoadBusinessToUI();
-    // Actualizar campos de splash
     const splashEnabledCheck = document.getElementById('splashEnabledCheck');
     const splashUrlInput = document.getElementById('splashUrlInput');
     const splashDurationInput = document.getElementById('splashDurationInput');
@@ -1695,7 +2315,6 @@
     if (splashDurationInput) splashDurationInput.value = business.splashDuration || 5;
   };
 
-  // Abrir panel de control y asegurar que los campos de splash estén actualizados
   openControlBtn.addEventListener('click', function() {
     if (!isAdmin) return;
     loadBusinessToUI();
@@ -1707,12 +2326,11 @@
   closeControlBtn.addEventListener('click', closeControlFn);
   controlModal.addEventListener('click', function(e) { if (e.target === this) closeControlFn(); });
 
-  // Guardar configuración incluyendo splash (sin alert de error)
+  // Guardar configuración (incluye categorías)
   controlForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     if (!isAdmin) return;
     const logoUrlInput = document.getElementById('logoUrlInput');
-    // Obtener valores de splash
     const splashEnabledCheck = document.getElementById('splashEnabledCheck');
     const splashUrlInput = document.getElementById('splashUrlInput');
     const splashDurationInput = document.getElementById('splashDurationInput');
@@ -1747,7 +2365,8 @@
       brandAlign: brandAlignInput ? brandAlignInput.value : 'left',
       splashEnabled: splashEnabledCheck ? splashEnabledCheck.checked : false,
       splashUrl: splashUrlInput ? splashUrlInput.value.trim() : '',
-      splashDuration: splashDurationInput ? parseInt(splashDurationInput.value) || 5 : 5
+      splashDuration: splashDurationInput ? parseInt(splashDurationInput.value) || 5 : 5,
+      categories: business.categories // ya se mantienen
     };
     const newUser = adminUserInput.value.trim();
     const newPass = adminPassInput.value.trim();
@@ -1760,13 +2379,25 @@
       closeControlFn();
       alert('✅ Configuración guardada correctamente.');
     } catch (error) {
-      // No mostrar alert de error, solo guardar localmente
       console.error('Error al guardar configuración:', error);
     }
   });
 
+  // Agregar categoría desde el panel
+  addCategoryBtn.addEventListener('click', function() {
+    const name = newCategoryInput.value.trim();
+    if (!name) { alert('Escribe un nombre para la categoría.'); return; }
+    if (business.categories.includes(name)) { alert('Esta categoría ya existe.'); return; }
+    business.categories.push(name);
+    saveBusinessToFirestore(business).then(() => {
+      loadBusinessToUI();
+      renderProducts(searchInput.value);
+      newCategoryInput.value = '';
+    });
+  });
+
   // =====================================================
-  // 18. TEMA GLOBAL
+  // 17. TEMA GLOBAL
   // =====================================================
   const themes = ['default', 'dark', 'lego'];
   let themeIndex = themes.indexOf(business.theme || 'default');
@@ -1784,12 +2415,11 @@
       alert(`✅ Tema cambiado a: ${newTheme}. Todos los usuarios verán este tema.`);
     } catch (error) {
       console.error('Error al cambiar tema:', error);
-      // No mostramos alert de error
     }
   });
 
   // =====================================================
-  // 19. BACKUP
+  // 18. BACKUP (sin cambios)
   // =====================================================
   document.getElementById('exportDbBtn').addEventListener('click', function() {
     if (!isAdmin) return;
@@ -1837,7 +2467,7 @@
   });
 
   // =====================================================
-  // 20. HISTORIAL (Admin)
+  // 19. HISTORIAL (sin cambios)
   // =====================================================
   function renderInventory() {
     if (!isAdmin) return;
@@ -1926,58 +2556,81 @@
   clearSalesFilter.addEventListener('click', function() { if (!isAdmin) return; salesFilter = 'all'; salesDateFilter.value = ''; renderSales(); });
 
   // =====================================================
-  // 21. Sincronización en tiempo real
+  // 20. Sincronización en tiempo real
   // =====================================================
   let productListener = null, salesListener = null, businessListener = null, adminListener = null;
 
   function startListeners() {
     if (productListener) productListener();
     productListener = productsRef.onSnapshot((doc) => {
-      if (doc.exists) { const newProducts = doc.data().list || []; if (JSON.stringify(newProducts) !== JSON.stringify(products)) { products = newProducts; renderProducts(searchInput.value); if (historyModal.classList.contains('active')) renderInventory(); } }
+      if (doc.exists) {
+        let raw = doc.data().list || [];
+        raw = raw.map(p => {
+          if (p.image && !p.images) {
+            p.images = [{ url: p.image, fit: 'cover' }];
+            delete p.image;
+          }
+          if (!p.images) p.images = [];
+          return p;
+        });
+        if (JSON.stringify(raw) !== JSON.stringify(products)) {
+          products = raw;
+          renderProducts(searchInput.value);
+          if (historyModal.classList.contains('active')) renderInventory();
+        }
+      }
     }, (error) => console.warn('Snapshot productos error:', error));
 
     if (salesListener) salesListener();
     salesListener = salesRef.onSnapshot((doc) => {
-      if (doc.exists) { const newSales = doc.data().list || []; if (JSON.stringify(newSales) !== JSON.stringify(sales)) { sales = newSales; if (historyModal.classList.contains('active')) renderSales(); } }
+      if (doc.exists) {
+        const newSales = doc.data().list || [];
+        if (JSON.stringify(newSales) !== JSON.stringify(sales)) {
+          sales = newSales;
+          if (historyModal.classList.contains('active')) renderSales();
+        }
+      }
     }, (error) => console.warn('Snapshot ventas error:', error));
 
     if (businessListener) businessListener();
     businessListener = businessRef.onSnapshot((doc) => {
       if (doc.exists) {
         const newBusiness = doc.data();
+        if (!newBusiness.categories) newBusiness.categories = ['Lego', 'Símil lego', 'mini figuras', 'Hot wheels', 'Autos escala', 'Novedades'];
         if (JSON.stringify(newBusiness) !== JSON.stringify(business)) {
           business = newBusiness;
           loadBusinessToUI();
-          // Si la splash cambia mientras la página está abierta, no la mostramos de nuevo.
-          // Solo se muestra al cargar la página.
         }
       }
     }, (error) => console.warn('Snapshot negocio error:', error));
 
     if (adminListener) adminListener();
     adminListener = adminRef.onSnapshot((doc) => {
-      if (doc.exists) { const newAdmin = doc.data(); if (JSON.stringify(newAdmin) !== JSON.stringify(admin)) { admin = newAdmin; } }
+      if (doc.exists) {
+        const newAdmin = doc.data();
+        if (JSON.stringify(newAdmin) !== JSON.stringify(admin)) {
+          admin = newAdmin;
+        }
+      }
     }, (error) => console.warn('Snapshot admin error:', error));
   }
 
   // =====================================================
-  // 22. RECONECTAR (sin alert de error)
+  // 21. RECONECTAR (sin alert)
   // =====================================================
   retryBtn.addEventListener('click', async function() {
     this.textContent = '⏳ Conectando...';
     this.disabled = true;
     const result = await loadAllData();
     if (result) { startListeners(); alert('✅ Reconexión exitosa.'); }
-    else { /* no mostramos alert de error */ }
     this.textContent = '🔄 Reconectar';
     this.disabled = false;
   });
 
   // =====================================================
-  // 23. BOTÓN FLOTANTE "VOLVER ARRIBA" (para clientes)
+  // 22. BOTÓN FLOTANTE "VOLVER ARRIBA"
   // =====================================================
   (function createBackToTop() {
-    // Estilos del botón
     const style = document.createElement('style');
     style.textContent = `
       #backToTopBtn {
@@ -1994,7 +2647,7 @@
         font-size: 2rem;
         line-height: 1;
         cursor: pointer;
-        display: none; /* oculto por defecto */
+        display: none;
         align-items: center;
         justify-content: center;
         transition: all 0.3s ease;
@@ -2030,14 +2683,12 @@
     `;
     document.head.appendChild(style);
 
-    // Crear el botón
     const btn = document.createElement('button');
     btn.id = 'backToTopBtn';
     btn.setAttribute('aria-label', 'Volver arriba');
     btn.innerHTML = '↑';
     document.body.appendChild(btn);
 
-    // Mostrar/ocultar según scroll
     let isVisible = false;
     window.addEventListener('scroll', function() {
       const scrollY = window.scrollY || window.pageYOffset;
@@ -2050,26 +2701,22 @@
       }
     });
 
-    // Acción: scroll suave al inicio
     btn.addEventListener('click', function() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Opcional: también enfocar el buscador para una mejor experiencia
       const search = document.getElementById('searchInput');
       if (search) search.focus();
     });
   })();
 
   // =====================================================
-  // 24. INYECCIÓN DE FILTROS ADMIN (nuevo)
+  // 23. INYECCIÓN DE FILTROS ADMIN
   // =====================================================
   function injectAdminFilters() {
-    // Crear el contenedor de filtros (se colocará justo antes del grid)
     const container = document.createElement('div');
     container.id = 'adminFiltersContainer';
     container.className = 'admin-only';
     container.style.cssText = 'display: none; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; padding: 12px 16px; background: var(--bg-card); border-radius: var(--lego-border-radius); border: 2px solid var(--border-color); align-items: center;';
 
-    // Select de categorías
     const catLabel = document.createElement('label');
     catLabel.textContent = 'Categoría: ';
     catLabel.style.fontWeight = '600';
@@ -2079,7 +2726,7 @@
     catSelect.className = 'lego-input';
     catSelect.style.width = 'auto';
     catSelect.style.padding = '6px 12px';
-    const categories = ['all', 'Lego', 'Símil lego', 'mini figuras', 'Hot wheels', 'Autos escala', 'Novedades'];
+    const categories = ['all', ...(business.categories || [])];
     categories.forEach(cat => {
       const opt = document.createElement('option');
       opt.value = cat;
@@ -2088,7 +2735,6 @@
     });
     catSelect.value = currentCategoryFilter;
 
-    // Checkbox solo agotados
     const zeroLabel = document.createElement('label');
     zeroLabel.style.display = 'flex';
     zeroLabel.style.alignItems = 'center';
@@ -2102,7 +2748,6 @@
     zeroLabel.appendChild(zeroCheck);
     zeroLabel.appendChild(document.createTextNode(' Mostrar solo agotados'));
 
-    // Select de orden
     const orderLabel = document.createElement('label');
     orderLabel.textContent = 'Ordenar: ';
     orderLabel.style.fontWeight = '600';
@@ -2127,13 +2772,11 @@
     });
     orderSelect.value = adminOrder;
 
-    // Botón reset
     const resetBtn = document.createElement('button');
     resetBtn.type = 'button';
     resetBtn.className = 'lego-button small secondary';
     resetBtn.textContent = '🔄 Restablecer filtros';
 
-    // Armar el contenedor
     container.appendChild(catLabel);
     container.appendChild(catSelect);
     container.appendChild(zeroLabel);
@@ -2141,16 +2784,13 @@
     container.appendChild(orderSelect);
     container.appendChild(resetBtn);
 
-    // Insertar antes del grid
     const grid = document.getElementById('productGrid');
     grid.parentNode.insertBefore(container, grid);
 
-    // Eventos
     catSelect.addEventListener('change', function() {
       const cat = this.value;
       currentCategoryFilter = cat;
       highlightCategory(cat);
-      // Cerrar el menú desplegable si está abierto
       const menu = document.getElementById('categoryMenu');
       if (menu) menu.classList.remove('active');
       renderProducts(searchInput.value);
@@ -2167,40 +2807,28 @@
     });
 
     resetBtn.addEventListener('click', function() {
-      // Resetear categoría a 'all'
       currentCategoryFilter = 'all';
       highlightCategory('all');
       catSelect.value = 'all';
-      // Resetear orden
       adminOrder = 'none';
       orderSelect.value = 'none';
-      // Resetear checkbox
       adminShowZeroStock = false;
       zeroCheck.checked = false;
-      // Limpiar búsqueda? No, solo filtros admin.
       renderProducts(searchInput.value);
     });
 
-    // Inicialmente oculto (se muestra cuando admin inicia sesión)
     if (isAdmin) {
       container.style.display = 'flex';
     }
   }
 
   // =====================================================
-  // 25. SPLASH CONTROLADA (se muestra solo si está habilitada)
+  // 24. SPLASH CONTROLADA
   // =====================================================
   function showSplashIfNeeded() {
-    // Si está desactivada, no hacer nada
     if (!business.splashEnabled) return;
+    if (!business.splashUrl) return;
 
-    // Si no hay URL, no mostrar
-    if (!business.splashUrl) {
-      console.warn('Splash activada pero sin URL.');
-      return;
-    }
-
-    // Crear overlay
     const overlay = document.createElement('div');
     overlay.id = 'splashOverlay';
     overlay.style.cssText = `
@@ -2216,7 +2844,6 @@
       opacity: 1;
     `;
 
-    // Imagen del GIF
     const img = document.createElement('img');
     img.src = business.splashUrl;
     img.style.maxWidth = '90%';
@@ -2228,7 +2855,6 @@
     overlay.appendChild(img);
     document.body.prepend(overlay);
 
-    // Ocultar después de la duración configurada
     const duration = (business.splashDuration || 5) * 1000;
     setTimeout(() => {
       overlay.style.opacity = '0';
@@ -2239,15 +2865,13 @@
   }
 
   // =====================================================
-  // 26. INICIALIZACIÓN
+  // 25. INICIALIZACIÓN
   // =====================================================
-  // Inyectar filtros admin antes de cargar datos para que estén disponibles
   injectAdminFilters();
 
   loadAllData().then(() => {
     checkAdminSession();
     startListeners();
-    // Mostrar splash después de cargar datos (si está habilitada)
     showSplashIfNeeded();
     console.log('🧱 FANS TOYS Manager con Firebase y fallback local cargado.');
     console.log(`📦 ${products.length} productos, 💰 ${sales.length} ventas.`);
